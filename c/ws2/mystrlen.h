@@ -1,7 +1,7 @@
 /*******************************************************************************
 				-Ws2
 				-Itai Marienberg
-				-Mon 04 Nov 2019 08:42:33  
+				-Mon 04 Nov 2019 14:50:59    
  				-Reviewer:
 *******************************************************************************/
 
@@ -10,12 +10,15 @@
 
 #include <stdio.h>
 #include <assert.h>
+#include <ctype.h>
 
-	size_t mystrlen(const char *str)
+	size_t Mystrlen(const char *str)
   {
-  
+  	const char *runner1 = str;
+	
+	/* Check if the address of str is NULL */
 	assert( NULL != str);
-	const char *runner1 = str;
+	
 
 	while ('\0' != *runner1)
 		{
@@ -23,16 +26,16 @@
 		}
 
 
-	return (runner1 - str);
+	return (((char *)runner1) - str);
   }
 
 
 /* Exercise 2 this function compares two strings character by character */
 
 
-  size_t mystrcmp(const char *str1, const char *str2)
+  size_t Mystrcmp(const char *str1, const char *str2)
  {
-	
+	/* Check if the address of str is NULL */
 	assert( NULL != str1);
 	assert( NULL != str2);
 
@@ -56,12 +59,14 @@
 /* Exercise 3 this function copy one string into another */
 
 
-  char *mystrcpy(char *destination, const char *source)
+  char *Mystrcpy(char *destination, const char *source)
  {
+	char *ptr3 = destination;
+
 	if (destination == NULL)
 	return NULL;
 
-	char *ptr3 = destination;
+	
 
 	while ('\0' != *source )
 		{
@@ -78,13 +83,14 @@
 /* Exercise 4 this function copy one string into another */
 
 
-char *mystrncpy(char *dest, const char *src, size_t n)
+char *Mystrncpy(char *dest, const char *src, size_t n)
 {
+	char *ptr4 = dest;
 
 	if (dest == NULL)
 	return NULL;
 
-	char *ptr4 = dest;
+	
 
 	while ('\0' != *src && n != 0 )
 		{
@@ -103,55 +109,54 @@ char *mystrncpy(char *dest, const char *src, size_t n)
    without lower/upper case sensitivity */
 
 
-#include <ctype.h>
 
-  size_t mystcasecmp(const char *string1, const char *string2)
+
+  size_t Mystcasecmp(const char *string1, const char *string2)
  {
 	
-	assert( NULL != string1);
-	assert( NULL != string2);
 	int i = 0;
+		
 	const char *run1 = string1;
 	const char *run2 = string2;
+	    	
+	while (tolower(*run1) == tolower(*run2) && '\0' != *run1)
 
-    while( '\0' != *run1 )
 	{
-      tolower(*run1);
-	  ++run1;
-
+		++run1;
+		++run2;
 	}
-	
-	while ('\0' != *string1 && '\0' != *string2)
-	{
-			if ((*string1 - *string2)	!= 0)
-				{
-					return (*string1 - *string2);
-				}
-			else 
-				{
-					string1++;
-					string2++;
-				}
-	
-	}
-	return (*string1 - *string2) ; 
- }
 
+	if(*run1 > *run2)
 
+	    {
+		i = 1;    
+	    }
+	   
+	 else if(*run1 < *run2)
 
-
-
-
-
-
-
-
-
-
-
-
-
+	    {
+		i = -1;
+	    }
+	   
+	  return (i);
 }
+	
+
+
+  
+   
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
