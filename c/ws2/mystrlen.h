@@ -35,6 +35,8 @@ char *Mystrchr(const char *s, int c);
 
 char *Mystrdup(const char *s);
 
+char *Mystrcat(char *dest, const char *src);
+
 #endif
   
    

@@ -180,7 +180,30 @@ char *Mystrncpy(char *dest, const char *src, size_t n)
 		return (char *) firstpos;	 
 }
     
+/* Exercise 8 this function returns a pointer to a null-terminated byte string,
+   which is a duplicate f the string pointed to by s */
 
+  char *Mystrcat(char *dest, const char *src)
+{
+ 	
+	const char *runsrc = src;
+	char *rundest = dest;
+	 
+	while ( '\0' != *rundest)
+		{
+			++rundest;
+		}
+	
+	while ('\0' != *runsrc)
+		{
+			*rundest = *runsrc;
+			++rundest;
+			++runsrc;	
+		}
+	 
+	return (char *) dest;
+}
+  
 
 
 

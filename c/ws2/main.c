@@ -20,12 +20,17 @@ int main()
 	printf("%s\n", result= Mystrchr(new, b)); */
 
 	
-	char new1[] = "Learn";
+	/* char new1[] = "Learn";
 	char *tmp = Mystrdup(new1); 
 	printf("%s\n" , tmp);
 	
-	free(tmp);
+	free(tmp); */
 
+	char dest[50] = "hello";
+	char src[] = "world";
+	Mystrcat(dest,src);
+	
+	printf("%s\n" , dest);
 	
 	return 0;
 
