@@ -298,9 +298,42 @@ void Swap (int *a, int *z)
 
 /* Exercise - white spaces deletion*/
 
-
-
-
+void Whitespace(char *s)
+{
+    char *runner1 = s;
+    char *runner2 = s;
+    char *temp = s;
+   
+    while (isspace(*runner1))
+    {
+        ++runner1;
+    }
+   
+    strcpy(runner2, runner1);
+   
+    runner1 = runner2;
+    temp = runner2;
+   
+    while ('\0' != *runner1)
+    {
+        if(isspace(*runner1) && isspace(*(runner1 + 1)))
+        {
+            while (isspace(*runner1))
+            {
+                ++runner1;
+            }
+           
+            strcpy(++runner2, runner1);
+            runner1 = runner2;
+        }    
+       
+        ++runner1;
+        ++runner2;
+    }
+   
+    printf("%s\n", temp);
+     
+}
 
 
 

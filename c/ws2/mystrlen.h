@@ -39,6 +39,8 @@ char *Mystrcat(char *dest, const char *src);
 
 int Ispolindrome(const char *str);
 
+void Whitespace(char *s);
+
 #endif
   
    
