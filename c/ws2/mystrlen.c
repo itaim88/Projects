@@ -12,6 +12,7 @@
 #include <assert.h>
 #include <ctype.h>
 #include <string.h>
+#include <stdlib.h>
 #include "mystrlen.h"
 
 	size_t Mystrlen(const char *str)
@@ -161,6 +162,55 @@ char *Mystrncpy(char *dest, const char *src, size_t n)
 
 	return NULL;
 }
+
+/* Exercise 7 this function returns a pointer to a null-terminated byte string,
+   which is a duplicate f the string pointed to by s */
+
+  char *Mystrdup(const char *s)
+{
+		
+	 char *newtmp = (char *) malloc (sizeof(char) * strlen(s));
+	 char *firstpos = newtmp;
+		while ('\0' != *s)
+				{
+				*newtmp = *s;
+				++newtmp;
+				++s;
+				}
+		return (char *) firstpos;	 
+}
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

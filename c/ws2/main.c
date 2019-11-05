@@ -2,6 +2,7 @@
 #include <assert.h>
 #include <ctype.h>
 #include <string.h>
+#include <stdlib.h>
 #include "mystrlen.h"
 
 int main()
@@ -12,17 +13,20 @@ int main()
 	printf("\n this is end of strlen\n"); */
 	
 	
-	char new[] = "Learn programming yourself";
+	/* char new[] = "Learn programming yourself";
 	int b = 'p';
 	char *result;
 
-	printf("%s\n", result= Mystrchr(new, b));
+	printf("%s\n", result= Mystrchr(new, b)); */
+
 	
+	char new1[] = "Learn";
+	char *tmp = Mystrdup(new1); 
+	printf("%s\n" , tmp);
 	
+	free(tmp);
 
-
-
-
+	
 	return 0;
 
 }

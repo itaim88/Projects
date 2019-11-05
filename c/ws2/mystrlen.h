@@ -14,6 +14,7 @@
 #include <assert.h>
 #include <ctype.h>
 #include <string.h>
+#include <stdlib.h>
 
 
 size_t Mystrlen(const char *str);
@@ -31,6 +32,8 @@ char *Mystrncpy(char *dest, const char *src, size_t n);
 size_t Mystcasecmp(const char *string1, const char *string2);
 
 char *Mystrchr(const char *s, int c);
+
+char *Mystrdup(const char *s);
 
 #endif
   
