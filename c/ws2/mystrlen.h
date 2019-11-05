@@ -30,6 +30,8 @@ char *Mystrncpy(char *dest, const char *src, size_t n);
 
 size_t Mystcasecmp(const char *string1, const char *string2);
 
+char *Mystrchr(const char *s, int c);
+
 #endif
   
    

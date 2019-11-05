@@ -110,9 +110,6 @@ char *Mystrncpy(char *dest, const char *src, size_t n)
 /* Exercise 5 this function compares two strings character by character
    without lower/upper case sensitivity */
 
-
-
-
   size_t Mystcasecmp(const char *string1, const char *string2)
  {
 	
@@ -143,26 +140,27 @@ char *Mystrncpy(char *dest, const char *src, size_t n)
 	  return (i);
 }
 	
+/* Exercise 6 this function returns a pointer to the first occurrence of the
+   character c in the string s */
 
+  char *Mystrchr(const char *s, int c)
+{
+	const char *run = s;
+	
+	while ('\0' != *run)
+		{
+			if( 0 == (*run - c))
+				{
+				return (char *)run;
+				}
+			else
+			{
+				++run;
+			}
+		}
 
-  
-   
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+	return NULL;
+}
 
 
 
