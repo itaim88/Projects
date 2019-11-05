@@ -37,6 +37,8 @@ char *Mystrdup(const char *s);
 
 char *Mystrcat(char *dest, const char *src);
 
+int Ispolindrome(const char *str);
+
 #endif
   
    

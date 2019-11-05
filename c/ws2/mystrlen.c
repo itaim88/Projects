@@ -204,15 +204,99 @@ char *Mystrncpy(char *dest, const char *src, size_t n)
 	return (char *) dest;
 }
   
+/* Exercise 9 this function appends the string pointed to by src to the end of
+ the string pointed to by dest up to n characters long */
+
+  /* char *Mystrncat(char *dest, const char *src, size_t n)
+{
+ 	
 
 
 
+} */
 
 
+ /* Exercise - this function checks if a string is a palindrome */
+
+ int Ispolindrome(const char *str)
+{
+	const char *start = str;
+	const char *end = str;
+	int length = strlen(str);
+	int i = 0;
+	
+	end = (( length - 1 )+str); /* points to address of the last 
+												character of srt */
+	
+
+	for ( i = 0; i < (length /2); ++i)
+		{
+			if ( *start == *end)
+				{
+					++start;
+					--end;
+				}
+			else 
+				{
+					 printf("Not a polindrome\n");
+					 return 0;
+				}
+		}
+		
+	printf("polindrome\n"); 
+	return 0; 
+}
 
 
+ /* Exercise - this function plays 7 BOOM*/
+
+void SevenBoom (int a, int z) 
+{
+	int i=0, temp= 0, flag =0, t2=0;
+
+	for( i=a; i<=z; i++)
+	{
+		flag= 0;
+		if (i % 7 == 0)
+		{
+			flag=1; 
+		}
+		if ((i / 10) > 0)
+		{
+			temp= i;
+			while (0 < temp)
+			{
+				t2= temp %10;
+				if( t2 % 10 == 7)
+				{
+					flag =1;
+					break;
+				}
+				temp /= 10;
+			}
+		}	
+		if (1 == flag)
+		{
+			printf("Boom ");
+		}
+		else
+		{
+			printf("%d ",i);
+		}		
+	}
+}
+
+ /* Exercise - SWAP 2 pointers to int*/
+
+void Swap (int *a, int *z) 
+{
+	int temp = *a;
+	*a = *z;
+	*z = temp;
+}
 
 
+/* Exercise - white spaces deletion*/
 
 
 
