@@ -32,16 +32,16 @@ int main()
 	free(tmp); 
 	*/
 
-	/*
+	
 	char dest[50] = "hello";
-	char src[] = "world";
+	char src[] = "world1";
 	Mystrcat(dest,src);
 	
 	printf("%s\n" , dest);
-	*/
 	
-	char a[] = "ACBA";
+	
+	/*char a[] = "ACBA";
 	Ispolindrome(a);
-	return 0;
+	return 0; */
 
 }
