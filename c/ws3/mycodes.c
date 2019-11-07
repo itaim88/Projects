@@ -78,7 +78,7 @@ void CleanEnvCopy(char **envp_cpy)
 	while (0 != *(envp_cpy + i))
 	{
 		free(*(envp_cpy +i));
-		*(envp_cpy + 1) = NULL;
+		*(envp_cpy + i) = NULL;
 		++i;
 	}
 	free (envp_cpy);
@@ -116,5 +116,40 @@ char **CpyEnv(const char **envp)
 	return head;
 	
 }
+
+/* Exercise 2 this function solve Josephus problem */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 	
