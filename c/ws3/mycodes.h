@@ -24,7 +24,7 @@ char **CpyEnv(const char **envp);
 
 void ToLower(char *str);
 
-
+void Kill(int *soldiers);
 
 #endif
   

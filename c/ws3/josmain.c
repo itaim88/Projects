@@ -16,29 +16,31 @@
 
 int main()
 {
-	int N = 10; /* number of soldiers */
- 	int start = 0;
- 	int arr[10] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
-
-		
-   
-	printf("%d \n", arr[6]);
-		
+	int N = 10;                                        /* number of soldiers */
+ 	int arr[10] = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1};	
+	int index = 3;                         /* the user first soldier choise */
+	int i = index - 1;               /* the actual user first soldier choise */
+	int *end = arr + (N-1);
+	int *start = arr;
+	int *sword = arr;
+	int alive = N;
 	
-
-
-	
+	sword = sword + index;
+			
+	while ( alive > 1 ) 
+			{
+			
+			
+			
+			MoveToNextAlive( sword, end, start);
+				
+			printf("%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,		 \n",arr[0],arr[1],arr[2],arr[3],arr[4],arr[5],arr[6],arr[7],arr[8],arr[9]);
+			
+			alive--;
+			}
+			
 	return 0;
 
 }
 
- /*void ArrCreate(int N)
-{
-	int i = 0;
-	for(  i = 0; i < N; i++)
-		{
-			arr[i] = i;
-		}
-
-} */
-
+ 

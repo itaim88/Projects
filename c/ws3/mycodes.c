@@ -119,6 +119,35 @@ char **CpyEnv(const char **envp)
 
 /* Exercise 2 this function solve Josephus problem */
 
+int alive (int arr[], int N)
+{
+	int i = 0;
+	int sum = 0;
+	for( i = 0 ; i < N ; i++)
+		{
+			sum += arr[i];
+		}
+		
+		return sum;
+}
+
+	
+
+void MoveToNextAlive(int *sword, int *end, int *start ) /* current *sword position */
+{
+
+			if (sword == end)
+				{
+					sword = start;
+				}
+				
+			if (1 == *sword)
+				{
+					*sword = 0;
+					 ++sword ;			
+				}
+								
+} 
 
 
 
