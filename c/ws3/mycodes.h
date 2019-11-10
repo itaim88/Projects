@@ -17,14 +17,15 @@
 #include <stdlib.h>
 
 void PrintEnv(char **env);
-
 size_t EnvpLines(const char **envp);
-
 char **CpyEnv(const char **envp);
-
 void ToLower(char *str);
+void MoveToNextAlive(int *sword, int *end, int *start );
 
-void Kill(int *soldiers);
+void init_arr();
+void kill();
+void reorder_arr();
+void print_winner();
 
 #endif
   

@@ -6,41 +6,77 @@
 *******************************************************************************/
 
 #include <stdio.h>
-#include <assert.h>
-#include <ctype.h>
-#include <string.h>
 #include <stdlib.h>
-#include "mycodes.h"
 
-/*void ArrCreate(int N);*/
+#define N 100            /* user choice*/
+
+void init_arr();       /* initialize the array with N members*/
+void kill();           /* execute the nth member starting and index start*/
+void reorder_arr();    /* reorder the array such that the member at index 
+						  n is removed*/
+void print_winner();
+
+int arr[N];       /* user choice*/
+int choice = 2;   /* user choice*/
+int len = N;
+int start = 1; /* must enter the user choice - 1 */
 
 int main()
 {
-	int N = 10;                                        /* number of soldiers */
- 	int arr[10] = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1};	
-	int index = 3;                         /* the user first soldier choise */
-	int i = index - 1;               /* the actual user first soldier choise */
-	int *end = arr + (N-1);
-	int *start = arr;
-	int *sword = arr;
-	int alive = N;
-	
-	sword = sword + index;
-			
-	while ( alive > 1 ) 
-			{
-			
-			
-			
-			MoveToNextAlive( sword, end, start);
-				
-			printf("%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,		 \n",arr[0],arr[1],arr[2],arr[3],arr[4],arr[5],arr[6],arr[7],arr[8],arr[9]);
-			
-			alive--;
-			}
-			
-	return 0;
+    if (1 > N ||  N < choice )
+        {
+            printf("Are we here to play or to test this game?\ntry again \n");
+            return 0;
+        }
 
+    init_arr();
+
+
+					while (len > 1)
+						{
+						kill();
+						reorder_arr();
+						}
+
+					print_winner();
+
+    return 0;
 }
 
- 
+void init_arr()
+{
+	int i = 0;
+    for  (i = 0; i < N ; ++i)
+        arr[i] = i;
+}
+
+void kill()
+{
+    int i = 0;
+    i = ( start + 1 ) % len;
+    arr[i] = -1;
+    start = i;
+}
+
+void reorder_arr()
+{
+    int i;
+    for (i = 0; i < len && arr[i] != -1; i++); /* find index of the one to kill*/
+		
+        for (++i; i < len; ++i) /* increment so we run him over*/
+        {
+         arr[i-1] = arr[i];
+        }
+   		 --len;
+       
+}
+
+void print_winner()
+{
+    printf("number %d on index %d is the winner ", arr[0],(arr[0] + 1));
+    printf("\n");
+}
+
+
+
+
