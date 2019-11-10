@@ -12,11 +12,15 @@
 
 int main(int argc, const char **argv, const char **envp)
 {
+	char **x;
 
-	CpyEnv(envp);
-
+	x = CpyEnv(envp);
 	
-
+	if( NULL == x)
+		{
+		printf("malloc Error-Not enough memory\n");
+		}
+	
 	return 0;
 
 }

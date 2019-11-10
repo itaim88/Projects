@@ -21,24 +21,51 @@
 
 char *MyStrDup(const char* s)
 {
+	int flag = 0; /* change flag to 1 if you wish to test Mymalloc*/
     int str_size = strlen(s) + 1;
-   
-    char *temp = (char*)malloc(sizeof(char) * str_size);
-   
     const char *runner = s;
-    assert(NULL != s);
-    assert(NULL != temp);
+    char *temp;
+    
+    if( 0 == flag)
+    	{
+   		 temp = (char*)malloc(sizeof(char) * str_size);
+   		 assert(NULL != s);
+    	 assert(NULL != temp);
+    	}
+    
+    else if( 1 == flag)
+    	{	
+		 temp = Mymalloc(flag);
+		 return temp;
+    	}
+			
+    Mystrcpy(temp, runner);
+
    
-    if(NULL == temp)
-    {
-        return NULL;
-    }
-   
-    strcpy(temp, runner);
-       
     return temp;
    
 }
+
+char *Mystrcpy(char *temp, const char *runner)
+{
+	char *ptr = temp;
+
+	if (temp == NULL)
+	return NULL;
+
+	
+
+	while ('\0' != *runner )
+		{
+			*temp = tolower(*runner);;
+			++temp;
+			++runner;
+		}
+		
+			*temp = '\0';
+
+	return ptr;
+ }	
 
 size_t EnvpLines(const char **envp)
 {
@@ -51,18 +78,11 @@ size_t EnvpLines(const char **envp)
 		++runner;
 		++count;
 	}
+	
 	return count;
 }
 
-void ToLower(char *str)
-{ 
-	char *runner = str;
-	while('\0' != *runner)
-	{
-		*runner = tolower(*runner);
-		++runner;
-	}
-}
+
 
 void PrintEnv(char **env)
 { 
@@ -82,6 +102,7 @@ void CleanEnvCopy(char **envp_cpy)
 		*(envp_cpy + i) = NULL;
 		++i;
 	}
+	
 	free (envp_cpy);
 	envp_cpy = NULL;		
 }
@@ -100,23 +121,49 @@ char **CpyEnv(const char **envp)
 	count = EnvpLines(envp);
 	
 	envp_cpy = (char**) calloc (count, sizeof(char *));
+	
+			if (NULL == envp_cpy)
+				{
+					printf("Error");
+					return NULL;
+				}
+   
 	head = envp_cpy;
 	
 	while (i < count)
 	{ 
 		*envp_cpy = MyStrDup(*runner);
-		ToLower(*envp_cpy);
+		
+				if (NULL == *envp_cpy)
+					{
+						CleanEnvCopy(head);						
+						return NULL;
+			
+					}
 		++runner;
 		++envp_cpy;
 		++i;
 	}
+	
 	PrintEnv(head);
 	
 	CleanEnvCopy(head);
 	
-	return head;
-	
+	return head;	
 }
+
+void *Mymalloc(int flag)
+{
+	void *ptr;
+	ptr = NULL;
+	
+	if ( 1 == flag)
+		{
+			return ptr;
+		}
+				
+} 
+
 
 
 

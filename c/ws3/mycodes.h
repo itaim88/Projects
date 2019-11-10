@@ -20,6 +20,8 @@ void PrintEnv(char **env);
 size_t EnvpLines(const char **envp);
 char **CpyEnv(const char **envp);
 void ToLower(char *str);
+char *Mystrcpy(char *temp, const char *runner);
+void *Mymalloc(int flag);
 void MoveToNextAlive(int *sword, int *end, int *start );
 
 void init_arr();

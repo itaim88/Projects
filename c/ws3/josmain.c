@@ -25,8 +25,8 @@ int main()
 {
     if (1 > N ||  N < choice )
         {
-            printf("Are we here to play or to test this game?\ntry again \n");
-            return 0;
+           printf("Are we here to play or to test this game?\ntry again \n");
+           return 0;
         }
 
     init_arr();
