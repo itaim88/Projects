@@ -13,20 +13,19 @@ int main()
 {
 /* this is if/else test **********************/
  
-/*  PrintIf();     */
+	/* PrintIf();  */   
 	 
 	/******* this is switch case test*************/
 		 
-/*  PrintSwitch()  */
+   /*PrintSwitch();*/  
 	
 	/***this LUT test ****************************/ 
 	
-/*	char choice = '0';
+	char choice = '0';
 	void (*ptr[256]) (char);
 	int i = 0;
 	system("stty -icanon -echo");
-	printf("Please pressed A or T or Esc to exit: \n");
-	scanf("%c", &choice);
+	
 	
 	for( i = 0 ; i < 256; ++i)
 		{
@@ -37,8 +36,14 @@ int main()
 	ptr[84] = &LUTPrint;
 	ptr[27] = &EscPrint;
 	
-	(*ptr[choice]) (choice);
+	while(27 != choice)
+	{
+	printf("Please pressed A or T or Esc to exit: \n");
+	scanf("%c", &choice);
 	
-	system("stty icanon echo");	*/
+	(*ptr[choice]) (choice);
+	}
+	
+	system("stty icanon echo");	
 	return 0;
 }

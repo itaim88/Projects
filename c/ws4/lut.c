@@ -9,12 +9,14 @@
 #include <stdlib.h>
 #include "lut.h"
 
-
 void PrintIf()
 {	
 	char choice = '0';
 	
 	system("stty -icanon -echo");
+	
+	while(27 != choice)
+	{
 	printf("Please pressed A or T or Esc to exit: \n");
 	scanf("%c", &choice);
 	
@@ -28,16 +30,17 @@ void PrintIf()
 				printf("You entered T\n");
 			}
 			
-	else if ( 27 == choice)
+	/*else if ( 27 == choice)
 			{
 				printf("You entered Esc\n");
-			}
+			}*/
 	
 	else  
 			{
 				printf("You entered invalid character \n");
 			}
 			
+	}
 	system("stty icanon echo");
 }
 
@@ -47,27 +50,26 @@ void PrintSwitch()
 	char choice = '0';
 	
 	system("stty -icanon -echo");
+	
+	while(27 != choice)
+	{
 	printf("Please pressed A or T or Esc to exit: \n");
 	scanf("%c", &choice);
 	
-	switch (choice)
-	{
-		case 'A':
-			printf("You entered A\n");
-			break;
+		switch (choice)
+		{
+			case 'A':
+				printf("You entered A\n");
+				break;
+				
+			case 'T':
+				printf("You entered T\n");
+				break;
 			
-		case 'T':
-			printf("You entered T\n");
-			break;
-		
-		case 27:
-			printf("You entered Esc\n");
-			break;
-		
-		default:
-			printf("You entered invalid character \n");
+			default:
+				printf("You entered invalid character \n");
+		}
 	}
-	
 	system("stty icanon echo");
 }
 
