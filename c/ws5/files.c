@@ -4,7 +4,7 @@
 				-Mon 11 Nov 2019 14:50:59    
  				-Reviewer:
 *******************************************************************************/
-enum STATUS{SUCC, FAIL, EXIT};
+enum STATUS{SUCC, FAIL, FAIL_OPEN,FAIL_REMOVE, EXIT};
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -13,15 +13,8 @@ enum STATUS{SUCC, FAIL, EXIT};
 
 /*  struct *******************************************************************/
 
-int Structs()
+void Structs(struct general gen_arr[])
 {
-	struct general
-    {
-        char *str;
-        int (*p_cmp)(const char *, const char *);
-        enum STATUS(*p_opr)(const char *);
-    }   gen_arr[4];
-
     gen_arr[0].str = "-exit";
     gen_arr[0].p_cmp =&Compare;
     gen_arr[0].p_opr =&ExitProg;
@@ -34,18 +27,32 @@ int Structs()
     gen_arr[2].p_cmp =&Compare;
     gen_arr[2].p_opr =&CountLines;
 
-    gen_arr[3].str = "add";
+    gen_arr[3].str = "<";
     gen_arr[3].p_cmp =&Compare;
-    gen_arr[3].p_opr =&AddString;
+    gen_arr[3].p_opr =&AddStringTop;
 
- return 0;
+	gen_arr[4].str = "this string always match";
+    gen_arr[4].p_cmp =&Compare_always;
+    gen_arr[4].p_opr =&AddString;
 }
-
 /*  Compare return 0 if equel ************************************************/
 
-int Compare(const char *, const char *)
+int Compare(const char *s1, const char *s2)
 {
+	assert (NULL != s1);
+	assert (NULL != s2);
+	
 	return (strcmp(const char *,const char *));
+}
+
+/*  Compare to new string ****************************************************/
+
+int Compare_always(const char *s1, const char *s2)
+{
+	assert (NULL != s1);
+	assert (NULL != s2);
+	
+	return 0;
 }
 
 /*  RemoveFile ***************************************************************/
@@ -61,13 +68,13 @@ enum STATUS RemoveFile(const char *file_name)
 	else
     {
          printf("Unable to delete the file\n");
-         return FAIL;
+         return FAIL_REMOVE;
     }
 }
 
 /***EXIT File ****************************************************************/
 
-enum STATUS ExitProg(const char *)
+enum STATUS ExitProg(const char *file_name)
 {
 	printf("Exiting program\n");
     return EXIT;
@@ -75,96 +82,119 @@ enum STATUS ExitProg(const char *)
 
 /***COUNT ********************************************************************/
 
-enum STATUS CountLines() 
+enum STATUS CountLines(const char *filename) 
 {
     FILE *fp; 
-    int count = 0;  /* Line counter (result) */
-    char filename[MAX_FILE_NAME]; 
-    char c;  /* To store a character read from file*/ 
-  
-    /* Get file name from user. The file should be 
-     either in current folder or complete path should be provided*/ 
-    printf("Enter file name: "); 
-    scanf("%s", filename); 
-  
-    /* Open the file*/ 
+    int count = 0;  /* Line counter  */ 
+    char c = 0;  
+ 
     fp = fopen(filename, "r"); 
   
-    /* Check if file exists*/ 
     if (fp == NULL) 
     { 
     	printf("Could not open file %s", filename); 
-        return FAIL; 
+        return FAIL_OPEN; 
     } 
-  
     /* Extract characters from file and store in character c*/ 
 	for (c = getc(fp); c != EOF; c = getc(fp)) 
     {
         if (c == '\n')
-        { /* Increment count if this character is newline*/ 
+        { 
         	count = count + 1; 
         }
-    }
-    /* Close the file*/ 
-    fclose(fp); 
-    printf("The file %s has %d lines\n ", filename, count); 
-  
+    } 
+    fclose(fp);   
     return SUCC; 
 } 
 	
 /***add to file ***************************************************************/
 
- "<"
-enum STATUS AddString()
-{
-   
-    print   
-    FILE *fp;
-    fp = fopen("try.txt", "a");
-    char input[MAX_LINES];
+enum STATUS AddString(const char *file_name, char *user_str)
+{  
+    FILE *f_ptr;
+    f_ptr = fopen(file_name, "a");
 
-    if( fp == NULL)
+    if( f_ptr == NULL)
     {
     	printf("ERROR");
-        return FAIL;
+        return FAIL_OPEN;
     }
-	else if ( "<")
-	{
-			
-			
-		return SUCC;
-	}
-		
-	else	
-    {
-    	printf("Enter a string to add to the file\n");
-        gets(input)!= NULL;
-        fputs(input, fp);
-        fclose(fp);
-    }
-        
+	
+ 	fputs(user_str, f_ptr);
+	fclose(f_ptr);
+     
     return SUCC;
+} 
 
+/***add to file ***************************************************************/
+
+enum STATUS AddStringTop(const char *file_name, char *user_str)
+{ 
+	char ch = 0;
+    FILE *fp;
+    fp = fopen(file_name, "r");
+    FILE *tmp_cpy;
+	tmp_cpy = fopen("tmp.txt", "a");
+	
+    if( fp == NULL || tmp_cpy == NULL )
+    {
+    	printf("ERROR");
+        return FAIL_OPEN;
+ 	}
+    
+    fputs((user_str + 1 ), tmp_cpy); 
+    
+    ch = fgetc(fp)
+    while (ch != EOF)
+    {
+    	fputc(ch, tmp_cpy);
+    	ch = fgetc(fp);	
+    }	
+    		    
+	fclose(tmp_cpy);
+	fclose(fp);
+	
+	tmp_cpy = fopen("tmp.txt", "r");
+	fp = fopen(file_name, "w");
+	
+	ch = fgetc(tmp_cpy)
+	while (ch != EOF)
+    {
+    	fputc(ch, fp);
+    	ch = fgetc(tmp_cpy)	
+    }	
+    
+    fclose(tmp_cpy);
+	fclose(fp);
+	remove(tmp_cpy);
+	
+	return SUCC;
 } 
 
 /***start program  ************************************************************/
-int StartProg ()
+int StartProg (const char *file_name, struct general gen_arr[])
 {
-	while()
-	{
-	printf("Please enter one of the following commands or a string to add to\
-	the file:\n");
-	printf("\"-remove\" to delete an existing file\n");
-	printf("\"-count\" to count the number of lines in existing file\n");
-	printf("\"exit\" to close the program\n");
-	printf("begin a string with \"<\" to add the string at the beginning of file\n"); 
+	char input[8] = {0};
+	int i = 0;
+	int status = 0;
 	
-		while()
+	while(EXIT != status)
+	{
+		fgets(input, sizeof(input), stdin)
+		
+		for( 0 = i ; i < STR_CH ; ++i)
 		{
+			status = gen_arr[i].p_cmp(gen_arr[i].str, input);
+		}  
+	
+			if( SUCC == status)
+			{
+				status = gen_arr[i].p_opr(file_name, input); 
+			}
 			
-			return;
-		}
-	}	
+			return 0;
+	}
+		
 	       		
 }
 
@@ -172,4 +202,3 @@ int StartProg ()
 
 
 
-מציג את FILES.txt.
