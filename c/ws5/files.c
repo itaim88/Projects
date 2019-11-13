@@ -1,49 +1,66 @@
 /*******************************************************************************
 				-Ws5
 				-Itai Marienberg
-				-Mon 11 Nov 2019 14:50:59    
+				-Mon 13 Nov 2019 14:50:59    
  				-Reviewer:
 *******************************************************************************/
 enum STATUS{SUCC, FAIL, FAIL_OPEN,FAIL_REMOVE, EXIT};
 
 #include <stdio.h>
+#include <assert.h>
 #include <stdlib.h>
 #include <string.h>
 #include "files.h"
+#define STR_CH 5
+#define N 100
 
 /*  struct *******************************************************************/
 
-void Structs(struct general gen_arr[])
+void Structs(general gen_arr[])
 {
-    gen_arr[0].str = "-exit";
-    gen_arr[0].p_cmp =&Compare;
-    gen_arr[0].p_opr =&ExitProg;
+    gen_arr[0].str = "-exit\n";
+    gen_arr[0].p_cmp = &Compare;
+    gen_arr[0].p_opr = &ExitProg;
 
-    gen_arr[1].str = "-remove";
-    gen_arr[1].p_cmp =&Compare;
-    gen_arr[1].p_opr =&RemoveFile;
+    gen_arr[1].str = "-remove\n";
+    gen_arr[1].p_cmp = &Compare;
+    gen_arr[1].p_opr = &RemoveFile;
 
-    gen_arr[2].str = "-count";
-    gen_arr[2].p_cmp =&Compare;
-    gen_arr[2].p_opr =&CountLines;
+    gen_arr[2].str = "-count\n";
+    gen_arr[2].p_cmp = &Compare;
+    gen_arr[2].p_opr = &CountLines;
 
     gen_arr[3].str = "<";
-    gen_arr[3].p_cmp =&Compare;
-    gen_arr[3].p_opr =&AddStringTop;
+    gen_arr[3].p_cmp = &CharCompare;
+    gen_arr[3].p_opr = &AddStringTop;
 
 	gen_arr[4].str = "this string always match";
-    gen_arr[4].p_cmp =&Compare_always;
-    gen_arr[4].p_opr =&AddString;
+    gen_arr[4].p_cmp = &Compare_always;
+    gen_arr[4].p_opr = &AddString;
 }
 /*  Compare return 0 if equel ************************************************/
-
 int Compare(const char *s1, const char *s2)
 {
 	assert (NULL != s1);
 	assert (NULL != s2);
 	
-	return (strcmp(const char *,const char *));
+	return (strcmp(s1, s2));
 }
+
+/*  Compare char return 0 if equel ************************************************/
+int CharCompare(const char *s1, const char *s2)
+{
+	assert (NULL != s1);
+	assert (NULL != s2);
+
+	if(*s1 == *s2)
+	{
+	return 0;
+	}
+	
+ 	return 1;	
+}
+
 
 /*  Compare to new string ****************************************************/
 
@@ -57,8 +74,10 @@ int Compare_always(const char *s1, const char *s2)
 
 /*  RemoveFile ***************************************************************/
 
-enum STATUS RemoveFile(const char *file_name)
+enum STATUS RemoveFile(const char *file_name, char *str)
 {
+	UNUSED(str);
+	
 	if ( 0 == remove(file_name))
     {
          printf("Deleted successfully\n");
@@ -74,25 +93,27 @@ enum STATUS RemoveFile(const char *file_name)
 
 /***EXIT File ****************************************************************/
 
-enum STATUS ExitProg(const char *file_name)
+enum STATUS ExitProg(const char *file_name, char *str)
 {
+	UNUSED(file_name);
+	UNUSED(str);
 	printf("Exiting program\n");
     return EXIT;
 }
 
 /***COUNT ********************************************************************/
 
-enum STATUS CountLines(const char *filename) 
+enum STATUS CountLines(const char *file_name, char *str) 
 {
     FILE *fp; 
     int count = 0;  /* Line counter  */ 
     char c = 0;  
- 
-    fp = fopen(filename, "r"); 
+ 	UNUSED(str);
+    fp = fopen(file_name, "r"); 
   
     if (fp == NULL) 
     { 
-    	printf("Could not open file %s", filename); 
+    	printf("Could not open file %s", file_name); 
         return FAIL_OPEN; 
     } 
     /* Extract characters from file and store in character c*/ 
@@ -102,7 +123,9 @@ enum STATUS CountLines(const char *filename)
         { 
         	count = count + 1; 
         }
+     
     } 
+    printf("%d\n",count);
     fclose(fp);   
     return SUCC; 
 } 
@@ -132,8 +155,8 @@ enum STATUS AddStringTop(const char *file_name, char *user_str)
 { 
 	char ch = 0;
     FILE *fp;
-    fp = fopen(file_name, "r");
     FILE *tmp_cpy;
+    fp = fopen(file_name, "r");
 	tmp_cpy = fopen("tmp.txt", "a");
 	
     if( fp == NULL || tmp_cpy == NULL )
@@ -144,7 +167,7 @@ enum STATUS AddStringTop(const char *file_name, char *user_str)
     
     fputs((user_str + 1 ), tmp_cpy); 
     
-    ch = fgetc(fp)
+    ch = fgetc(fp);
     while (ch != EOF)
     {
     	fputc(ch, tmp_cpy);
@@ -157,45 +180,46 @@ enum STATUS AddStringTop(const char *file_name, char *user_str)
 	tmp_cpy = fopen("tmp.txt", "r");
 	fp = fopen(file_name, "w");
 	
-	ch = fgetc(tmp_cpy)
+	ch = fgetc(tmp_cpy);
 	while (ch != EOF)
     {
     	fputc(ch, fp);
-    	ch = fgetc(tmp_cpy)	
+    	ch = fgetc(tmp_cpy)	;
     }	
     
     fclose(tmp_cpy);
 	fclose(fp);
-	remove(tmp_cpy);
+	
+	remove("tmp.txt");
 	
 	return SUCC;
 } 
 
 /***start program  ************************************************************/
-int StartProg (const char *file_name, struct general gen_arr[])
+int StartProg (const char *file_name, general gen_arr[])
 {
-	char input[8] = {0};
+	char input[N];
 	int i = 0;
 	int status = 0;
 	
 	while(EXIT != status)
-	{
-		fgets(input, sizeof(input), stdin)
+	{  
+		printf("Please enter your string: \n");
+		fgets(input, N, stdin);
 		
-		for( 0 = i ; i < STR_CH ; ++i)
+		for( i = 0 ; i < STR_CH ; ++i)
 		{
 			status = gen_arr[i].p_cmp(gen_arr[i].str, input);
-		}  
-	
 			if( SUCC == status)
 			{
-				status = gen_arr[i].p_opr(file_name, input); 
+				status = gen_arr[i].p_opr(file_name, input);
+				break; 
 			}
+		}
 			
-			return 0;
 	}
 		
-	       		
+ return 0;	       		
 }
 
 
