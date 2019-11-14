@@ -57,7 +57,6 @@ int CharCompare(const char *s1, const char *s2)
 	{
 	return 0;
 	}
-	
  	return 1;	
 }
 
@@ -68,7 +67,6 @@ int Compare_always(const char *s1, const char *s2)
 {
 	assert (NULL != s1);
 	assert (NULL != s2);
-	
 	return 0;
 }
 
@@ -98,7 +96,7 @@ enum STATUS ExitProg(const char *file_name, char *str)
 	UNUSED(file_name);
 	UNUSED(str);
 	printf("Exiting program\n");
-    return EXIT;
+	return EXIT;
 }
 
 /***COUNT ********************************************************************/
@@ -145,8 +143,7 @@ enum STATUS AddString(const char *file_name, char *user_str)
 	
  	fputs(user_str, f_ptr);
 	fclose(f_ptr);
-     
-    return SUCC;
+   	return SUCC;
 } 
 
 /***add to file ***************************************************************/
@@ -191,7 +188,6 @@ enum STATUS AddStringTop(const char *file_name, char *user_str)
 	fclose(fp);
 	
 	remove("tmp.txt");
-	
 	return SUCC;
 } 
 
@@ -217,9 +213,8 @@ int StartProg (const char *file_name, general gen_arr[])
 			}
 		}
 			
-	}
-		
- return 0;	       		
+	}	
+	return 0;	       		
 }
 
 
