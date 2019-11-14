@@ -1,5 +1,5 @@
 
-
+#include <stdlib.h>
 #include <stdio.h>
 
 /********** x*(2^y) ***********************************************************/
@@ -39,12 +39,62 @@ int IsPow2NoLoop(unsigned int n)
 {
 	unsigned int check = 1;
 	
-	if ( ((n - 1) & n ) == 0) 
+	if ( 0 == ((n - 1) & n )) 
 	{
 		return 1;
 	}
 	return 0;
 }
+/********** add 1 *************************************************************/
+int Add1(int n)
+{
+	return (-(~n)); /* can use abs() */ 
+} 
+
+int addOne(int x) 
+{ 
+    int m = 1; 
+      
+    // Flip all the set bits  
+    // until we find a 0  
+    while( x & m ) 
+    { 
+        x = x ^ m; 
+        m = m << 1; 
+    } 
+      
+    // flip the rightmost 0 bit  
+    x = x ^ m; 
+    return x;
+/********** add 1 *************************************************************/
+void Add1(unsigned int arr[])
+{
+	
+	printf("");
+}	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
