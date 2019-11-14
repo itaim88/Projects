@@ -13,9 +13,7 @@ enum STATUS{SUCC, FAIL, FAIL_OPEN,FAIL_REMOVE, EXIT};
 #include "files.h"
 #define STR_CH 5
 #define N 100
-
 /*  struct *******************************************************************/
-
 void Structs(general gen_arr[])
 {
     gen_arr[0].str = "-exit\n";
@@ -45,7 +43,6 @@ int Compare(const char *s1, const char *s2)
 	assert (NULL != s2);	
 	return (strcmp(s1, s2));
 }
-
 /*  Compare char return 0 if equel ************************************************/
 int CharCompare(const char *s1, const char *s2)
 {
@@ -58,19 +55,14 @@ int CharCompare(const char *s1, const char *s2)
 	}
  	return 1;	
 }
-
-
 /*  Compare to new string ****************************************************/
-
 int Compare_always(const char *s1, const char *s2)
 {
 	assert (NULL != s1);
 	assert (NULL != s2);
 	return 0;
 }
-
 /*  RemoveFile ***************************************************************/
-
 enum STATUS RemoveFile(const char *file_name, char *str)
 {
 	UNUSED(str);
@@ -86,9 +78,7 @@ enum STATUS RemoveFile(const char *file_name, char *str)
          return FAIL_REMOVE;
     }
 }
-
 /***EXIT File ****************************************************************/
-
 enum STATUS ExitProg(const char *file_name, char *str)
 {
 	UNUSED(file_name);
@@ -96,9 +86,7 @@ enum STATUS ExitProg(const char *file_name, char *str)
 	printf("Exiting program\n");
 	return EXIT;
 }
-
 /***COUNT ********************************************************************/
-
 enum STATUS CountLines(const char *file_name, char *str) 
 {
     FILE *fp; 
@@ -124,10 +112,8 @@ enum STATUS CountLines(const char *file_name, char *str)
     printf("%d\n",count);
     fclose(fp);   
     return SUCC; 
-} 
-	
+} 	
 /***add to file ***************************************************************/
-
 enum STATUS AddString(const char *file_name, char *user_str)
 {  
     FILE *f_ptr;
@@ -142,9 +128,7 @@ enum STATUS AddString(const char *file_name, char *user_str)
 	fclose(f_ptr);
    	return SUCC;
 } 
-
 /***add to file ***************************************************************/
-
 enum STATUS AddStringTop(const char *file_name, char *user_str)
 { 
 	char ch = 0;
@@ -185,7 +169,6 @@ enum STATUS AddStringTop(const char *file_name, char *user_str)
 	remove("tmp.txt");
 	return SUCC;
 } 
-
 /***start program  ************************************************************/
 int StartProg (const char *file_name, general gen_arr[])
 {
