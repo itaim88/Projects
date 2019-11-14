@@ -42,8 +42,7 @@ void Structs(general gen_arr[])
 int Compare(const char *s1, const char *s2)
 {
 	assert (NULL != s1);
-	assert (NULL != s2);
-	
+	assert (NULL != s2);	
 	return (strcmp(s1, s2));
 }
 
@@ -81,7 +80,6 @@ enum STATUS RemoveFile(const char *file_name, char *str)
          printf("Deleted successfully\n");
          return SUCC;
     }
-
 	else
     {
          printf("Unable to delete the file\n");
@@ -109,7 +107,7 @@ enum STATUS CountLines(const char *file_name, char *str)
  	UNUSED(str);
     fp = fopen(file_name, "r"); 
   
-    if (fp == NULL) 
+    if (NULL == fp) 
     { 
     	printf("Could not open file %s", file_name); 
         return FAIL_OPEN; 
@@ -135,12 +133,11 @@ enum STATUS AddString(const char *file_name, char *user_str)
     FILE *f_ptr;
     f_ptr = fopen(file_name, "a");
 
-    if( f_ptr == NULL)
+    if( NULL == f_ptr )
     {
     	printf("ERROR");
         return FAIL_OPEN;
     }
-	
  	fputs(user_str, f_ptr);
 	fclose(f_ptr);
    	return SUCC;
@@ -156,28 +153,27 @@ enum STATUS AddStringTop(const char *file_name, char *user_str)
     fp = fopen(file_name, "r");
 	tmp_cpy = fopen("tmp.txt", "a");
 	
-    if( fp == NULL || tmp_cpy == NULL )
+    if( NULL == fp || NULL == tmp_cpy )
     {
     	printf("ERROR");
         return FAIL_OPEN;
  	}
-    
     fputs((user_str + 1 ), tmp_cpy); 
-    
     ch = fgetc(fp);
+    
     while (ch != EOF)
     {
     	fputc(ch, tmp_cpy);
     	ch = fgetc(fp);	
     }	
-    		    
+ 		    
 	fclose(tmp_cpy);
 	fclose(fp);
 	
 	tmp_cpy = fopen("tmp.txt", "r");
 	fp = fopen(file_name, "w");
-	
 	ch = fgetc(tmp_cpy);
+	
 	while (ch != EOF)
     {
     	fputc(ch, fp);
@@ -186,7 +182,6 @@ enum STATUS AddStringTop(const char *file_name, char *user_str)
     
     fclose(tmp_cpy);
 	fclose(fp);
-	
 	remove("tmp.txt");
 	return SUCC;
 } 
