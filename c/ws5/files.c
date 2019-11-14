@@ -119,7 +119,7 @@ enum STATUS AddString(const char *file_name, char *user_str)
     FILE *f_ptr;
     f_ptr = fopen(file_name, "a");
 
-    if( NULL == f_ptr )
+    if ( NULL == f_ptr )
     {
     	printf("ERROR");
         return FAIL_OPEN;
@@ -128,7 +128,7 @@ enum STATUS AddString(const char *file_name, char *user_str)
 	fclose(f_ptr);
    	return SUCC;
 } 
-/***add to file ***************************************************************/
+/***add to top file ***************************************************************/
 enum STATUS AddStringTop(const char *file_name, char *user_str)
 { 
 	char ch = 0;
@@ -137,7 +137,7 @@ enum STATUS AddStringTop(const char *file_name, char *user_str)
     fp = fopen(file_name, "r");
 	tmp_cpy = fopen("tmp.txt", "a");
 	
-    if( NULL == fp || NULL == tmp_cpy )
+    if ( NULL == fp || NULL == tmp_cpy )
     {
     	printf("ERROR");
         return FAIL_OPEN;
@@ -176,15 +176,15 @@ int StartProg (const char *file_name, general gen_arr[])
 	int i = 0;
 	int status = 0;
 	
-	while(EXIT != status)
+	while (EXIT != status)
 	{  
 		printf("Please enter your string: \n");
 		fgets(input, N, stdin);
 		
-		for( i = 0 ; i < STR_CH ; ++i)
+		for ( i = 0 ; i < STR_CH ; ++i)
 		{
 			status = gen_arr[i].p_cmp(gen_arr[i].str, input);
-			if( SUCC == status)
+			if ( SUCC == status)
 			{
 				status = gen_arr[i].p_opr(file_name, input);
 				break; 
