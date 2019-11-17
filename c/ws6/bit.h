@@ -1,7 +1,7 @@
 /*******************************************************************************
-				-Ws5
+				-Ws6
 				-Itai Marienberg
-				-Mon 13 Nov 2019 14:50:59    
+				-Mon 17 Nov 2019 14:50:59    
  				-Reviewer:
 *******************************************************************************/
 
@@ -18,6 +18,7 @@
 #define THIRD_BIT 3
 #define ZERO_INDEX 15
 
+
 long Pow2(unsigned int x, unsigned int y);
 int IsPow2(unsigned int n);
 int IsPow2NoLoop(unsigned int n);
@@ -25,6 +26,7 @@ int Add1(unsigned int n);
 int addOne(unsigned int x);
 void ThreeBits(unsigned int arr[]);
 unsigned int reverseBits(unsigned int num);
+unsigned int reverseBitsNoLoop(unsigned int num);
 unsigned int SecAndSix(unsigned int n);
 unsigned int SecOrSix(unsigned int n);
 unsigned int SwapBit(unsigned int n);
@@ -34,5 +36,6 @@ int SetBit(unsigned int n);
 int SetBitNoLoop(unsigned int n);
 int numberOfSetBits(unsigned int i);
 int MynumberOfSetBits(uint64_t x);
+
 
 #endif

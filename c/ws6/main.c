@@ -1,7 +1,7 @@
 /*******************************************************************************
 				-Ws6
 				-Itai Marienberg
-				-Mon 13 Nov 2019 14:50:59    
+				-Mon 17 Nov 2019 14:50:59    
  				-Reviewer:
 *******************************************************************************/
 #include <stdio.h>
@@ -36,12 +36,13 @@ int main()
 	
 	/*printf("%d\n",SetBit(0));*/
 	
-	/*unsigned int x = ~0;
-	printf("%u\n",reverseBits(x));*/
+	unsigned int x = 38;
+	printf("%u\n",reverseBits(x));
 	
-	uint64_t i = 10;
-	printf("%d\n",MynumberOfSetBits(i));
+	/*uint64_t i = 10;
+	printf("%d\n",MynumberOfSetBits(i));*/
 	
+	printf("%u\n",reverseBitsNoLoop(~0));
 	
 	return 0;
 }

@@ -1,7 +1,7 @@
 /*******************************************************************************
 				-Ws6
 				-Itai Marienberg
-				-Mon 13 Nov 2019 14:50:59    
+				-Mon 17 Nov 2019 14:50:59    
  				-Reviewer:
 *******************************************************************************/
 #include <stdlib.h>
@@ -106,6 +106,16 @@ unsigned int reverseBits(unsigned int num)
         }
     } 
     return reverse_num; 
+}
+/********** BYTE MIRROR no loop ***********************************************/
+unsigned int reverseBitsNoLoop(unsigned int num) 
+{ 
+ 	num = (((num & 0xaaaaaaaa) >> 1) | ((num & 0x55555555) << 1));
+ 	num = (((num & 0xcccccccc) >> 2) | ((num & 0x33333333) << 2));
+ 	num = (((num & 0xf0f0f0f0) >> 4) | ((num & 0x0f0f0f0f) << 4));
+ 	num = (((num & 0xff00ff00) >> 8) | ((num & 0x00ff00ff) << 8));
+ 	num = ((num >> 16) | (num << 16));
+    return num; 
 } 
 /********** 2 and 6 are 1 *****************************************************/
 unsigned int SecAndSix(unsigned int n)
@@ -208,13 +218,7 @@ int MynumberOfSetBits(uint64_t x)
 	/*x = (x & m32) + ((x >> 32) & m32);*/ 
 	return x;
 }
-
-
-
-
-
-
-
+/********** print float bits **************************************************/
 
 
 
