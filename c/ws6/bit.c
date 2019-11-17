@@ -6,6 +6,7 @@
 *******************************************************************************/
 #include <stdlib.h>
 #include <stdio.h>
+#include <inttypes.h>
 #include "bit.h"
 /********** x*(2^y) ***********************************************************/
 long Pow2(unsigned int x, unsigned int y)
@@ -49,14 +50,14 @@ int IsPow2NoLoop(unsigned int n)
 	return 0;
 }
 /********** add 1 *************************************************************/
-int Add1(int n)
+ int Add1(unsigned int n)
 {
 	return (-(~n)); /* can use abs() */ 
 } 
 
-int addOne(int x) 
+int addOne(unsigned int x) 
 { 
-    int m = 1;     
+    unsigned int m = 1;     
     /*Flip all the set bits  
     until we find a 0 */
        
@@ -85,7 +86,7 @@ void ThreeBits(unsigned int arr[])
           ++count;
         }
 
-        if ( 3 == count)
+        if ( THIRD_BIT == count)
         {
             printf("%d\n", remember);
         }
@@ -94,7 +95,7 @@ void ThreeBits(unsigned int arr[])
 /********** BYTE MIRROR *******************************************************/
 unsigned int reverseBits(unsigned int num) 
 { 
-    unsigned int NO_OF_BITS = sizeof(num) * 8; 
+    unsigned int NO_OF_BITS = sizeof(num) * BYTE; 
     unsigned int reverse_num = 0; 
   	unsigned int i = 0; 
     for (i = 0; i < NO_OF_BITS; i++) 
@@ -111,8 +112,8 @@ unsigned int SecAndSix(unsigned int n)
 {
     unsigned int sec = 0;
     unsigned int six = 0;
-    sec = ( n & 1 << 2);
-    six = ( n & 1 << 6);
+    sec = ( n & 1 << SEC);
+    six = ( n & 1 << SIX);
     return (68 - sec - six);
 }
 /********** 2 or 6 are 1 *****************************************************/
@@ -121,8 +122,8 @@ unsigned int SecOrSix(unsigned int n)
     unsigned int sec = 0;
     unsigned int six = 0;
     unsigned int result = 0;
-    sec = ( n & 1 << 2);
-    six = ( n & 1 << 6);
+    sec = ( n & 1 << SEC);
+    six = ( n & 1 << SIX);
     result = sec + six;
 
     switch(result)
@@ -140,14 +141,13 @@ unsigned int SecOrSix(unsigned int n)
     return 1;
 }
 /********** 3 and 5 swaps *****************************************************/
-
 unsigned int SwapBit(unsigned int n)
 {
-    unsigned int bit3 =  (n >> 3) & 1;
-    unsigned int bit5 =  (n >> 5) & 1;
+    unsigned int bit3 =  (n >> THIRD_BIT) & 1;
+    unsigned int bit5 =  (n >> FIVE_BIT) & 1;
     unsigned int x = (bit3 ^ bit5);
     unsigned int result = 0;
-    x = (x << 3) | (x << 5);
+    x = (x << THIRD_BIT) | (x << FIVE_BIT);
     result = n ^ x;
     return result;
 }
@@ -156,7 +156,7 @@ int SmallestDev(unsigned int n)
 {
 /* (~0) is the largest unsigned int,
 subtraction 15 (set zero at index 0,1,2,3)*/
-    return  n = n & ((~0)-15); 
+    return  n = n & ((~0) - ZERO_INDEX); 
 }
 /********** swap variables****************************************************/
 int SwapVar(int *x, int *y)
@@ -167,9 +167,9 @@ int SwapVar(int *x, int *y)
     return 0; 
 } 
 /********** set bits***************************************************/
-int SetBit(int n)
+int SetBit(unsigned int n)
 {
-	int count = 0;
+	unsigned int count = 0;
 	
  	while ( 0 != n)
  	{
@@ -183,18 +183,31 @@ int SetBit(int n)
     return count; 
 } 
 /********** set bits no loop **************************************************/
-int SetBitNoLoop(int n)
+int numberOfSetBits(unsigned int i)
 {
- 	n= (n & (~0));
-    return n; 
-} 
+     i = i - ((i >> 1) & 0x55555555);
+     i = (i & 0x33333333) + ((i >> 2) & 0x33333333);
+     return (((i + (i >> 4)) & 0x0F0F0F0F) * 0x01010101) >> 24;
+}
+/********** set bits no loop **************************************************/
+int MynumberOfSetBits(uint64_t x)
+{
+	const uint64_t m1  = 0x55555555; 
+	const uint64_t m2  = 0x33333333; 
+	const uint64_t m4  = 0x0f0f0f0f; 
+	const uint64_t m8  = 0x00ff00ff; 
+	const uint64_t m16 = 0x0000ffff; 
+	const uint64_t m32 = 0x0000ffff; 
+	const uint64_t h01 = 0x01010101;
 
-
-
-
-
-
-
+	x = (x & m1 ) + ((x >>  1) & m1 ); 
+	x = (x & m2 ) + ((x >>  2) & m2 ); 
+	x = (x & m4 ) + ((x >>  4) & m4 ); 
+	x = (x & m8 ) + ((x >>  8) & m8 ); 
+	x = (x & m16) + ((x >> 16) & m16);  
+	/*x = (x & m32) + ((x >> 32) & m32);*/ 
+	return x;
+}
 
 
 

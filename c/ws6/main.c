@@ -6,6 +6,7 @@
 *******************************************************************************/
 #include <stdio.h>
 #include <stdlib.h>
+#include <inttypes.h>
 #include "bit.h"
 
 
@@ -35,9 +36,11 @@ int main()
 	
 	/*printf("%d\n",SetBit(0));*/
 	
-	unsigned int x = ~0;
-	printf("%u\n",reverseBits(x));
+	/*unsigned int x = ~0;
+	printf("%u\n",reverseBits(x));*/
 	
+	uint64_t i = 10;
+	printf("%d\n",MynumberOfSetBits(i));
 	
 	
 	return 0;
