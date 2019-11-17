@@ -8,6 +8,8 @@
 #include <stdlib.h>
 #include "bit.h"
 
+
+
 int main()
 {
    /* ***unsigned int x[ARR_SIZE] = {14, 0, 67, 14, 7};
@@ -31,7 +33,12 @@ int main()
 	SwapVar(&x, &y);
 	printf("After Swapping: x = %d, y = %d\n", x, y); ******/ 
 	
-	printf("%d\n",SetBit(0));
+	/*printf("%d\n",SetBit(0));*/
+	
+	unsigned int x = ~0;
+	printf("%u\n",reverseBits(x));
+	
+	
 	
 	return 0;
 }

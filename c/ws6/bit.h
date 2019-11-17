@@ -18,6 +18,7 @@ int IsPow2NoLoop(unsigned int n);
 int Add1(int n);
 int addOne(int x);
 void ThreeBits(unsigned int arr[]);
+unsigned int reverseBits(unsigned int num);
 unsigned int SecAndSix(unsigned int n);
 unsigned int SecOrSix(unsigned int n);
 unsigned int SwapBit(unsigned int n);

@@ -92,12 +92,20 @@ void ThreeBits(unsigned int arr[])
     }
 }
 /********** BYTE MIRROR *******************************************************/
-int (unsigned int n)
-{
-	
-	return;
+unsigned int reverseBits(unsigned int num) 
+{ 
+    unsigned int NO_OF_BITS = sizeof(num) * 8; 
+    unsigned int reverse_num = 0; 
+  	unsigned int i = 0; 
+    for (i = 0; i < NO_OF_BITS; i++) 
+    { 
+        if (0 != (num & (1 << i))) 
+        {
+           reverse_num = reverse_num | (1 << ((NO_OF_BITS - 1) - i));  
+        }
+    } 
+    return reverse_num; 
 } 
-
 /********** 2 and 6 are 1 *****************************************************/
 unsigned int SecAndSix(unsigned int n)
 {
@@ -105,7 +113,7 @@ unsigned int SecAndSix(unsigned int n)
     unsigned int six = 0;
     sec = ( n & 1 << 2);
     six = ( n & 1 << 6);
-    return (68 -sec - six);
+    return (68 - sec - six);
 }
 /********** 2 or 6 are 1 *****************************************************/
 unsigned int SecOrSix(unsigned int n)
@@ -146,7 +154,8 @@ unsigned int SwapBit(unsigned int n)
 /********** 16 no remainder ***************************************************/
 int SmallestDev(unsigned int n)
 {
-/* (~0) is the largest unsigned int,subtraction 15 (set zero at index 0,1,2,3)*/
+/* (~0) is the largest unsigned int,
+subtraction 15 (set zero at index 0,1,2,3)*/
     return  n = n & ((~0)-15); 
 }
 /********** swap variables****************************************************/
@@ -176,8 +185,8 @@ int SetBit(int n)
 /********** set bits no loop **************************************************/
 int SetBitNoLoop(int n)
 {
- 	n= (n & (~0))
-    return count; 
+ 	n= (n & (~0));
+    return n; 
 } 
 
 
