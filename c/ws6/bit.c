@@ -8,6 +8,9 @@
 #include <stdio.h>
 #include <inttypes.h>
 #include "bit.h"
+
+
+
 /********** x*(2^y) ***********************************************************/
 long Pow2(unsigned int x, unsigned int y)
 {
@@ -219,6 +222,31 @@ int MynumberOfSetBits(uint64_t x)
 	return x;
 }
 /********** print float bits **************************************************/
+void printBinary(int n, int i) 
+{ 
+    int k; 
+    for (k = i - 1; k >= 0; k--)
+    { 
+        if ((n >> k) & 1) 
+        {
+            printf("1"); 
+        }
+        else
+        {
+            printf("0");
+        } 
+    } 
+} 
+
+void printIEEE(myfloat var) 
+{ 
+    printf("%d | ", var.raw.sign); 
+    printBinary(var.raw.exponent, 8); 
+    printf(" | "); 
+    printBinary(var.raw.mantissa, 23); 
+    printf("\n"); 
+} 
+  
 
 
 

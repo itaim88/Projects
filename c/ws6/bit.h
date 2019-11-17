@@ -4,7 +4,6 @@
 				-Mon 17 Nov 2019 14:50:59    
  				-Reviewer:
 *******************************************************************************/
-
 #ifndef __BIT_H__
 #define __BIT_H__
 
@@ -18,6 +17,19 @@
 #define THIRD_BIT 3
 #define ZERO_INDEX 15
 
+typedef union 
+{ 
+
+    float f; 
+    struct
+    {  
+        unsigned int mantissa : 23; 
+        unsigned int exponent : 8; 
+        unsigned int sign : 1; 
+  
+    } raw;
+
+} myfloat; 
 
 long Pow2(unsigned int x, unsigned int y);
 int IsPow2(unsigned int n);
@@ -36,6 +48,7 @@ int SetBit(unsigned int n);
 int SetBitNoLoop(unsigned int n);
 int numberOfSetBits(unsigned int i);
 int MynumberOfSetBits(uint64_t x);
-
+void printBinary(int n, int i);
+void printIEEE(myfloat var);
 
 #endif

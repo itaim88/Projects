@@ -9,8 +9,6 @@
 #include <inttypes.h>
 #include "bit.h"
 
-
-
 int main()
 {
    /* ***unsigned int x[ARR_SIZE] = {14, 0, 67, 14, 7};
@@ -36,13 +34,19 @@ int main()
 	
 	/*printf("%d\n",SetBit(0));*/
 	
-	unsigned int x = 38;
-	printf("%u\n",reverseBits(x));
+	/*unsigned int x = 38;
+	printf("%u\n",reverseBits(x));*/
 	
 	/*uint64_t i = 10;
 	printf("%d\n",MynumberOfSetBits(i));*/
 	
-	printf("%u\n",reverseBitsNoLoop(~0));
+	/*printf("%u\n",reverseBitsNoLoop(~0));*/
+	
+	  
+    myfloat var; 
+    var.f = -2.25; 
+    printf("IEEE 754 representation of %f is : \n", var.f); 
+    printIEEE(var);
 	
 	return 0;
 }
