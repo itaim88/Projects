@@ -19,7 +19,6 @@
 #define ZERO_INDEX 15
 #define INT_SIZE 32
 
-
 long Pow2(unsigned int x, unsigned int y);
 int IsPow2(unsigned int n);
 int IsPow2NoLoop(unsigned int n);
@@ -36,7 +35,7 @@ int SwapVar(int *x, int *y);
 int SetBit(unsigned int n);
 int SetBitNoLoop(unsigned int n);
 int numberOfSetBits(unsigned int i);
-int MynumberOfSetBits(uint64_t x);
+int MynumberOfSetBits(unsigned int x);
 /*void printBinary(int n, int i);*/
 /*void printIEEE(myfloat var);*/
 void FloatBinary(float f);

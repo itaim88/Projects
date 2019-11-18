@@ -43,6 +43,11 @@ int IsPow2(unsigned int n)
 /********** no loop ***********************************************************/
 int IsPow2NoLoop(unsigned int n)
 {
+	if ( 0 == n )
+	{
+		return 0;
+	}
+	
     while (0 == n % 2)
     {
         n = n >> 1;
@@ -118,11 +123,11 @@ unsigned int reverseBits(unsigned int num)
 /********** BYTE MIRROR no loop ***********************************************/
 unsigned int reverseBitsNoLoop(unsigned int num) 
 { 
- 	num = (((num & 0xaaaaaaaa) >> 1) | ((num & 0x55555555) << 1));
- 	num = (((num & 0xcccccccc) >> 2) | ((num & 0x33333333) << 2));
- 	num = (((num & 0xf0f0f0f0) >> 4) | ((num & 0x0f0f0f0f) << 4));
- 	num = (((num & 0xff00ff00) >> 8) | ((num & 0x00ff00ff) << 8));
- 	num = ((num >> 16) | (num << 16));
+	num = (((num & 0xaaaaaaaa) >> 1) | ((num & 0x55555555) << 1));
+	num = (((num & 0xcccccccc) >> 2) | ((num & 0x33333333) << 2));
+	num = (((num & 0xf0f0f0f0) >> 4) | ((num & 0x0f0f0f0f) << 4));
+	num = (((num & 0xff00ff00) >> 8) | ((num & 0x00ff00ff) << 8));
+	num = ((num >> 16) | (num << 16));
     return num; 
 } 
 /********** 2 and 6 are 1 *****************************************************/
@@ -194,22 +199,14 @@ int numberOfSetBits(unsigned int i)
      return (((i + (i >> 4)) & 0x0F0F0F0F) * 0x01010101) >> 24;
 }
 /********** set bits no loop **************************************************/
-int MynumberOfSetBits(uint64_t x)
+int MynumberOfSetBits(unsigned int x)
 {
-	const uint64_t m1  = 0x55555555; 
-	const uint64_t m2  = 0x33333333; 
-	const uint64_t m4  = 0x0f0f0f0f; 
-	const uint64_t m8  = 0x00ff00ff; 
-	const uint64_t m16 = 0x0000ffff; 
-	const uint64_t m32 = 0x0000ffff; 
-	const uint64_t h01 = 0x01010101;
-
-	x = (x & m1 ) + ((x >>  1) & m1 ); 
-	x = (x & m2 ) + ((x >>  2) & m2 ); 
-	x = (x & m4 ) + ((x >>  4) & m4 ); 
-	x = (x & m8 ) + ((x >>  8) & m8 ); 
-	x = (x & m16) + ((x >> 16) & m16);  
-	/*x = (x & m32) + ((x >> 32) & m32);*/ 
+	x = (x & 0x55555555 ) + ((x >> 1) & 0x55555555 ); 
+	x = (x & 0x33333333 ) + ((x >> 2) & 0x33333333 ); 
+	x = (x & 0x0f0f0f0f ) + ((x >> 4) & 0x0f0f0f0f ); 
+	x = (x & 0x00ff00ff ) + ((x >> 8) & 0x00ff00ff ); 
+	x = (x & 0x0000ffff) + ((x >> 16) & 0x0000ffff);  
+	
 	return x;
 }
 /********** print float bits **************************************************/
