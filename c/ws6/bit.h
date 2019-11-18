@@ -11,25 +11,14 @@
 #include <stdlib.h>
 #define ARR_SIZE 5
 #define BYTE 8
-#define SEC 2
-#define SIX 6
-#define FIVE_BIT 5
-#define THIRD_BIT 3
+#define SEC 1
+#define SIX 5
+#define SEC_SIX 34
+#define FIVE_BIT 4
+#define THIRD_BIT 2
 #define ZERO_INDEX 15
+#define INT_SIZE 32
 
-typedef union 
-{ 
-
-    float f; 
-    struct
-    {  
-        unsigned int mantissa : 23; 
-        unsigned int exponent : 8; 
-        unsigned int sign : 1; 
-  
-    } raw;
-
-} myfloat; 
 
 long Pow2(unsigned int x, unsigned int y);
 int IsPow2(unsigned int n);
@@ -48,7 +37,9 @@ int SetBit(unsigned int n);
 int SetBitNoLoop(unsigned int n);
 int numberOfSetBits(unsigned int i);
 int MynumberOfSetBits(uint64_t x);
-void printBinary(int n, int i);
-void printIEEE(myfloat var);
+/*void printBinary(int n, int i);*/
+/*void printIEEE(myfloat var);*/
+void FloatBinary(float f);
+void PrintBinary(unsigned int n);
 
 #endif
