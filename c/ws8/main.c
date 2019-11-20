@@ -1,7 +1,11 @@
-#include <stdio.h>
-#include <string.h>
-#include "myprogram.h"
+/*******************************************************************************
+-Ws8
+-Itai Marienberg
+-Mon 20 Nov 2019 14:50:59    
+ -Reviewer:
+*******************************************************************************/
 
+#include "myprogram.h"
 
 int main()
 {

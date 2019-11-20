@@ -1,13 +1,13 @@
-
-
-#include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
-#include <assert.h>
+/*******************************************************************************
+-Ws8
+-Itai Marienberg
+-Mon 20 Nov 2019 14:50:59    
+ -Reviewer:
+*******************************************************************************/
 #include "myprogram.h"
 
-/***********************************/
-void StructArrInt(addprint arr[])
+/******************************************************************************/
+int StructArrInt(addprint arr[])
 {
 	arr[0].print = &PrintInt;
 	*(int*)(&arr[0].data) = 10;
@@ -19,12 +19,18 @@ void StructArrInt(addprint arr[])
 	arr[1].add = &AddFloat;
 	arr[1].clean =&NoNeedCleaner;
 	
-	arr[2].data = malloc(6);
+	arr[2].data = malloc(STRING_LENGTH);
+	if (NULL == arr[2].data)
+	{
+		printf("Error - fail to allocate memory");
+		return 0;
+	}
 	strcpy(arr[2].data, "Hello");
 	arr[2].print = &PrintString;
 	arr[2].add = &AddString;
 	arr[2].clean = &Cleaner;
 	
+	return 0;
 }
 /*****************************************************************************/
 int Initialize(addprint arr[])
@@ -36,29 +42,40 @@ int Initialize(addprint arr[])
 		arr[i].print(arr[i].data);
 		arr[i].add(&arr[i].data);
 		arr[i].print(arr[i].data);
+		arr[i].clean(arr[i].data);
 	}
+	
 	return 0;
 }
 /*****************************************************************************/
 int AddInt(void *data)
 {
+	assert (NULL != data);
+	
 	*(int*)(data) = NUMBER_TO_ADD + (*(int*)(data));
+	
 	return 0;
 }
 /*****************************************************************************/
 int AddFloat(void *data)
 {
+	assert (NULL != data);
 	*(float*)(data) = NUMBER_TO_ADD + (*(float*)(data));
+	
 	return 0;
 }
 /*****************************************************************************/
 int AddString(void *data)
 {	
+	
 	char buffer[BUFFER];
 	int count = 0;
 	int length = 0;
 	int n = NUMBER_TO_ADD;
 	int x = n;
+	
+	assert (NULL != data);
+	
 	length = strlen(*(char**)data);
 	
 	while( 0 != x)
@@ -68,6 +85,12 @@ int AddString(void *data)
 	}
 	
 	*(char**)data = realloc(*(char**)data, length + 1 + count);
+	if (NULL == *(char**)data)
+	{
+		printf("Error - fail to allocate memory");
+		
+		return 0;
+	}
 	sprintf(buffer,"%d", n);
 	strcat(*(char**)data, buffer);
 
@@ -77,31 +100,44 @@ int AddString(void *data)
 
 int PrintInt(const void *data)
 {
-	printf("int value is %d\n",*(int*)(&data));   
+	assert (NULL != data);
+	
+	printf("int value is %d\n",*(int*)(&data));
+	   
 	return 0;
 }
 /*****************************************************************************/
 int PrintFloat(const void *data)
 {
-	printf("float value is %f\n",*(float*)(&data)); 
+	assert (NULL != data);
+	
+	printf("float value is %f\n",*(float*)(&data));
+	 
 	return 0;
 }
 /*****************************************************************************/
 int PrintString(const void *data)
 {
+	assert (NULL != data);
+	
 	printf("%s\n",(char*)(data)); 
+	
 	return 0;
 }
 /*****************************************************************************/
 int Cleaner(void *data)
 {
-	free(data); 
-	data = NULL;
+	assert (NULL != data);
+	
+	free(data); data = NULL;
+	
 	return 0;
 }
 /*****************************************************************************/
 int NoNeedCleaner(void *data)
 {
+	assert (NULL != data);
+	
 	return 0;
 }
 
