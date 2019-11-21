@@ -27,14 +27,21 @@ typedef struct basic
 
 }addprint;
 
-int StructArrInt(addprint arr[]);
+/******** Initialize******/
 int Initialize(addprint arr[]);
+int RunProgram(addprint arr[]);
+
+/******** print***********/
 int PrintInt(const void *data);
-int AddInt(void *data);
 int PrintFloat(const void *data);
-int AddFloat(void *data);
 int PrintString(const void *data);
+
+/********add*************/
+int AddInt(void *data);
+int AddFloat(void *data);
 int AddString(void *data);
+
+/********clean***********/
 int Cleaner(void *data);
 int NoNeedCleaner(void *data);
 

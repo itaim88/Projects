@@ -7,7 +7,7 @@
 #include "myprogram.h"
 
 /******************************************************************************/
-int StructArrInt(addprint arr[])
+int Initialize(addprint arr[])
 {
 	arr[0].print = &PrintInt;
 	*(int*)(&arr[0].data) = 10;
@@ -33,7 +33,7 @@ int StructArrInt(addprint arr[])
 	return 0;
 }
 /*****************************************************************************/
-int Initialize(addprint arr[])
+int RunProgram(addprint arr[])
 {
 	int i = 0;
 	
@@ -52,7 +52,7 @@ int AddInt(void *data)
 {
 	assert (NULL != data);
 	
-	*(int*)(data) = NUMBER_TO_ADD + (*(int*)(data));
+	*(int*)(data) += NUMBER_TO_ADD;
 	
 	return 0;
 }
@@ -60,19 +60,17 @@ int AddInt(void *data)
 int AddFloat(void *data)
 {
 	assert (NULL != data);
-	*(float*)(data) = NUMBER_TO_ADD + (*(float*)(data));
+	*(float*)(data) += NUMBER_TO_ADD;
 	
 	return 0;
 }
 /*****************************************************************************/
 int AddString(void *data)
-{	
-	
+{		
 	char buffer[BUFFER];
 	int count = 0;
 	int length = 0;
-	int n = NUMBER_TO_ADD;
-	int x = n;
+	int x = NUMBER_TO_ADD;
 	
 	assert (NULL != data);
 	
@@ -91,16 +89,15 @@ int AddString(void *data)
 		
 		return 0;
 	}
-	sprintf(buffer,"%d", n);
+	sprintf(buffer,"%d", NUMBER_TO_ADD);
 	strcat(*(char**)data, buffer);
 
 	return 0;
 } 
 /*****************************************************************************/
-
 int PrintInt(const void *data)
 {
-	assert (NULL != data);
+	assert (NULL != (int*)(&data));
 	
 	printf("int value is %d\n",*(int*)(&data));
 	   
@@ -109,7 +106,7 @@ int PrintInt(const void *data)
 /*****************************************************************************/
 int PrintFloat(const void *data)
 {
-	assert (NULL != data);
+	assert (NULL != (float*)(&data));
 	
 	printf("float value is %f\n",*(float*)(&data));
 	 
@@ -118,7 +115,7 @@ int PrintFloat(const void *data)
 /*****************************************************************************/
 int PrintString(const void *data)
 {
-	assert (NULL != data);
+	assert (NULL != (int*)(&data));
 	
 	printf("%s\n",(char*)(data)); 
 	
@@ -127,7 +124,7 @@ int PrintString(const void *data)
 /*****************************************************************************/
 int Cleaner(void *data)
 {
-	assert (NULL != data);
+	assert (NULL != (int*)(&data));
 	
 	free(data); data = NULL;
 	
@@ -136,7 +133,7 @@ int Cleaner(void *data)
 /*****************************************************************************/
 int NoNeedCleaner(void *data)
 {
-	assert (NULL != data);
+	assert (NULL != (int*)(&data));
 	
 	return 0;
 }

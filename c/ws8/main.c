@@ -9,9 +9,22 @@
 
 int main()
 {
+	int Succes = 0;
+	
 	addprint arr[NUM_ELEMENTS];
-	StructArrInt(arr);
-	Initialize(arr);
+	Succes = Initialize(arr);
+	if ( 0 != Succes)
+	{
+		printf("Fail to Initialize");
+		return 1; 
+	}
+	
+	Succes = RunProgram(arr);
+	if ( 0 != Succes)
+	{
+		printf("Fail to Initialize");
+		return 1; 
+	}
 	
 	return 0;
 }
