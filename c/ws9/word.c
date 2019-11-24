@@ -1,15 +1,10 @@
 /*******************************************************************************
 -Ws9
 -Itai Marienberg
--Mon 20 Nov 2019 14:50:59    
- -Reviewer:
+-Mon 24 Nov 2019 14:50:59    
+ -Reviewer: Yonatan
 *******************************************************************************/
 #include "word.h"
-
-
-#include <stdlib.h>
-
-
 
 size_t CharOfWord(char c)
 {
@@ -51,7 +46,7 @@ size_t CharOfWord(char c)
 
 	assert(NULL != str);
 
-	while ( 0 != (address % WORD))
+	while ((0 != (address % WORD))&& ( 0 < n))
 	{
 		*runner = (char)c;
 		++runner;
@@ -87,7 +82,7 @@ void *Mymemcpy(void *destanation, const void *source, size_t n)
     assert(NULL != destanation);
     assert(NULL != source);
 
-    while (0 != (destanation_address % WORD))
+    while ((0 != (destanation_address % WORD)) && ( 0 < n))
     {
         *destanation_runner = *source_runner;
         ++destanation_runner;
@@ -98,7 +93,7 @@ void *Mymemcpy(void *destanation, const void *source, size_t n)
 
     while (WORD <= n)
     {
-        str_word = StringOfWord(source_runner);
+    	str_word = StringOfWord(source_runner);
         *(size_t*)destanation_runner = str_word;
         n -= WORD;
 		destanation_runner += WORD;
@@ -169,12 +164,16 @@ int Myatoi(const char *str)
 
 /*******atoi evry BASE ********************************************************/
 
-int AtoZ(char c) 
+int AtoiAscii(char c) 
 { 
-    if (c >= '0' && c <= '9') 
-        return (int)c - '0'; 
+    if ('0' <= c && '9' >= c) 
+    {
+        return ((int)c - '0'); 
+    }
     else
-        return (int)c - 'A' + 10; 
+    {
+        return ((int)c - 'A' + 10);
+    } 
 } 
 
 int MyatoiBase(char *str, int base) 
@@ -186,13 +185,13 @@ int MyatoiBase(char *str, int base)
   
     for (i = (len - 1); 0 <= i; --i) 
     { 
-        if (AtoZ(str[i]) >= base) 
+        if (AtoiAscii(str[i]) >= base) 
         { 
         	printf("Invalid Number\n"); 
             return -1; 
         } 
   
-    	num += AtoZ(str[i]) * power; 
+    	num += AtoiAscii(str[i]) * power; 
         power *= base; 
     } 
   
@@ -212,7 +211,7 @@ char* Myitoa(int i,char buffer[],int base)
         i *= -1;
         shifter = i;
     }
-
+    
     do
     { 
         ++runner;
@@ -260,6 +259,10 @@ void TwoGoodToBeThree(char *a, char *b, char *c)
 	for (i = 0; 3 > i; ++i)
 	{
     	abc[i] = (char *)calloc(128, 1);
+    	if (NULL == abc[i])
+		{
+			printf("Error - fail to allocate memory");
+		}
 	}
 
 	while (('\0' != *a) || ('\0' != *b) || ('\0' != *c))

@@ -1,8 +1,8 @@
 /*******************************************************************************
 -Ws9
 -Itai Marienberg
--Mon 20 Nov 2019 14:50:59    
- -Reviewer:
+-Mon 24 Nov 2019 14:50:59    
+ -Reviewer:Yonatan
 *******************************************************************************/
 #ifndef __WORD_H__
 #define __WORD_H__
@@ -26,8 +26,8 @@ void *Mymemcpy(void *destanation, const void *source, size_t n);
 void *Mymemmove(void *destanation, const void *source, size_t n);
 
 int Myatoi(const char *str);
-char* Myitoa(int i, char buffer[],int base);
-int AtoZ(char c);
+char* Myitoa(int i, char buffer[], int base);
+int AtoiAscii(char c);
 int MyatoiBase(char *str, int base);
 int LittleOrBigEndian();
 void TwoGoodToBeThree(char *a, char *b, char *c);

@@ -1,16 +1,14 @@
 /*******************************************************************************
 -Ws9
 -Itai Marienberg
--Mon 20 Nov 2019 14:50:59    
- -Reviewer:
+-Mon 24 Nov 2019 14:50:59    
+ -Reviewer: Yonatan
 *******************************************************************************/
 
 #include "word.h"
 
-
 int main()
 {
-	
 	int c = '7';
 	size_t n = 11;
 	char destanation[50] = {"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"};
@@ -28,12 +26,10 @@ int main()
  	char *dest = sorce;
     
 	char *dest_new = (char *) malloc(sizeof(char)*100);
-	char newsrc[] = "this is my string";
-	strcpy(dest_new,newsrc);
-	Mymemset(dest_new,c,n);
+	strcpy(dest_new,"this is my string");
+	Mymemset(dest_new+1, c, n);
 	puts(dest_new);
 	free(dest_new);
-	
 	
 	Mymemcpy(destanation,src,12);
 	puts(destanation);
@@ -43,22 +39,18 @@ int main()
 	printf("Myatoi %d\n",MyatoiBase(test,base));
 
   
-    printf("int to string %s\n",Myitoa(i,buffer,base));
+    printf("int to string %s\n",Myitoa(i, buffer, base));
     
     Mymemmove((abc +2), abc, 4);
     puts(destanation);
 
     IS_LITTLE_ENDIEN(a); 
    
-
-	
-	
 	dest = dest + 2;
 	Mymemmove (dest, sorce, 3);
 	puts (dest);
   
-
-	TwoGoodToBeThree(A,B,C);
+	TwoGoodToBeThree(A, B, C);
 	
   return 0;
 }
