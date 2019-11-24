@@ -9,7 +9,7 @@
 
 int main()
 {
-	char str[50] = "this is my string";
+	
 	int c = '7';
 	size_t n = 11;
 	char destanation[50] = {"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"};
@@ -18,11 +18,18 @@ int main()
     char deci[20] = "10";
     int i = 34510;
     char buffer[20] = "0";
-    char test[20] = "AA";
+    char test[20] = "AB";
     int a = 1;
-
-	Mymemset(str,c,n);
-	puts(str);
+    
+    /********/
+    
+	char *dest = (char *) malloc(sizeof(char)*100);
+	char newsrc[] = "this is my string";
+	strcpy(dest,newsrc);
+	Mymemset(dest,c,n);
+	puts(dest);
+	free(dest);
+	/*********/
 	
 	Mymemcpy(destanation,src,12);
 	puts(destanation);

@@ -157,9 +157,8 @@ int MyatoiBase(char *str, int base)
     int num = 0;   
     int i = 0; 
   
-    for (i = (len - 1); i >= 0; --i) 
+    for (i = (len - 1); 0 <= i; --i) 
     { 
-
         if (val(str[i]) >= base) 
         { 
         	printf("Invalid Number\n"); 
@@ -167,7 +166,7 @@ int MyatoiBase(char *str, int base)
         } 
   
     	num += val(str[i]) * power; 
-        power = power * base; 
+        power *= base; 
     } 
   
     return num; 
