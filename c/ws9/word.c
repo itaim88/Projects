@@ -118,6 +118,37 @@ void *Mymemcpy(void *destanation, const void *source, size_t n)
     }
     return destanation;
 }
+/***************************************************************************/
+void *Mymemmove(void *destanation, const void *source, size_t n)
+{
+    char *runner_dest = (char *) destanation;
+    char *runner_src = (char *) source;
+    
+    /*assert(NULL != destanation);
+    assert(NULL != source);*/
+    
+    if ((size_t)runner_dest < (n + (size_t)runner_src)) 
+    {
+    	runner_dest += n - 1;
+		runner_src += n - 1 ;
+    	while ( 0 < n)
+    	{
+		
+		*runner_dest =  *runner_src;
+		--runner_dest;
+		--runner_src;
+		--n;
+		}
+	}
+    
+  else
+    {
+      Mymemcpy(destanation, source, n);
+    }
+
+  return destanation;
+}
+
 
 /*******atoi *****************************************************************/
 int Myatoi(const char *str)
@@ -142,7 +173,7 @@ int Myatoi(const char *str)
 
 /*******atoi BASE *****************************************************************/
 
-int val(char c) 
+int AtoZ(char c) 
 { 
     if (c >= '0' && c <= '9') 
         return (int)c - '0'; 
@@ -159,13 +190,13 @@ int MyatoiBase(char *str, int base)
   
     for (i = (len - 1); 0 <= i; --i) 
     { 
-        if (val(str[i]) >= base) 
+        if (AtoZ(str[i]) >= base) 
         { 
         	printf("Invalid Number\n"); 
             return -1; 
         } 
   
-    	num += val(str[i]) * power; 
+    	num += AtoZ(str[i]) * power; 
         power *= base; 
     } 
   

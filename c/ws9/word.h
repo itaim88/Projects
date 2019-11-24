@@ -12,7 +12,7 @@
 #include <assert.h> /* assert pointers to NULL */
 #include <string.h>
 #include <stdlib.h>
-#include <math.h>
+
 
 #define WORD 8
 #define BYTE 8
@@ -25,10 +25,11 @@ size_t CharOfWord(char c);
 void *Mymemset(void *str, int c, size_t n);
 size_t StringOfWord(char *src);
 void *Mymemcpy(void *destanation, const void *source, size_t n);
+void *Mymemmove(void *destanation, const void *source, size_t n);
 
 int Myatoi(const char *str);
 char* Myitoa(int i, char buffer[],int base);
-int val(char c);
+int AtoZ(char c);
 int MyatoiBase(char *str, int base);
 int LittleOrBigEndian();
 

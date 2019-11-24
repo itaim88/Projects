@@ -10,7 +10,7 @@
 int main()
 {
 	
-	int c = '7';
+	/*int c = '7';
 	size_t n = 11;
 	char destanation[50] = {"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"};
     char src[20] = {"123456789YES"};
@@ -20,18 +20,19 @@ int main()
     char buffer[20] = "0";
     char test[20] = "AB";
     int a = 1;
+    char abc[50] = {"abcdef"};
     
     /********/
     
-	char *dest = (char *) malloc(sizeof(char)*100);
+	/*char *dest = (char *) malloc(sizeof(char)*100);
 	char newsrc[] = "this is my string";
 	strcpy(dest,newsrc);
 	Mymemset(dest,c,n);
 	puts(dest);
-	free(dest);
+	free(dest);*/
 	/*********/
 	
-	Mymemcpy(destanation,src,12);
+	/*Mymemcpy(destanation,src,12);
 	puts(destanation);
 	
 	LittleOrBigEndian();
@@ -41,8 +42,20 @@ int main()
   
     printf("int to string %s\n",Myitoa(i,buffer,base));
     
+    Mymemmove((abc +2), abc, 4);
+    puts(destanation);
 
-    IS_LITTLE_ENDIEN(a);
+    IS_LITTLE_ENDIEN(a); */
    
-	return 0;
+
+  char src[50] = "abcdef";
+  char *dest = src;
+  dest = dest + 2;
+  Mymemmove (dest, src, 3);
+  puts (dest);
+
+  return 0;
 }
+
+   
+
