@@ -10,9 +10,7 @@
 #include <stdio.h>	/* printf */
 #include <string.h>	/* strlen */
 #include <assert.h> /* assert pointers to NULL */
-#include <string.h>
-#include <stdlib.h>
-
+#include <stdlib.h> /* malloc */
 
 #define WORD 8
 #define BYTE 8
@@ -32,5 +30,6 @@ char* Myitoa(int i, char buffer[],int base);
 int AtoZ(char c);
 int MyatoiBase(char *str, int base);
 int LittleOrBigEndian();
+void TwoGoodToBeThree(char *a, char *b, char *c);
 
 #endif

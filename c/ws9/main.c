@@ -7,32 +7,35 @@
 
 #include "word.h"
 
+
 int main()
 {
 	
-	/*int c = '7';
+	int c = '7';
 	size_t n = 11;
 	char destanation[50] = {"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"};
     char src[20] = {"123456789YES"};
     int base = 16;
-    char deci[20] = "10";
     int i = 34510;
     char buffer[20] = "0";
     char test[20] = "AB";
     int a = 1;
     char abc[50] = {"abcdef"};
+    char *A = "98765{432";
+	char *B = "987{6";
+	char *C = "23";
+ 	char sorce[50] = "abcdef";
+ 	char *dest = sorce;
     
-    /********/
-    
-	/*char *dest = (char *) malloc(sizeof(char)*100);
+	char *dest_new = (char *) malloc(sizeof(char)*100);
 	char newsrc[] = "this is my string";
-	strcpy(dest,newsrc);
-	Mymemset(dest,c,n);
-	puts(dest);
-	free(dest);*/
-	/*********/
+	strcpy(dest_new,newsrc);
+	Mymemset(dest_new,c,n);
+	puts(dest_new);
+	free(dest_new);
 	
-	/*Mymemcpy(destanation,src,12);
+	
+	Mymemcpy(destanation,src,12);
 	puts(destanation);
 	
 	LittleOrBigEndian();
@@ -45,15 +48,18 @@ int main()
     Mymemmove((abc +2), abc, 4);
     puts(destanation);
 
-    IS_LITTLE_ENDIEN(a); */
+    IS_LITTLE_ENDIEN(a); 
    
 
-  char src[50] = "abcdef";
-  char *dest = src;
-  dest = dest + 2;
-  Mymemmove (dest, src, 3);
-  puts (dest);
+	
+	
+	dest = dest + 2;
+	Mymemmove (dest, sorce, 3);
+	puts (dest);
+  
 
+	TwoGoodToBeThree(A,B,C);
+	
   return 0;
 }
 

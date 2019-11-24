@@ -6,21 +6,17 @@
 *******************************************************************************/
 #include "word.h"
 
-#include <stdio.h>
-#include <string.h>
-#include <assert.h>
-#include <string.h>
+
 #include <stdlib.h>
 
-#define WORD 8
-#define BYTE 8
+
 
 size_t CharOfWord(char c)
 {
 	size_t char_word_maker = c;
 	int i = 0;
 
-	for ( ; WORD - 1 > i ; ++i)
+	for ( ; (WORD - 1) > i ; ++i)
 	{
 		char_word_maker <<= BYTE;
 		char_word_maker |= c;
@@ -45,7 +41,7 @@ size_t CharOfWord(char c)
 
 	return string_word_maker;
 }
-/***************************************************************************/
+/*********Mymemset************************************************************/
 
  void *Mymemset(void *str, int c, size_t n)
 {
@@ -80,7 +76,7 @@ size_t CharOfWord(char c)
 	return str;
 }
 
-/***************************************************************************/
+/**********Mymemcpy******************************************************/
 void *Mymemcpy(void *destanation, const void *source, size_t n)
 {
     size_t destanation_address = (size_t) destanation;
@@ -118,14 +114,14 @@ void *Mymemcpy(void *destanation, const void *source, size_t n)
     }
     return destanation;
 }
-/***************************************************************************/
+/*********Mymemmove********************************************************/
 void *Mymemmove(void *destanation, const void *source, size_t n)
 {
     char *runner_dest = (char *) destanation;
     char *runner_src = (char *) source;
     
-    /*assert(NULL != destanation);
-    assert(NULL != source);*/
+    assert(NULL != destanation);
+    assert(NULL != source);
     
     if ((size_t)runner_dest < (n + (size_t)runner_src)) 
     {
@@ -141,9 +137,9 @@ void *Mymemmove(void *destanation, const void *source, size_t n)
 		}
 	}
     
-  else
+	else
     {
-      Mymemcpy(destanation, source, n);
+    	Mymemcpy(destanation, source, n);
     }
 
   return destanation;
@@ -171,7 +167,7 @@ int Myatoi(const char *str)
     return (negitive * string_to_number);
 }
 
-/*******atoi BASE *****************************************************************/
+/*******atoi evry BASE ********************************************************/
 
 int AtoZ(char c) 
 { 
@@ -202,7 +198,7 @@ int MyatoiBase(char *str, int base)
   
     return num; 
 } 
-/***************************************************************************/
+/*********Myitoa************************************************************/
 char* Myitoa(int i,char buffer[],int base)
 {
     int shifter = i;
@@ -235,8 +231,7 @@ char* Myitoa(int i,char buffer[],int base)
     return buffer;
 }
 
-/***************************************************************************/   
-
+/********LittleOrBigEndian*****************************************************/   
 int LittleOrBigEndian()
 {
     unsigned int i = 1;
@@ -253,15 +248,48 @@ int LittleOrBigEndian()
     return 0;
 }
 
+/*****3 arrays*************************************************************/   
 
+void TwoGoodToBeThree(char *a, char *b, char *c)
+{
+	char **abc = NULL;
+	int i = 0;
 
+	abc = (char**)calloc(3,1);
+	
+	for (i = 0; 3 > i; ++i)
+	{
+    	abc[i] = (char *)calloc(128, 1);
+	}
 
+	while (('\0' != *a) || ('\0' != *b) || ('\0' != *c))
+	{
+		++abc[0][(int)*a];
+		++abc[1][(int)*b];
+		++abc[2][(int)*c];
+		if ('\0' != *a)
+		{
+			++a;
+		}
+		if ('\0' != *b)
+		{
+			++b;
+		}
+		if ('\0' != *c)
+		{
+			++c;
+		} 
+	}
 
-
-
-
-
-
+	for (i = 0 ; 128 > i ; ++i)
+	{
+		if ((abc[0][i]  > 0) && ((abc[1][i]) > 0) && ((abc[2][i] == 0)))
+		{
+			printf("%c\n",i);
+		}
+	}
+	free(abc);
+}
 
 
 
