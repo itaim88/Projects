@@ -6,6 +6,7 @@
 *******************************************************************************/
 #include "word.h"
 
+/*******make a word of charecter***********************************************/
 size_t CharOfWord(char c)
 {
 	size_t char_word_maker = c;
@@ -19,26 +20,24 @@ size_t CharOfWord(char c)
 
 	return char_word_maker;
 }
-/***************************************************************************/
-
- size_t StringOfWord(char *src)
+/**********make a word from string*********************************************/
+size_t StringOfWord(char *src)
 {
     int i = 0;
 	size_t string_word_maker = *(src + BYTE - 1);
     char *runner = (src + BYTE - 1);
-
+    
 	for ( ; (WORD - 1) > i ; ++i)
 	{
         string_word_maker <<= BYTE;
-        string_word_maker |= *(runner-1);
+        string_word_maker |= *(runner - 1);
         --runner;
 	}
 
 	return string_word_maker;
 }
 /*********Mymemset************************************************************/
-
- void *Mymemset(void *str, int c, size_t n)
+void *Mymemset(void *str, int c, size_t n)
 {
 	size_t address = (size_t) str;
 	char *runner = (char *)str;
@@ -122,13 +121,13 @@ void *Mymemmove(void *destanation, const void *source, size_t n)
     {
     	runner_dest += n - 1;
 		runner_src += n - 1 ;
+	
     	while ( 0 < n)
     	{
-		
-		*runner_dest =  *runner_src;
-		--runner_dest;
-		--runner_src;
-		--n;
+			*runner_dest =  *runner_src;
+			--runner_dest;
+			--runner_src;
+			--n;
 		}
 	}
     
@@ -139,8 +138,6 @@ void *Mymemmove(void *destanation, const void *source, size_t n)
 
   return destanation;
 }
-
-
 /*******atoi *****************************************************************/
 int Myatoi(const char *str)
 {
@@ -170,6 +167,7 @@ int AtoiAscii(char c)
     {
         return ((int)c - '0'); 
     }
+    
     else
     {
         return ((int)c - 'A' + 10);
@@ -204,7 +202,7 @@ char* Myitoa(int i,char buffer[],int base)
     char *runner = buffer;
     int right_digit = 0;
     
-    if(0 > i)
+    if (0 > i)
     {
         *runner = '-';
         ++runner;
@@ -235,10 +233,12 @@ int LittleOrBigEndian()
 {
     unsigned int i = 1;
     char *c = (char*)(&i);
+    
     if (1 == *c)
     {
       printf("Little endian\n");
     }
+    
     else
     {
       printf("Big endian\n");
@@ -256,6 +256,11 @@ void TwoGoodToBeThree(char *a, char *b, char *c)
 
 	abc = (char**)calloc(3,1);
 	
+	if (NULL == abc)
+		{
+			printf("Error - fail to allocate memory");
+		}
+		
 	for (i = 0; 3 > i; ++i)
 	{
     	abc[i] = (char *)calloc(128, 1);
@@ -270,14 +275,17 @@ void TwoGoodToBeThree(char *a, char *b, char *c)
 		++abc[0][(int)*a];
 		++abc[1][(int)*b];
 		++abc[2][(int)*c];
+		
 		if ('\0' != *a)
 		{
 			++a;
 		}
+		
 		if ('\0' != *b)
 		{
 			++b;
 		}
+		
 		if ('\0' != *c)
 		{
 			++c;

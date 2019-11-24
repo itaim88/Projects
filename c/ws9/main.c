@@ -39,16 +39,15 @@ int main()
 	printf("Myatoi %d\n",MyatoiBase(test,base));
 
   
-    printf("int to string %s\n",Myitoa(i, buffer, base));
+    printf("int to string %s\n",(Myitoa(i, buffer, base)));
     
-    Mymemmove((abc +2), abc, 4);
-    puts(destanation);
+    printf("%s\n",(char *)Mymemmove((abc +2), abc, 4));
 
     IS_LITTLE_ENDIEN(a); 
    
 	dest = dest + 2;
 	Mymemmove (dest, sorce, 3);
-	puts (dest);
+	puts(dest);
   
 	TwoGoodToBeThree(A, B, C);
 	
