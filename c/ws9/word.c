@@ -299,6 +299,12 @@ void TwoGoodToBeThree(char *a, char *b, char *c)
 			printf("%c\n",i);
 		}
 	}
+	
+	for (i = 0; 3 > i; ++i)
+	{
+    	free(abc[i]);
+    }
+
 	free(abc);
 }
 
