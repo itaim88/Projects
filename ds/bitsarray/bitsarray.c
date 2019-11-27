@@ -27,13 +27,13 @@
 #define MSB 0x8000000000000000UL
 
 /*********set all bits to 1****************************************************/
-size_t BArrSetAllBits(bitsarr_t bits)
+bitsarr_t BArrSetAllBits(bitsarr_t bits)
 {
 	return (bits |= ~0);
 }
 
 /*********set all bits to 0****************************************************/
-size_t BArrResetAllBits(bitsarr_t bits)
+bitsarr_t BArrResetAllBits(bitsarr_t bits)
 {
 	return bits &= 0; 
 }
@@ -59,7 +59,7 @@ int BArrIsOff(bitsarr_t bits, int position)
 }
 
 /*********Count bit set 1 ****************************************************/
-size_t BArrCountOn(bitsarr_t bits)
+bitsarr_t BArrCountOn(bitsarr_t bits)
 {
 	int count = 0;
 	
@@ -73,46 +73,46 @@ size_t BArrCountOn(bitsarr_t bits)
 }
 
 /*********check if bit is 1 in position ***************************************/
-size_t BArrCountOff(bitsarr_t bits)
+bitsarr_t BArrCountOff(bitsarr_t bits)
 {
 	int count = 0;
 	
-	while ( 0 != bits )
+	while (0 != bits )
 	{
-	bits = bits & (bits -1);
-	++count;
+		bits = bits & (bits -1);
+		++count;
 	}
 	
 	return ((sizeof(size_t) * BYTES) - count);
 }
 
 /****This function sets specific bit to the given status *********************/
-size_t BArrSetBit(bitsarr_t bits, int position, int status)
+bitsarr_t BArrSetBit(bitsarr_t bits, int position, int status)
 {
 	if ( 1 == status)
 	{
-	return (bits |= (MASK_1 << (position - 1))); 
+		return (bits |= (MASK_1 << (position - 1))); 
 	}	
 	
 	else
 	{
-	return (bits &= ((~0) - (MASK_1 << (position -1))));
+		return (bits &= ((~0) - (MASK_1 << (position -1))));
 	}
 }
 
 /****This function sets specific bit to the given status *********************/
-size_t BArrSetOn(bitsarr_t bits, int position)
+bitsarr_t BArrSetOn(bitsarr_t bits, int position)
 {
 	return (bits |= (0x01UL << (position -1)));
 }
 /****This function sets specific bit to the given status *********************/
-size_t BArrSetOff(bitsarr_t bits, int position)
+bitsarr_t BArrSetOff(bitsarr_t bits, int position)
 {
 	return (bits &= ((~0) - (MASK_1 << (position -1))));
 }
 
 /***** This function rotate the array to left n times ************************/
-size_t BArrRotateLeft(bitsarr_t bits, int num_of_rotations)
+bitsarr_t BArrRotateLeft(bitsarr_t bits, int num_of_rotations)
 {
 	while (0 < (num_of_rotations % (TOTAL_BITS)))
 	{
@@ -133,7 +133,7 @@ size_t BArrRotateLeft(bitsarr_t bits, int num_of_rotations)
 }
 
 /* This function rotate the array to right n times ***************************/
-size_t BArrRotateRight(bitsarr_t bits, int num_of_rotations)
+bitsarr_t BArrRotateRight(bitsarr_t bits, int num_of_rotations)
 {
 	while (0 < (num_of_rotations % (TOTAL_BITS)))
 	{
@@ -179,13 +179,13 @@ char* BArrToString(bitsarr_t bits, char* buffer)
 }
 
 /* This function flips specific bit *******************************************/
-size_t BArrFlipBit(bitsarr_t bits, int position)
+bitsarr_t BArrFlipBit(bitsarr_t bits, int position)
 {
 	return (bits ^= (MASK_1 << (position -1)));
 }
 
 /* This function mirroring a given bits array *********************************/
-size_t BArrMirror(bitsarr_t bits)
+bitsarr_t BArrMirror(bitsarr_t bits)
 {
 bits = (((bits & 0xaaaaaaaaaaaaaaaa) >> BITWISE1) | ((bits & 0x5555555555555555)
 		 << BITWISE1));
