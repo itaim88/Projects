@@ -7,7 +7,7 @@
 #ifndef __STACK_H__
 #define __STACK_H__
 
-#include <stddef.h>
+#include <stddef.h> /*size_t*/
 
 typedef struct Stack stack_t;
 

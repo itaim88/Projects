@@ -4,10 +4,10 @@
 -Mon 28 Nov 2019    
 -Reviewer:
 *******************************************************************************/
-#include <assert.h>
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
+#include <assert.h> /*assert*/
+#include <stdlib.h> /*malloc*/
+#include <stdio.h> /*printf*/
+#include <string.h> /* memcpy*/
 
 #include "stack.h"
 
@@ -74,7 +74,7 @@ void StackPop(stack_t* mystack)
 {
 	assert(NULL != mystack);
 
-	if(mystack->current != mystack->start)
+	if (mystack->current != mystack->start)
 	{
 		mystack->current = (char *)mystack->current - mystack->element_size;
 	}
