@@ -15,8 +15,8 @@ typedef struct Node
     struct Node *next;
 }node_t;
 
-typedef int (*action_func_ptr)(node_t *node, void *additional);
-typedef int (*match_func_ptr)(node_t *node, void *additional);
+typedef int (*action_func_ptr)(void *node, void *additional);
+typedef int (*match_func_ptr)(void *node, void *additional);
 
 /* Creates a new node */
 /* WARNING: Doesnt get NULL pointer */
@@ -49,7 +49,7 @@ node_t *SLLGetNode(const node_t *head, match_func_ptr, void *additional);
 
 /* Performs a generic operation on all nodes in the data structure */
 /* WARNING: Doesnt get NULL pointer */
-int SLLForEach(const node_t *head, action_func_ptr, void *additional);
+int SLLForEach(node_t *head, action_func_ptr, void *additional);
 
 /* Returns the number of nodes */
 /* WARNING: Doesnt get NULL pointer */

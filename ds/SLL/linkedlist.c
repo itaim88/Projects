@@ -77,12 +77,13 @@ void SLLRemove(node_t *node)
 {
 	node_t *runner = NULL;
 
-	assert(NULL != node);
 	assert(NULL != node->next);
 
 	runner = node->next;
+
 	node->data = runner->data;
 	node->next = runner->next;
+	runner->next = NULL;
 
 	free(runner);
 	runner = NULL;
@@ -110,7 +111,7 @@ node_t *SLLGetNode(const node_t *head, match_func_ptr usr_func, void *additional
 
 	while (NULL != runner)
 	{
-		if (0 != usr_func(runner, additional))
+		if (0 == usr_func(runner, additional))
 		{
 			runner = runner->next;
 		}
@@ -120,12 +121,12 @@ node_t *SLLGetNode(const node_t *head, match_func_ptr usr_func, void *additional
 		}
 	}
 
-	return NULL ;
+	return runner;
 }
 
 /* Performs a generic operation on all nodes in the data structure */
 /* WARNING: Doesnt get NULL pointer */
-int SLLForEach(const node_t *head, action_func_ptr usr_func, void *additional)
+int SLLForEach(node_t *head, action_func_ptr usr_func, void *additional)
 {
 	node_t *runner = (node_t *)head;
 
@@ -134,12 +135,7 @@ int SLLForEach(const node_t *head, action_func_ptr usr_func, void *additional)
 		runner = runner->next;
 	}
 
-	if (NULL != runner)
-	{
-		return 1;
-	}
-
-	return 0;
+	return !(NULL == runner ->next);
 }
 
 /* Returns the number of nodes */
@@ -159,6 +155,7 @@ size_t SLLSize(const node_t *head)
 
 	return count;
 }
+
 /* Flips the direciton of pointing from last to first */
 /* WARNING: Doesnt get NULL pointer */
 node_t *SLLFlip(node_t *head)
