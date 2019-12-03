@@ -13,7 +13,6 @@ node_t *SLLCreateNode(node_t *next, const void *data)
 {
 	node_t *new_node = NULL;
 	new_node = (node_t *)malloc(sizeof(node_t));
-
 	if (NULL == new_node)
 	{
 		return NULL;
@@ -26,10 +25,12 @@ node_t *SLLCreateNode(node_t *next, const void *data)
 
 void SLLDestroy(node_t *current_node)
 {        
-    node_t *next_runner = current_node->next;
+    node_t *next_runner = NULL;
     node_t *temp = NULL;
 
     assert(NULL != current_node);
+    
+    next_runner = current_node->next;
 
     while (NULL != next_runner)
     {        
@@ -119,9 +120,11 @@ node_t *SLLGetNode(const node_t *head, match_func_ptr usr_func, void *additional
 
 int SLLForEach(node_t *head, action_func_ptr usr_func, void *additional)
 {
-	node_t *runner = head;
+	node_t *runner = NULL;
 
 	assert(NULL != head);
+	
+	runner = head;
 
 	while ((0 == usr_func(runner, additional)) && (NULL != runner->next))
 	{
@@ -133,10 +136,12 @@ int SLLForEach(node_t *head, action_func_ptr usr_func, void *additional)
 
 size_t SLLSize(const node_t *head)
 {
-	node_t const *runner = head;
+	const node_t *runner = NULL;
 	size_t count = 0;
 
 	assert(NULL != head);
+	
+	runner = head;
 
 	while (NULL != runner)
 	{
@@ -164,8 +169,6 @@ node_t *SLLFlip(node_t *head)
 		prev_node = current_node;
 		current_node = next_node;
 	}
-
-	head = prev_node;
 
 	return prev_node;
 }
@@ -228,7 +231,7 @@ node_t *SLLFindIntersection(const node_t *head1, const node_t *head2)
 	{
 		if (runner1 == runner2)
 		{	
-				return runner1;
+			return runner1;
 		}
 		runner1 = runner1->next;
 		runner2 = runner2->next;
@@ -236,9 +239,3 @@ node_t *SLLFindIntersection(const node_t *head1, const node_t *head2)
 
 	return runner1;
 }
-
-	
-
-
-
-
