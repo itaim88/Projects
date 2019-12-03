@@ -6,15 +6,11 @@
 
 #include <assert.h> /*assert*/
 #include <stdlib.h> /*malloc*/
-#include <string.h> /* memcpy*/
 
 #include "linkedlist.h"
 
-/* Creates a new node */
-/* WARNING: Doesnt get NULL pointer */
 node_t *SLLCreateNode(node_t *next, const void *data)
 {
-
 	node_t *new_node = NULL;
 	new_node = (node_t *)malloc(sizeof(node_t));
 
@@ -22,7 +18,6 @@ node_t *SLLCreateNode(node_t *next, const void *data)
 	{
 		return NULL;
 	}
-
 	new_node->next = next;
 	new_node->data = (void *)data;
 
@@ -34,6 +29,8 @@ void SLLDestroy(node_t *current_node)
     node_t *next_runner = current_node->next;
     node_t *temp = NULL;
 
+    assert(NULL != current_node);
+
     while (NULL != next_runner)
     {        
         temp = next_runner;
@@ -41,6 +38,7 @@ void SLLDestroy(node_t *current_node)
         free(temp);
         temp = NULL;
     }
+
     current_node->next = NULL;
     free(current_node);
     current_node = NULL;
@@ -84,13 +82,10 @@ void SLLRemove(node_t *node)
 	node->data = runner->data;
 	node->next = runner->next;
 	runner->next = NULL;
-
 	free(runner);
 	runner = NULL;
 }
 
-/* Removes the node after the node sent to the function */
-/* WARNING: Doesnt get NULL pointer */
 void SLLRemoveAfter(node_t *node)
 {
 	node_t *runner = node;
@@ -103,8 +98,6 @@ void SLLRemoveAfter(node_t *node)
 	runner = NULL;
 }
 
- /*Returns a node according to a condition specified by the user */
-/* WARNING: Doesnt get NULL pointer */
 node_t *SLLGetNode(const node_t *head, match_func_ptr usr_func, void *additional)
 {
 	node_t *runner = (node_t *)head;
@@ -121,25 +114,23 @@ node_t *SLLGetNode(const node_t *head, match_func_ptr usr_func, void *additional
 		}
 	}
 
-	return runner;
+	return NULL;
 }
 
-/* Performs a generic operation on all nodes in the data structure */
-/* WARNING: Doesnt get NULL pointer */
 int SLLForEach(node_t *head, action_func_ptr usr_func, void *additional)
 {
-	node_t *runner = (node_t *)head;
+	node_t *runner = head;
+
+	assert(NULL != head);
 
 	while ((0 == usr_func(runner, additional)) && (NULL != runner->next))
 	{
 		runner = runner->next;
 	}
 
-	return !(NULL == runner ->next);
+	return !(NULL == runner->next);
 }
 
-/* Returns the number of nodes */
-/* WARNING: Doesnt get NULL pointer */
 size_t SLLSize(const node_t *head)
 {
 	node_t const *runner = head;
@@ -156,8 +147,6 @@ size_t SLLSize(const node_t *head)
 	return count;
 }
 
-/* Flips the direciton of pointing from last to first */
-/* WARNING: Doesnt get NULL pointer */
 node_t *SLLFlip(node_t *head)
 {
 	node_t *prev_node = NULL;
@@ -178,31 +167,33 @@ node_t *SLLFlip(node_t *head)
 
 	head = prev_node;
 
-	return head;
+	return prev_node;
 }
 
-/* Checks if a loop occurs in the structure */
-/* Returns 0 - loop occurs, 1 - loop doesnt occur */
-/* WARNING: Doesnt get NULL pointer */
 int SLLHasLoop(const node_t *head)
 {
-	const node_t *fast = head->next;
-	const node_t *slow = head;
+	node_t *fast_runner = NULL, *slow_runner = NULL;
 
 	assert(NULL != head);
 
-	while((fast != slow) && fast->next)
+	fast_runner = (node_t *)head->next;
+	slow_runner = (node_t *)head;
+
+	while (fast_runner->next != NULL && fast_runner != slow_runner)
 	{
-		fast = fast->next;
-		fast = fast->next;
-		slow = slow->next;
+		slow_runner = slow_runner->next;
+		fast_runner = fast_runner->next;
+
+		if (fast_runner->next == NULL)
+		{
+			break;
+		}
+		fast_runner = fast_runner->next;
 	}
 
-	return(fast == slow);
+	return (slow_runner == fast_runner);
 }
 
-/* Returns a pointer to the node the create an  */
-/* WARNING: Doesnt get NULL pointer */
 node_t *SLLFindIntersection(const node_t *head1, const node_t *head2)
 {
 	size_t size1 = 0, size2 = 0;
@@ -216,29 +207,29 @@ node_t *SLLFindIntersection(const node_t *head1, const node_t *head2)
 	size1 = SLLSize(runner1);
 	size2 = SLLSize(runner2);
 	
-
-	while (SLLSize(runner1) != SLLSize(runner2))
+	if (size1 > size2)
 	{
-		if (size1 > size2)
+		while (size1 - size2 > 0)
 		{
 			runner1 = runner1->next;
 			--size1;
 		}
-		else if (size2 > size1)
+	}
+	else  
+	{
+		while (size2 - size1 > 0)
 		{
 			runner2 = runner2->next;
 			--size2;
 		}
-	
 	}
-
+	
 	while (NULL != runner1)
 	{
 		if (runner1 == runner2)
 		{	
 				return runner1;
 		}
-
 		runner1 = runner1->next;
 		runner2 = runner2->next;
 	}
