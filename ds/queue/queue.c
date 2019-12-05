@@ -43,8 +43,8 @@ queue_t *QCreate()
 		FREE(queue)
 		
 		return NULL;
-
-	}	
+	}
+		
     return queue; 
 }
 
@@ -102,14 +102,12 @@ size_t QSize(const queue_t *queue)
 
 queue_t *QAppend(queue_t *queue1, queue_t *queue2)
 {
-	
 	assert(NULL != queue1);	
 	assert(NULL != queue2);	
 
 	queue1->rear->next = queue2->front;
 	SLLRemove(queue1->rear);
 	SLLRemove(queue1->rear);
-
 	queue1->rear = queue2->rear;
 	FREE(queue2)
 	
