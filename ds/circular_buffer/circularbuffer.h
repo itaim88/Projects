@@ -44,7 +44,7 @@ ssize_t CBufferRead(cbuffer_t *cb , void *buffer, size_t count);
 /* Not defined for NULL pointer.                                    */
 /* complexity of memcopy                                            */  
 /********************************************************************/
-ssize_t CBufferWrite(cbuffer_t *cb ,const void *buffer, size_t count);
+ssize_t CBufferWrite(cbuffer_t *cb ,const void *buffer, size_t count_to_write);
 
 /***************************************************************/
 /* If circular buffer is empty returns 1, otherwise returns 0. */
