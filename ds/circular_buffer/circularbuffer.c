@@ -131,19 +131,19 @@ ssize_t CBufferWrite(cbuffer_t *cb ,const void *buffer, size_t count_to_write)
 
     if (count_to_write > free_space)
     {
-	count_to_write = free_space;
+		count_to_write = free_space;
     }
 
     count = count_to_write;
     
     if (count > free_space - cb->read_index)
     {
-	size_to_end = free_space - cb->read_index;
-	memcpy(&cb->arr[write_index], runner, size_to_end);
-	count -= size_to_end;
-   	cb->size += size_to_end;
-	write_index = 0UL;
-	runner += size_to_end;
+		size_to_end = free_space - cb->read_index;
+		memcpy(&cb->arr[write_index], runner, size_to_end);
+		count -= size_to_end;
+	   	cb->size += size_to_end;
+		write_index = 0UL;
+		runner += size_to_end;
     }
     
     memcpy(&cb->arr[write_index], runner, count);
