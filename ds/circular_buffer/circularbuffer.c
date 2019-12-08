@@ -71,7 +71,7 @@ ssize_t CBufferRead(cbuffer_t *cb , void *buffer, size_t count)
 		memcpy(runner, &cb->arr[cb->read_index], buffer_end);
 		cb->size -= buffer_end;
 		count -= (cb->read_index) - 1;
-		cb->read_index = 0;
+		cb->read_index = 0UL;
 		runner = (char *)buffer + buffer_end; 	
 	}
 
@@ -117,10 +117,10 @@ ssize_t CBufferRead(cbuffer_t *cb , void *buffer, size_t count)
 ssize_t CBufferWrite(cbuffer_t *cb ,const void *buffer, size_t count_to_write)
 {   
     byte_t *runner = NULL;
-    size_t write_index = 0;
-    size_t count = 0;
-    size_t free_space = 0;
-    size_t size_to_end = 0;
+    size_t write_index = 0UL;
+    size_t count = 0UL;
+    size_t free_space = 0UL;
+    size_t size_to_end = 0UL;
 
     assert(NULL != cb);
     assert(NULL != buffer);
@@ -142,7 +142,7 @@ ssize_t CBufferWrite(cbuffer_t *cb ,const void *buffer, size_t count_to_write)
 	memcpy(&cb->arr[write_index], runner, size_to_end);
 	count -= size_to_end;
    	cb->size += size_to_end;
-	write_index = 0;
+	write_index = 0UL;
 	runner += size_to_end;
     }
     
