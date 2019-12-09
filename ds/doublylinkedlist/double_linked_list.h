@@ -3,7 +3,7 @@
 
 #include <stddef.h> /* size_t */
 
-typedef struct Iterator iterator_t;
+typedef struct DLLNode *iterator_t;
 typedef struct DLL dll_t;
 
 typedef int (*action_func_ptr)(void*, void*);
@@ -78,7 +78,7 @@ iterator_t DLLEnd(dll_t *dll);
 /* Returns the data of the current iterator    */
 /* complexity O(1)                             */
 /***********************************************/
-void *GetData(iterator_t it);
+void *DLLGetData(iterator_t it);
 
 /*********************************************************/
 /* Returns 1 if the iterators are equal or 0 otherwise   */

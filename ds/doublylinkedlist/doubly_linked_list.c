@@ -11,12 +11,6 @@
 
 #define FREE(ptr) free(ptr); ptr = NULL;
 
-
-struct Iterator
-{
-	struct DLLNode *node;
-};
-
 struct DLLNode
 {
 	void *data;
@@ -43,7 +37,7 @@ dll_t *DLLCreate()
 	new_dummy->head.next = &new_dummy->tail;
 	new_dummy->head.prev = NULL;
 	new_dummy->head.data = NULL;
-	new_dummy->tail.next = &new_dummy->head;
+	new_dummy->tail.prev = &new_dummy->head;
 	new_dummy->tail.next = NULL;
 	new_dummy->tail.data = NULL;
 
@@ -72,7 +66,7 @@ iterator_t DLLBegin(dll_t *dll)
 
 	assert(NULL != dll);
 
-	new_iterator.node = (dll->head.next);
+	new_iterator = (dll->head.next);
 
 	return new_iterator;
 }
@@ -83,7 +77,7 @@ iterator_t DLLEnd(dll_t *dll)
 
 	assert(NULL != dll);
 
-	new_iterator.node = &dll->tail;
+	new_iterator = &dll->tail;
 
 	return new_iterator;
 }
@@ -99,7 +93,7 @@ int DLLIsEmpty(const dll_t *dll)
 iterator_t DLLGetNext(iterator_t it)
 {
     iterator_t iter;
-    iter.node = it.node->next;
+    iter = it->next;
     
     return iter;
 }
@@ -107,7 +101,7 @@ iterator_t DLLGetNext(iterator_t it)
 iterator_t DLLGetPrev(iterator_t it)
 {
     iterator_t iter;
-    iter.node = it.node->prev;
+    iter = it->prev;
     
     return iter;
 }
@@ -135,38 +129,38 @@ iterator_t DLLInsert(dll_t *dll, iterator_t it, void *data)
 	new_node = (dllnode_t *)malloc(sizeof(dllnode_t));
 	if (NULL == new_node)
 	{
-		it.node = &dll->tail;
+		it = &dll->tail;
 		return it;
 	}
 
-	new_node->data= (void *)data;
-	new_node->prev= it.node->prev; 
-	new_node->next= &dll->tail; 
+	new_node->data = data;
+	new_node->prev = it->prev; 
+	new_node->next = it;
 
-	(it.node->prev)->next = new_node;
-	it.node->prev = new_node;
-	it.node = new_node;
+	it->prev->next = new_node;
+	it->prev = new_node;
+	it = new_node;
 
 	return it;
 }
-void *GetData(iterator_t it)
+void *DLLGetData(iterator_t it)
 {
-	return (it.node->data);
+	return it->data;
 }
 
 int DLLIsSameIter(const iterator_t it1, const iterator_t it2)
 {
-	return (it1.node == it2.node);
+	return (it1 == it2);
 }
 
 iterator_t DLLRemove(iterator_t it)
 {
-	dllnode_t *holder = it.node;
+	dllnode_t *holder = it;
 
-	(it.node->next)->prev = it.node->prev;
-	(it.node->prev)->next = it.node->next;
+	it->next->prev = it->prev;
+	it->prev->next = it->next;
 
-	it.node = it.node->next;
+	it = it->next;
 	FREE(holder);
 
 	return it;
@@ -188,8 +182,106 @@ void *DLLPopBack(dll_t *dll)
 	assert(NULL != dll);
 
 	iter = DLLGetPrev(DLLEnd(dll));
-	storage = GetData(iter);
+	storage = DLLGetData(iter);
 	DLLRemove(iter);
 
 	return storage; 
 }
+
+void *DLLPopFront(dll_t *dll)
+{
+	void * holder = NULL;
+	iterator_t iter;
+
+	assert(NULL != dll);
+
+	iter = DLLBegin(dll);
+	holder = DLLGetData(iter);
+	DLLRemove(iter);
+
+	return holder;
+}
+
+iterator_t DLLPushFront(dll_t *dll, void *data)
+{
+	assert(NULL != dll);
+	assert(NULL != data);
+
+	return DLLInsert(dll, DLLBegin(dll) , data);
+}
+
+int DLLForEach(iterator_t start, iterator_t end, action_func_ptr a_ptr, void *ap)
+{
+	iterator_t it_runner = NULL;
+
+	assert(NULL != ap);
+	assert(NULL != start);
+	assert(NULL != end);
+
+	it_runner = start;
+
+	while (it_runner != end )
+	{
+		if (0 == a_ptr(DLLGetData(it_runner), ap))
+		{
+			it_runner = DLLGetNext(it_runner);
+		}
+
+		else
+		{
+			return 1;
+		}
+	}
+
+	return 0;	
+}
+
+iterator_t DLLFind(iterator_t start, iterator_t end, match_func_ptr m_ptr, void *ap)
+{
+	iterator_t it_runner = NULL;
+
+	assert(NULL != ap);
+	assert(NULL != start);
+	assert(NULL != end);
+
+	it_runner = start;
+
+	while (it_runner != end )
+	{
+		if (1 == m_ptr(DLLGetData(it_runner), ap))
+		{
+			return it_runner;	
+		}
+
+		else
+		{
+			it_runner = DLLGetNext(it_runner);
+			
+		}
+	}
+
+	return NULL;	
+}
+
+iterator_t DLLSplice(iterator_t start, iterator_t end, iterator_t where)
+{
+	iterator_t it_end_prev = NULL;
+
+	assert(NULL != start);
+	assert(NULL != end);
+	assert(NULL != end);
+
+ 	it_end_prev = DLLGetPrev(end);
+
+	start->prev->next = end;
+	end->prev = start->prev; 
+
+
+	start->prev = where;
+	it_end_prev->next = where->next;
+	where->next->prev = it_end_prev;
+	where->next = start;
+
+	return where;
+}	
+
