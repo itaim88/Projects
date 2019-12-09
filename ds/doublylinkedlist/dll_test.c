@@ -23,14 +23,22 @@
     }\
 }
 
-/*static int AdditionFunc(void *node, void *ap)
+static int AdditionFunc(void *node, void *ap)
 {
-    node_t *n = (node_t *)node;
+   void *n = node;
     
-    *(int*)n->data += *(int*)ap;
+    *(int *)n+= *(int*)ap;
     
     return 0;
-}*/
+}
+
+static int MatchFunc(void* node, void* ap)
+{
+    void *n = node;
+
+    return (*(int*)n == *(int*)ap);
+
+}
 
 static void TestDLL1()
 {
@@ -99,9 +107,9 @@ static void TestDLL1()
     it3 = DLLPushBack(dll2, &data3);
     RUN_TEST(3 == DLLSize(dll2), "is empty test3");    
     
-   /* RUN_TEST(0 == DLLForEach(it1, it3, &AdditionFunc, &ap), "for each test3");
+    RUN_TEST(0 == DLLForEach(it1, it3, &AdditionFunc, &ap), "for each test3");
     RUN_TEST(80 == *(int*)DLLPopFront(dll2), "pop back test3");
-    RUN_TEST(25 == *(int*)DLLPopFront(dll2), "pop back test3");*/
+    RUN_TEST(25 == *(int*)DLLPopFront(dll2), "pop back test3");
     
     DLLDestroy(dll2);
     

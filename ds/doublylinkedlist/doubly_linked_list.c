@@ -47,22 +47,23 @@ dll_t *DLLCreate()
 void DLLDestroy(dll_t *dll)
 {
     dllnode_t *runner = dll->head.next;    
-    dllnode_t *current = dll->head.next;    
+    dllnode_t *current = NULL; 
+
+    assert(NULL != dll);   
    
-    while (runner->next != &dll->tail)
+    while (runner != &dll->tail)
     {
+    	current = runner;
         runner = runner->next;
         FREE(current);
-        current = runner; 
     }
 
-    FREE(runner);
     FREE(dll);
 }
 
 iterator_t DLLBegin(dll_t *dll)
 {
-	iterator_t new_iterator;
+	iterator_t new_iterator = NULL;
 
 	assert(NULL != dll);
 
@@ -73,7 +74,7 @@ iterator_t DLLBegin(dll_t *dll)
 
 iterator_t DLLEnd(dll_t *dll)
 {
-	iterator_t new_iterator;
+	iterator_t new_iterator = NULL;
 
 	assert(NULL != dll);
 
@@ -92,7 +93,10 @@ int DLLIsEmpty(const dll_t *dll)
 
 iterator_t DLLGetNext(iterator_t it)
 {
-    iterator_t iter;
+    iterator_t iter = NULL;
+
+    assert(NULL != it); 
+
     iter = it->next;
     
     return iter;
@@ -101,6 +105,9 @@ iterator_t DLLGetNext(iterator_t it)
 iterator_t DLLGetPrev(iterator_t it)
 {
     iterator_t iter;
+
+    assert(NULL != it);
+
     iter = it->prev;
     
     return iter;
@@ -109,9 +116,11 @@ iterator_t DLLGetPrev(iterator_t it)
 size_t DLLSize(const dll_t *dll)
 {
 	dllnode_t *runner = dll->head.next;    
-    size_t size = 1;    
+    size_t size = 0;   
+
+    assert(NULL != dll);
    
-    while (runner->next != &dll->tail)
+    while (runner != &dll->tail)
     {
         runner = runner->next;
         ++size;
@@ -125,6 +134,7 @@ iterator_t DLLInsert(dll_t *dll, iterator_t it, void *data)
 	dllnode_t *new_node = NULL;
 
 	assert(NULL != dll);
+	assert(NULL != data); 
 
 	new_node = (dllnode_t *)malloc(sizeof(dllnode_t));
 	if (NULL == new_node)
@@ -136,7 +146,6 @@ iterator_t DLLInsert(dll_t *dll, iterator_t it, void *data)
 	new_node->data = data;
 	new_node->prev = it->prev; 
 	new_node->next = it;
-
 	it->prev->next = new_node;
 	it->prev = new_node;
 	it = new_node;
@@ -145,17 +154,24 @@ iterator_t DLLInsert(dll_t *dll, iterator_t it, void *data)
 }
 void *DLLGetData(iterator_t it)
 {
+	assert(NULL != it); 
+
 	return it->data;
 }
 
 int DLLIsSameIter(const iterator_t it1, const iterator_t it2)
 {
+	assert(NULL != it1); 
+	assert(NULL != it2); 
+
 	return (it1 == it2);
 }
 
 iterator_t DLLRemove(iterator_t it)
 {
 	dllnode_t *holder = it;
+
+	assert(NULL != it); 
 
 	it->next->prev = it->prev;
 	it->prev->next = it->next;
@@ -246,7 +262,7 @@ iterator_t DLLFind(iterator_t start, iterator_t end, match_func_ptr m_ptr, void 
 
 	it_runner = start;
 
-	while (it_runner != end )
+	while (it_runner != end)
 	{
 		if (1 == m_ptr(DLLGetData(it_runner), ap))
 		{
@@ -260,7 +276,7 @@ iterator_t DLLFind(iterator_t start, iterator_t end, match_func_ptr m_ptr, void 
 		}
 	}
 
-	return NULL;	
+	return it_runner;	
 }
 
 iterator_t DLLSplice(iterator_t start, iterator_t end, iterator_t where)
@@ -269,14 +285,11 @@ iterator_t DLLSplice(iterator_t start, iterator_t end, iterator_t where)
 
 	assert(NULL != start);
 	assert(NULL != end);
-	assert(NULL != end);
+	assert(NULL != where);
 
  	it_end_prev = DLLGetPrev(end);
-
 	start->prev->next = end;
 	end->prev = start->prev; 
-
-
 	start->prev = where;
 	it_end_prev->next = where->next;
 	where->next->prev = it_end_prev;
