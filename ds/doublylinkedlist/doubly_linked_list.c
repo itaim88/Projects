@@ -63,24 +63,16 @@ void DLLDestroy(dll_t *dll)
 
 iterator_t DLLBegin(dll_t *dll)
 {
-	iterator_t new_iterator = NULL;
-
 	assert(NULL != dll);
 
-	new_iterator = (dll->head.next);
-
-	return new_iterator;
+	return dll->head.next;
 }
 
 iterator_t DLLEnd(dll_t *dll)
 {
-	iterator_t new_iterator = NULL;
-
 	assert(NULL != dll);
 
-	new_iterator = &dll->tail;
-
-	return new_iterator;
+	return &dll->tail;;
 }
 
 
@@ -93,24 +85,16 @@ int DLLIsEmpty(const dll_t *dll)
 
 iterator_t DLLGetNext(iterator_t it)
 {
-    iterator_t iter = NULL;
-
     assert(NULL != it); 
 
-    iter = it->next;
-    
-    return iter;
+    return it->next;
 }
 
 iterator_t DLLGetPrev(iterator_t it)
 {
-    iterator_t iter;
-
     assert(NULL != it);
-
-    iter = it->prev;
     
-    return iter;
+    return it->prev;
 }
 
 size_t DLLSize(const dll_t *dll)
@@ -192,7 +176,7 @@ iterator_t DLLPushBack(dll_t *dll, void *data)
 
 void *DLLPopBack(dll_t *dll)
 {
-	iterator_t iter;
+	iterator_t iter = NULL;
 	void *storage = NULL;
 
 	assert(NULL != dll);
@@ -206,8 +190,8 @@ void *DLLPopBack(dll_t *dll)
 
 void *DLLPopFront(dll_t *dll)
 {
-	void * holder = NULL;
-	iterator_t iter;
+	void *holder = NULL;
+	iterator_t iter = NULL;
 
 	assert(NULL != dll);
 
