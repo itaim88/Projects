@@ -72,7 +72,7 @@ iterator_t DLLEnd(dll_t *dll)
 {
 	assert(NULL != dll);
 
-	return &dll->tail;;
+	return &dll->tail;
 }
 
 
