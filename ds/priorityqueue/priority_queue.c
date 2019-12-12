@@ -7,8 +7,8 @@
 #include <assert.h> /*assert*/
 #include <stdlib.h> /*malloc*/
 
-#include "priority_queue.h" 
-#include "sortedlist.h"
+#include "priority_queue.h" /*priority queue header*/
+#include "sortedlist.h"     /*sort dll header*/
 
 #define FREE(ptr) free(ptr); ptr = NULL;
 
@@ -19,7 +19,7 @@ typedef struct data_struct
     void *param;
     compare_func_ptr cmp_func;
 
-}data_struct_t;
+} data_struct_t;
 
 struct PQueue
 {
@@ -31,13 +31,9 @@ struct PQueue
 
 static int CmpForSll(const void *user_data, const void *node_data, void *data_struct)
 {
-    if (0 < (((data_struct_t *)data_struct)->cmp_func
-            ((void *)node_data, (void *)user_data, ((data_struct_t *)data_struct)->param)))
-    {
-        return 1;
-    }
+    return(0 < (((data_struct_t *)data_struct)->cmp_func
+            ((void *)node_data, (void *)user_data, ((data_struct_t *)data_struct)->param)));
     
-    return 0;
 }
 
 pq_t *PQCreate(compare_func_ptr cmp_ptr, void *param)
@@ -60,9 +56,7 @@ pq_t *PQCreate(compare_func_ptr cmp_ptr, void *param)
         pq->queue = SortLLCreate(&CmpForSll, ptr_struct);
         pq->func = cmp_ptr;
         pq->param = param;
-        pq->data_wrapper = ptr_struct;
-        
-      
+        pq->data_wrapper = ptr_struct;  
     }
     
     return pq;
@@ -73,11 +67,9 @@ void PQDestroy(pq_t *pq)
     assert(NULL != pq);    
     
     SortLLDestroy(pq->queue);
-    
+    FREE(pq->data_wrapper);
     FREE(pq);
 }
-
-
 
 void *PQDequeue(pq_t *pq)
 {
@@ -92,8 +84,7 @@ int PQEnqueue(pq_t *pq, void *data)
     
     return (SLLIsSameIter(SortLLInsert(pq->queue, data), SLLEnd(pq->queue)));
 }
-
-   
+  
 void *PQPeek(const pq_t *pq)
 {
 	assert(NULL != pq);   
@@ -136,8 +127,7 @@ void *PQErase(pq_t *pq, match_func_ptr_pq m_ptr, void *param)
     holder = SLLGetData(it);
 
     if (!SLLIsSameIter(it, SLLEnd(pq->queue)))
-    {
-        
+    {  
         it = SortLLRemove(it);
     }
     
