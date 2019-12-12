@@ -40,6 +40,11 @@ sll_t *SortLLCreate(is_before func, void *param)
     }
     
     new_sll->list = DLLCreate();
+    if (NULL == new_sll->list)
+    {
+    	return NULL;
+    }
+    
     new_sll->func = func;
     new_sll->param = param;
     
@@ -74,6 +79,7 @@ sll_iterator_t SortLLInsert(sll_t *sll, void *data)
     }
     
     i.current = DLLInsert(sll->list, i.current, data);
+    
     return i;
 }
 
@@ -122,12 +128,14 @@ sll_iterator_t SLLEnd(sll_t *sll)
 sll_iterator_t SLLNext(sll_iterator_t it)
 {
     it.current = DLLGetNext(it.current);
+    
     return it;
 }
 
 sll_iterator_t SLLPrev(sll_iterator_t it)
 {
     it.current = DLLGetPrev(it.current);
+    
     return it;    
 }
 
@@ -191,10 +199,12 @@ sll_iterator_t SLLFind(const sll_t *sll, const void *data, sll_iterator_t start,
     if (0 == (sll->func(data, SLLGetData(it), sll->param)))
     {
         FREE(data_struct);
+        
         return it;
     }
     
     FREE(data_struct);
+    
     return end;                                         
 }
 
