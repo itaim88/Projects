@@ -16,8 +16,8 @@
 
 #include "priorityqueue.h" /*priority functions*/
 #include "task.h" /*task functions*/
-#include "uid.h"
-#include "scheduler.h"
+#include "uid.h" /* uid functions*/
+#include "scheduler.h" /* scheduler functions*/
 
 #define FREE(ptr) {free(ptr); ptr = NULL;}
 
@@ -33,7 +33,7 @@ int PriorityFunc(const void *node_data, const void *user_data, void *param)
 {
     task_t *t1 = (task_t *)node_data;
     task_t *t2 = (task_t *)user_data;
-    return (TaskGetTimeToRun(t1) - TaskGetTimeToRun(t2));
+    return (TaskGetTimeToRun(t1) - TaskGetTimeToRun(t2)); /*some students prefered to do t2 -t1, i think it`s just diffrent way of thinking*/
 }
 
 scheduler_t *SchedulerCreate()
@@ -46,7 +46,8 @@ scheduler_t *SchedulerCreate()
         {
             new_sch->remove_current = 0;
             new_sch->stop_flag = 1;
-            new_sch->current_task = NULL; 
+            new_sch->current_task = NULL;
+             
             return new_sch;
         }
         
@@ -89,10 +90,15 @@ ilrd_uid_t SchedulerAddTask(scheduler_t *s, task_func to_do, time_t interval, vo
     
     return new_task->uid;
 }
-
+/*
 int CompareUid(void *task1, void *task2)
 {
     return (UIDIsSame(((task_t*)task1)->uid,((task_t*)task2)->uid));
+}
+*/
+int IsMatch(void *task1, void *uid)
+{
+    return (UIDIsSame(((task_t*)task1)->uid,*(ilrd_uid_t *)uid));
 }
 
 void SchedulerRemoveTask(scheduler_t *s, ilrd_uid_t uid)
@@ -107,12 +113,11 @@ void SchedulerRemoveTask(scheduler_t *s, ilrd_uid_t uid)
         return;
     }
     
-    temp = PQErase(s->q, &CompareUid, &uid);
+    temp = PQErase(s->q, &IsMatch, &uid);
     if (NULL != temp)
     {
         TaskDestroy(temp);
-    }
-          
+    }       
 }
 
 void SchedulerRun(scheduler_t *s)
@@ -121,6 +126,7 @@ void SchedulerRun(scheduler_t *s)
     
     assert(NULL != s);
     
+    /*s->remove_current = 0;*/
     s->stop_flag = 1;
     
     while (1 == s->stop_flag)

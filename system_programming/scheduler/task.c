@@ -18,7 +18,7 @@
 
 task_t *TaskCreate(task_func to_do, time_t interval, void *param)
 {
-    task_t * new_task = (task_t*)malloc(sizeof(task_t));
+    task_t *new_task = (task_t *)malloc(sizeof(task_t));
     if (NULL == new_task)
     {
         return NULL;
@@ -33,7 +33,7 @@ task_t *TaskCreate(task_func to_do, time_t interval, void *param)
     
     new_task->task_func = to_do;
     new_task->param = param;
-    new_task->run_time = time(NULL); /*+ interval;*/
+    new_task->run_time = time(NULL) + interval;
     new_task->interval = interval;
     
     return new_task;
@@ -41,6 +41,8 @@ task_t *TaskCreate(task_func to_do, time_t interval, void *param)
 
 void TaskDestroy(task_t *t)
 {
+	assert (NULL != t);
+	
     FREE(t);
 }
 
