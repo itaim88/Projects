@@ -51,7 +51,6 @@ void VectorDestroy(vector_t* myvector)
 
 	free(myvector->start); myvector->start = NULL;
 	free(myvector); myvector = NULL;
-
 }
 
 int VectorPushBack(vector_t *myvector, const void *data)
@@ -65,8 +64,8 @@ int VectorPushBack(vector_t *myvector, const void *data)
 		VectorReserve( myvector, (myvector->capacity));
 	}
 
-	memcpy(((char *)myvector->start + ((myvector->size * myvector->element_size))),
-												data, myvector->element_size);
+	memcpy(((char *)myvector->start + ((myvector->size * myvector->element_size)
+											  )), data, myvector->element_size);
 	++(myvector->size);
 
 	return 0;
@@ -80,10 +79,9 @@ void VectorPopBack(vector_t *myvector)
 	{
 		--(myvector->size);
 	
-
-		if ((myvector->capacity/4) >= (myvector->size))
+		if ((myvector->capacity / 4) >= (myvector->size))
 		{
-			VectorReserve(myvector, (myvector->capacity/2));
+			VectorReserve(myvector, (myvector->capacity / 2));
 		}
 	}	
 }
@@ -93,9 +91,8 @@ int VectorReserve(vector_t *myvector, size_t new_capacity)
 	assert(NULL != myvector);
 
 	myvector->capacity = new_capacity; 
-
 	myvector->start = (void *)realloc(myvector->start,(new_capacity *
-														 myvector->element_size));
+													myvector->element_size));
 
 	if (NULL == myvector->start)
 	{
@@ -119,14 +116,15 @@ size_t VectorSize(const vector_t *myvector)
 	return (myvector->size);	
 }
 
-void* VectorGetItemAddress(const vector_t *myvector, int position)
+void* VectorGetItemAddress(const vector_t *myvector, size_t position)
 {
 	assert(NULL != myvector);
 
-	if ((0 > position) | ((int)myvector->size < position))
+	if ((0 >= position) | (myvector->size < position))
 	{
 		return NULL;
 	}
 
-	return ((char *)myvector->start + ((position -1) * (myvector->element_size)));
+	return ((char *)myvector->start + ((position - 1) * (myvector->element_size)
+																			 ));
 }

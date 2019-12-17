@@ -6,7 +6,7 @@
 *******************************************************************************/
 
 
-/* Exercise 1 this function calculate the length of a string without the '\0' */
+
 #ifndef __MYSTRLEN_H__
 #define __MYSTRLEN_H__
 

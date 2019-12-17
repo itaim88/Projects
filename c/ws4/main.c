@@ -22,21 +22,21 @@ int main()
 	/***this LUT test ****************************/ 
 	
 	char choice = '0';
-	void (*ptr[256]) (char);
+	int (*ptr[256]) (char);
 	int i = 0;
 	system("stty -icanon -echo");
 	
 	
 	for( i = 0 ; i < 256; ++i)
 		{
-			ptr[i] = &Myvoid;
+			ptr[i] = Myvoid;
 		}
 		
 	ptr[65] = &LUTPrint;
 	ptr[84] = &LUTPrint;
 	ptr[27] = &EscPrint;
 	
-	while(27 != choice)
+	while(*ptr[choice]) (choice) != 1)
 	{
 	printf("Please pressed A or T or Esc to exit: \n");
 	scanf("%c", &choice);

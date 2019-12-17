@@ -29,12 +29,6 @@ void PrintIf()
 			{
 				printf("You entered T\n");
 			}
-			
-	/*else if ( 27 == choice)
-			{
-				printf("You entered Esc\n");
-			}*/
-	
 	else  
 			{
 				printf("You entered invalid character \n");
@@ -73,19 +67,22 @@ void PrintSwitch()
 	system("stty icanon echo");
 }
 
-void Myvoid(char choice)
+int Myvoid(char choice)
 {
-	
+	return NULL;
 }
 
-void EscPrint(char choice)
+int EscPrint(char choice)
 {
  printf("You entered Esc\n");
+ 
+	 return 1;
 }
 
-void LUTPrint(char c)
+int LUTPrint(char c)
 {
-	printf("%c is pressed \n",c);
+ printf("%c is pressed \n",c);
+	return 0;
 }
 
 

@@ -254,7 +254,7 @@ void TwoGoodToBeThree(char *a, char *b, char *c)
 	char **abc = NULL;
 	int i = 0;
 
-	abc = (char**)calloc(3,1);
+	abc = (char**)calloc(3,8); /* 8 byte for pointer */
 	
 	if (NULL == abc)
 		{
@@ -263,7 +263,7 @@ void TwoGoodToBeThree(char *a, char *b, char *c)
 		
 	for (i = 0; 3 > i; ++i)
 	{
-    	abc[i] = (char *)calloc(128, 1);
+    	abc[i] = (char *)calloc(ASCII, 1);
     	if (NULL == abc[i])
 		{
 			printf("Error - fail to allocate memory");
@@ -292,13 +292,13 @@ void TwoGoodToBeThree(char *a, char *b, char *c)
 		} 
 	}
 
-	for (i = 0 ; 128 > i ; ++i)
+	for (i = 0 ; ASCII > i ; ++i)
 	{
 		if ((abc[0][i]  > 0) && ((abc[1][i]) > 0) && ((abc[2][i] == 0)))
 		{
 			printf("%c\n",i);
 		}
-	}
+	} 
 	
 	for (i = 0; 3 > i; ++i)
 	{
@@ -307,6 +307,7 @@ void TwoGoodToBeThree(char *a, char *b, char *c)
 
 	free(abc);
 }
+
 
 
 

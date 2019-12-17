@@ -7,7 +7,7 @@
 #include <assert.h> /*assert*/
 #include <stdlib.h> /*malloc*/
 
-#include "priority_queue.h" /*priority queue header*/
+#include "priorityqueue.h" /*priority queue header*/
 #include "sortedlist.h"     /*sort dll header*/
 
 #define FREE(ptr) free(ptr); ptr = NULL;
@@ -116,7 +116,7 @@ void PQClear(pq_t *pq)
 	}
 }
 
-void *PQErase(pq_t *pq, match_func_ptr_pq m_ptr, void *param)
+void *PQErase(pq_t *pq, match_func_pq m_ptr, void *param)
 {
     void *holder = NULL;
     sll_iterator_t it;

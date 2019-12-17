@@ -43,6 +43,6 @@ size_t VectorSize(const vector_t *myvector);
 /* This function return specific item address to the user */
 /* Warning: the address is valid until using PopBack/PushBack over the limit */
 /* Warning: the function doesn't get NULL pointer */
-void* VectorGetItemAddress(const vector_t *myvector, int position);
+void* VectorGetItemAddress(const vector_t *myvector, size_t position);
 
 #endif

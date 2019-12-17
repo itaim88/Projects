@@ -90,7 +90,7 @@ char *Mystrncpy(char *dest, const char *src, size_t n)
 {
 	char *ptr4 = dest;
 
-	if (dest == NULL)
+	if (src == NULL)
 	return NULL;
 
 	
@@ -119,7 +119,8 @@ char *Mystrncpy(char *dest, const char *src, size_t n)
 	const char *run1 = string1;
 	const char *run2 = string2;
 	    	
-	while (tolower(*run1) == tolower(*run2) && '\0' != *run1)
+	while ((tolower(*run1) == tolower(*run2)) && ('\0' != *run1) &&
+		  ('\0' != *run2))
 
 	{
 		++run1;

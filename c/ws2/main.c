@@ -41,7 +41,8 @@ int main()
 	
 	
 	/*char a[] = "ACBA";
-	Ispolindrome(a);
-	return 0; */
+	Ispolindrome(a); */
+
+	return 0;
 
 }

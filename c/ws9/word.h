@@ -15,6 +15,7 @@
 #define WORD 8
 #define BYTE 8
 #define MAX_INT 2147483647
+#define ASCII 256 
 #define DIGIT "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 #define IS_LITTLE_ENDIEN(a) ((1 == *(char*)(&a))?(printf("Little Endian\n"))\
 												:(printf("Big Endian\n")))

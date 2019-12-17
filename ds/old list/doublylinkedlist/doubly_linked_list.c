@@ -9,7 +9,7 @@
 
 #include "double_linked_list.h" /* Doubly linked list header*/
 
-#define FREE(ptr) free(ptr); ptr = NULL;
+#define FREE(ptr) {free(ptr); ptr = NULL;}
 
 struct DLLNode
 {
@@ -117,8 +117,7 @@ iterator_t DLLInsert(dll_t *dll, iterator_t it, void *data)
 {
 	dllnode_t *new_node = NULL;
 
-	assert(NULL != dll);
-	assert(NULL != data); 
+	assert(NULL != dll); 
 
 	new_node = (dllnode_t *)malloc(sizeof(dllnode_t));
 	if (NULL == new_node)
@@ -153,9 +152,11 @@ int DLLIsSameIter(const iterator_t it1, const iterator_t it2)
 
 iterator_t DLLRemove(iterator_t it)
 {
-	dllnode_t *holder = it;
+	dllnode_t *holder = NULL;
 
 	assert(NULL != it); 
+	
+	holder = it;
 
 	it->next->prev = it->prev;
 	it->prev->next = it->next;
@@ -210,7 +211,7 @@ iterator_t DLLPushFront(dll_t *dll, void *data)
 	return DLLInsert(dll, DLLBegin(dll) , data);
 }
 
-int DLLForEach(iterator_t start, iterator_t end, action_func_ptr a_ptr, void *ap)
+/*int DLLForEach(iterator_t start, iterator_t end, action_func_ptr a_ptr, void *ap)
 {
 	iterator_t it_runner = NULL;
 
@@ -234,9 +235,48 @@ int DLLForEach(iterator_t start, iterator_t end, action_func_ptr a_ptr, void *ap
 	}
 
 	return 0;	
+}*/
+
+int DLLForEach(iterator_t start, iterator_t end, action_func_ptr a_ptr, void *ap)
+{
+    iterator_t i = NULL;
+    int return_val = 0;
+   
+    assert(NULL != start);
+    assert(NULL != end);
+    assert(NULL != a_ptr);
+   
+    for (i = start; i != end; i = DLLGetNext(i))
+    {
+        if (0 != (return_val = a_ptr(i->data, ap)))
+        {
+            return return_val;
+        }
+    }
+   
+    return return_val;
 }
 
 iterator_t DLLFind(iterator_t start, iterator_t end, match_func_ptr m_ptr, void *ap)
+{
+    iterator_t i = NULL;
+   
+    assert(NULL != start);
+    assert(NULL != end);
+    assert(NULL != m_ptr);
+   
+    for (i = start; i != end; i = DLLGetNext(i))
+    {
+        if (1 == m_ptr(i->data, ap))
+        {
+            return i;
+        }
+    }
+   
+    return end;
+}
+
+/*iterator_t DLLFind(iterator_t start, iterator_t end, match_func_ptr m_ptr, void *ap)
 {
 	iterator_t it_runner = NULL;
 
@@ -261,7 +301,8 @@ iterator_t DLLFind(iterator_t start, iterator_t end, match_func_ptr m_ptr, void 
 	}
 
 	return it_runner;	
-}
+}*/
+
 
 iterator_t DLLSplice(iterator_t start, iterator_t end, iterator_t where)
 {

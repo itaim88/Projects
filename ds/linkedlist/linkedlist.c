@@ -17,8 +17,9 @@ node_t *SLLCreateNode(node_t *next, const void *data)
 	{
 		return NULL;
 	}
-	new_node->next = next;
 	new_node->data = (void *)data;
+	new_node->next = next;
+	
 
 	return new_node;
 }
@@ -57,7 +58,7 @@ int SLLInsert(node_t *node, node_t *next_node)
 	tmp = node->data;
 	node->data = next_node->data;
 	next_node->data = tmp;
-
+	
 	return 0;
 }
 
@@ -136,20 +137,18 @@ int SLLForEach(node_t *head, action_func_ptr usr_func, void *additional)
 
 size_t SLLSize(const node_t *head)
 {
-	const node_t *runner = NULL;
-	size_t count = 0;
-
-	assert(NULL != head);
-	
-	runner = head;
-
-	while (NULL != runner)
-	{
-		runner = runner->next;
-		++count;
-	}
-
-	return count;
+    size_t count = 1;
+    node_t *runner = (node_t *)head;
+   
+    assert(NULL != head);
+   
+    while (NULL != runner->next)
+    {
+        ++count;
+        runner = runner->next;
+    }
+   
+    return count;
 }
 
 node_t *SLLFlip(node_t *head)

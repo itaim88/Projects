@@ -11,9 +11,7 @@ enum STATUS{SUCC, FAIL, FAIL_OPEN,FAIL_REMOVE, EXIT};
 #include <string.h>
 #include "files.h"
 
-
 #define STRUCT_ARR 5
-
 
 int main()
 {
