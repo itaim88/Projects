@@ -12,7 +12,7 @@
 #include <assert.h> /* assert */
 #include <stdio.h> /*sizeof*/
 
-#include "fsa.h" /*priority functions*/
+#include "fsa.h" /*fsa*/
 
 #define BYTES_IN_SMALL_WORD sizeof(size_t)
 #define SIZE_OF_FSA sizeof(fsa_t)
@@ -21,7 +21,7 @@
 typedef struct BlockHeader
 {
 	size_t next_free_index;
-}header_block_t;
+} header_block_t;
 
 struct FixedSizeAllocator
 {
@@ -53,8 +53,8 @@ fsa_t *FSAInit(void *allocated, const size_t segment_size, const size_t block_si
 {
 	fsa_t *new_fsa = NULL;
 	header_block_t *block_header = NULL;
-	size_t number_of_blocks = 0;
-	size_t index_holder = 0;
+	size_t number_of_blocks = 0UL;
+	size_t index_holder = 0UL;
 
 	assert(NULL != allocated);
 
@@ -69,7 +69,7 @@ fsa_t *FSAInit(void *allocated, const size_t segment_size, const size_t block_si
 
 	index_holder = block_header->next_free_index;
 
-	while (0 < (number_of_blocks - 1))
+	while (0UL < (number_of_blocks - 1UL))
 	{
 		block_header->next_free_index = index_holder + new_fsa->block_size + 
 														SIZE_OF_BLOCK_HEAD;
@@ -108,8 +108,8 @@ void *FSAAlloc(fsa_t *fsa)
 void FSAFree(void *block)
 {
 	header_block_t *head_runner = NULL;
-	size_t index_for_moving = 0;
-	size_t index_for_holding = 0;
+	size_t index_for_moving = 0UL;
+	size_t index_for_holding = 0UL;
 
 	assert(NULL != block);
 
@@ -125,7 +125,7 @@ void FSAFree(void *block)
 size_t FSACountFree(const fsa_t *fsa)
 {	
 	header_block_t *runner = NULL;
-	size_t counter_for_free = 0;
+	size_t counter_for_free = 0UL;
 
 	assert(NULL != fsa);
 
