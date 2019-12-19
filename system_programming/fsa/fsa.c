@@ -9,19 +9,14 @@
 /*********************************/
 
 #include <stddef.h>	/*size_t*/
-#include <stdlib.h> /* malloc */
 #include <assert.h> /* assert */
 #include <stdio.h> /*sizeof*/
 
 #include "fsa.h" /*priority functions*/
 
-#define FREE(ptr) {free(ptr); ptr = NULL;}
-
 #define BYTES_IN_SMALL_WORD sizeof(size_t)
 #define SIZE_OF_FSA sizeof(fsa_t)
 #define SIZE_OF_BLOCK_HEAD sizeof(header_block_t)
-#define ONE_BYTE 1
-
 
 typedef struct BlockHeader
 {
@@ -76,13 +71,16 @@ fsa_t *FSAInit(void *allocated, const size_t segment_size, const size_t block_si
 
 	while (0 < (number_of_blocks - 1))
 	{
-		block_header->next_free_index = index_holder + new_fsa->block_size + SIZE_OF_BLOCK_HEAD;
+		block_header->next_free_index = index_holder + new_fsa->block_size + 
+														SIZE_OF_BLOCK_HEAD;
 		index_holder = block_header->next_free_index;
-		block_header = (header_block_t *)((char *)block_header + (SIZE_OF_BLOCK_HEAD + new_fsa->block_size));
+		block_header = (header_block_t *)((char *)block_header +
+								 (SIZE_OF_BLOCK_HEAD + new_fsa->block_size));
 		--number_of_blocks;
 	}
 
-	block_header->next_free_index = index_holder + new_fsa->block_size + SIZE_OF_BLOCK_HEAD;
+	block_header->next_free_index = index_holder + new_fsa->block_size +
+													 SIZE_OF_BLOCK_HEAD;
 
 	return new_fsa;
 }
@@ -145,5 +143,5 @@ size_t FSACountFree(const fsa_t *fsa)
 size_t FSASuggestSize(const size_t blocks_count, const size_t block_size)
 {	
 	return ((blocks_count * (RevisedBlockSize(block_size) + SIZE_OF_BLOCK_HEAD))
-	                                         + SIZE_OF_FSA);
+	                                       					  + SIZE_OF_FSA);
 }
