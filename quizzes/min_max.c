@@ -4,6 +4,7 @@
 
 #define HALF_LENGTH length/2
 #define NEXT_PAIR 2
+
 /* this function works only for even length */
 
 void MinAndMax(const int *arr, size_t length)
