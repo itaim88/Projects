@@ -57,7 +57,7 @@ void MinAndMax(const int *arr, size_t length, int *max_return, int *min_return)
 		++counter;
 	} 
 	
-	if (0 != (length % 2))
+	if (0UL != (length % 2))
 	{
 		if (arr[length - 1] > max)
 		{
