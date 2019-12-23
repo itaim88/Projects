@@ -19,7 +19,7 @@ void MinAndMax(const int *arr, size_t length)
 	
 	arr_runner = (int *)arr;
 	
-	if ( *arr_runner > *(arr_runner + 1))
+	if (*arr_runner > *(arr_runner + 1))
 	{
 		max = *arr_runner;
 		min = *(arr_runner + 1);
