@@ -7,7 +7,7 @@
 
 /* this function works only for even length */
 
-void MinAndMax(const int *arr, size_t length)
+void MinAndMax(const int *arr, size_t length, int *max_return, int *min_return)
 {
 	int min = 0;
 	int max = 0;
@@ -58,15 +58,21 @@ void MinAndMax(const int *arr, size_t length)
 		}
 		++counter;
 	} 
-	printf("MIN is %d, MAX is %d \n" , min, max);
+	
+	*max_return = max;
+	*min_return = min;
 }
 
 int main()
 {
 	int arr[] = {6, -1234, 3, 5, 1, 4, 9, 2, 0, 1000, -1, 999, -987, 20};
 	size_t length = sizeof(arr)/sizeof(int);
+	int max = 0;
+	int min = 0;
 	
-	MinAndMax(arr, length);
+	MinAndMax(arr, length, &max, &min);
+	printf("max = %d \n", max);
+	printf("min = %d \n", min);
 	
 	return 0;
 } 
