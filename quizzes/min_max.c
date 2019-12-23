@@ -5,8 +5,6 @@
 #define HALF_LENGTH length/2
 #define NEXT_PAIR 2
 
-/* this function works only for even length */
-
 void MinAndMax(const int *arr, size_t length, int *max_return, int *min_return)
 {
 	int min = 0;
@@ -32,8 +30,7 @@ void MinAndMax(const int *arr, size_t length, int *max_return, int *min_return)
 		max = *(arr_runner + 1);
 	}
 	
-	for (arr_runner = arr_runner + NEXT_PAIR; counter < (HALF_LENGTH); 
-								 arr_runner = arr_runner + NEXT_PAIR)
+	for (arr_runner += NEXT_PAIR; counter < (HALF_LENGTH); arr_runner += NEXT_PAIR)
 	{
 		if (*(arr_runner ) > *(arr_runner + 1))
 		{
@@ -60,13 +57,26 @@ void MinAndMax(const int *arr, size_t length, int *max_return, int *min_return)
 		++counter;
 	} 
 	
+	if (0 != (length % 2))
+	{
+		if (arr[length - 1] > max)
+		{
+			max = arr[length - 1];
+		}
+				
+		if (arr[length - 1] < min)
+		{
+			min = arr[length - 1];
+		}
+	}
+	
 	*max_return = max;
 	*min_return = min;
 }
 
 int main()
 {
-	int arr[] = {6, -12000, 3, 5, 1, 4, 9, 2, 0, 1000, -1, 999, -987, 20000};
+	int arr[] = {6, -12000, 3, 5, 1, 4, 9, 2, 0, 1000, -1, 999, -99987};
 	size_t length = sizeof(arr)/sizeof(int);
 	int max = 0;
 	int min = 0;
