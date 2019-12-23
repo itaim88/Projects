@@ -3,7 +3,7 @@
 
 #include <stddef.h> /*size_t*/
 
-typedef struct Fixed_Size_Allocator fsa_t;
+typedef struct FixedSizeAllocator fsa_t;
 
 
 /*
@@ -41,6 +41,6 @@ size_t FSACountFree(const fsa_t *fsa);
 * Gets number of blocks demanded by the user and returns the segment size suggested.
 * complexity of O(1);              
 */
-size_t FSASuggestSize(const size_t block_size, const size_t blocks_count);
+size_t FSASuggestSize(const size_t blocks_count, const size_t block_size);
 
 #endif
