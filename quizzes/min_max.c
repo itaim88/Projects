@@ -64,7 +64,7 @@ void MinAndMax(const int *arr, size_t length, int *max_return, int *min_return)
 			max = arr[length - 1];
 		}
 				
-		if (arr[length - 1] < min)
+		else if (arr[length - 1] < min)
 		{
 			min = arr[length - 1];
 		}
