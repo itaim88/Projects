@@ -35,15 +35,15 @@ void MinAndMax(const int *arr, size_t length, int *max_return, int *min_return)
 	for (arr_runner = arr_runner + NEXT_PAIR; counter < (HALF_LENGTH); 
 								 arr_runner = arr_runner + NEXT_PAIR)
 	{
-		if (*(arr_runner )  > *(arr_runner + 1))
+		if (*(arr_runner ) > *(arr_runner + 1))
 		{
-			tmp_max = *(arr_runner );
+			tmp_max = *(arr_runner);
 			tmp_min = *(arr_runner + 1);
 		}
 		
 		else
 		{
-			tmp_min= *(arr_runner);
+			tmp_min = *(arr_runner);
 			tmp_max = *(arr_runner + 1);
 		}
 	
@@ -56,6 +56,7 @@ void MinAndMax(const int *arr, size_t length, int *max_return, int *min_return)
 		{
 			min = tmp_min;
 		}
+		
 		++counter;
 	} 
 	
@@ -65,7 +66,7 @@ void MinAndMax(const int *arr, size_t length, int *max_return, int *min_return)
 
 int main()
 {
-	int arr[] = {6, -1234, 3, 5, 1, 4, 9, 2, 0, 1000, -1, 999, -987, 20};
+	int arr[] = {6, -12000, 3, 5, 1, 4, 9, 2, 0, 1000, -1, 999, -987, 20000};
 	size_t length = sizeof(arr)/sizeof(int);
 	int max = 0;
 	int min = 0;
