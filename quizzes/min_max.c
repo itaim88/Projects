@@ -76,7 +76,7 @@ void MinAndMax(const int *arr, size_t length, int *max_return, int *min_return)
 
 int main()
 {
-	int arr[] = {6, -12000, 3, 5, 1, 4, 9, 2, 0, 1000, -1, 999, -99987};
+	int arr[] = {6, -12000, 3, 5, 1, 4, 9, 2, 0, 1000, -1, 999, 0, -99987};
 	size_t length = sizeof(arr)/sizeof(int);
 	int max = 0;
 	int min = 0;
