@@ -9,7 +9,7 @@
 
 #include <stdio.h> /* printf */
 
-#include "circularbuffer.h" /* API function */
+#include "cbuffer.h" /* API function */
 
 #define GREEN "\033[;032m"
 #define RED   "\033[;031m"

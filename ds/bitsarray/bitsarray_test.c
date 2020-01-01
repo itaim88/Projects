@@ -1,147 +1,138 @@
-/*******************************************************************************
--Ws1
--Itai Marienberg
--Mon 26 Nov 2019   
- -Reviewer: 
-*******************************************************************************/
-
 #include <stdio.h>
 #include <stdlib.h>
-
+#include <string.h>
 #include "bitsarray.h"
 
-#define TOTAL_BITS 64
-#define NRM "\x1B[0m"
-#define RED "\x1B[31m"
-#define GREEN "\x1B[32m"
-#define MSB 0x8000000000000000UL
+#define RED "\x1b[31m"
+#define GREEN "\x1b[32m"
+#define M0 (size_t) 0x0000000000000000
+#define M1 (size_t) 0x5555555555555555
+#define M2 (size_t) 0x3333333333333333
+#define M4 (size_t) 0x0f0f0f0f0f0f0f0f
+#define M8 (size_t) 0x00ff00ff00ff00ff
+#define M16 (size_t) 0x0000ffff0000ffff
+#define M32 (size_t) 0x00000000ffffffff
+#define M64 (size_t) 0xffffffffffffffff
+#define MASK1 (size_t) 0x0000000000000000001
 
-#define RUN_TEST(test,err_msg){\
-							if (test)\
-							{\
-								printf(GREEN"success\n");\
-							}\
-							else\
-							{\
-								printf(RED"FAIL: %s\n", err_msg);\
-							}\
-						}
+#define RUN_TEST(test,mssg)\
+            if (test)\
+            {\
+                printf(GREEN "SUCCESS: %s\n",mssg);\
+            }\
+            else\
+            {\
+                printf(RED "FAIL: %s\n",mssg);\
+            }\
 
-void test_BArrSetAllBits()
+static void TestBArrSetAllBits()
 {
-	RUN_TEST((BArrSetAllBits(0) == ~0UL), "can't set on all the bits");	
-	RUN_TEST((BArrSetAllBits(~0) == ~0UL), "can't set on all the bits");	
-	RUN_TEST((BArrSetAllBits(528734) == ~0UL), "can't set on all the bits");	
-}
-void test_BArrResetAllBits()
-{
-	RUN_TEST((BArrResetAllBits(1) == 0UL),"Reset failed (1)");
-	RUN_TEST((BArrResetAllBits(~0) == 0UL),"Reset failed (~0)");
-	RUN_TEST((BArrResetAllBits(123) == 0UL),"Reset failed (123)");
+    RUN_TEST((BArrSetAllBits(M0) == M64), "set all - 0");
+    RUN_TEST((BArrSetAllBits(~M4) == M64), "set all")
 }
 
-void test_BArrSetOn()
+static void TestBArrResetAllBits()
 {
-	RUN_TEST((BArrSetOn(0,32) == 2147483648UL), "SetBitOn error");
-	RUN_TEST((BArrSetOn(0,1) == 1ul), "SetBitOn error");
-	RUN_TEST((BArrSetOn(0,2) == 2ul), "SetBitOn error");
+    RUN_TEST((BArrResetAllBits(M1) == M0), "reset all");
+    RUN_TEST((BArrResetAllBits(M64) == M0), "reset all - 0xffffffffffffffff");
+    RUN_TEST((BArrResetAllBits(M0) == 0), "reset all - 0x0000000000000000");
+}   
+
+static void TestBArrIsOn()
+{
+    RUN_TEST((BArrIsOn(M0,2) == 0), "second bit in M0 is not on");  
+    RUN_TEST((BArrIsOn(123456789,5) == 1), "5th bit in 123456789 is on");
+    RUN_TEST((BArrIsOn(M64,64) == 1), "bit 64 in M64 is on");         
+}    
+
+static void TestBArrIsOff()
+{
+    RUN_TEST((BArrIsOff(0,2) == 1), "second bit in 0 is off");  
+    RUN_TEST((BArrIsOff(123456789,5) == 0), "5th bit in 123456789 is not on");
+    RUN_TEST((BArrIsOn(M64,64) == 1), "bit 64 in M64 is not on");
+    RUN_TEST((BArrIsOn(M2,1) == 1), "bit 1 in M2 is off");       
+}   
+
+static void TestBArrCountOn()
+{
+    RUN_TEST((BArrCountOn(M64) == 64), "64 set bits in M64");  
+    RUN_TEST((BArrCountOn(MASK1) == 1), "1 set bits in MASK1");
+    RUN_TEST((BArrCountOn(M0) == 0), "0 set bits in M0");         
 }
 
-void test_BArrIsOff()
+static void TestBArrCountOff()
+{ 
+    RUN_TEST((BArrCountOff(M32) == 32), "32 bits off in M32");
+    RUN_TEST((BArrCountOff(M64) == 0), "0 bits off in M64");          
+}
+  
+static void TestBArrSetOn()
 {
-	RUN_TEST((BArrIsOff(4,7) == 1UL),"IsOff 1 returns succ instead of fail");
-	RUN_TEST((BArrIsOff(4,2) == 1UL),"IsOff 2 returns fail instead of succ");
-	RUN_TEST((BArrIsOff(11,1) == 0UL),"IsOff 3 fails with normal input");
-	RUN_TEST((BArrIsOff(10,2) == 0UL),"IsOff 4 fails with normal input");
-	RUN_TEST((BArrIsOff(11,10) == 1UL),"IsOff 5 fails with normal input");
-	RUN_TEST((BArrIsOff(10,10) == 1UL),"IsOff 6 fails with normal input");
+    RUN_TEST((BArrSetOn(123456789,2) == 123456791), "SetOn");
+    RUN_TEST((BArrSetOn(M0,1) == MASK1), "SetOn");
+    RUN_TEST((BArrSetOn(M32,2) == M32), "SetOn");           
+}
+    
+static void TestBArrSetOff()
+{
+    RUN_TEST((BArrSetOff(123456789,3) == 123456785), "SetOff");
+    RUN_TEST((BArrSetOff(MASK1,1) == M0), "SetOff");          
 }
 
-void test_BArrIsOn()
+static void TestBArrSetBit()
 {
-	RUN_TEST((BArrIsOn(4,7) == 0),"IsOn 1 returns succ instead of fail");
-	RUN_TEST((BArrIsOn(4,2) == 0),"IsOn 2 returns fail instead of succ");
-	RUN_TEST((BArrIsOn(11,1) == 1),"IsOn 3 fails with normal input");
-	RUN_TEST((BArrIsOn(10,2) == 1),"IsOn 4 fails with normal input");
-	RUN_TEST((BArrIsOn(11,10) == 0),"IsOn 5 fails with normal input");
-	RUN_TEST((BArrIsOn(10,10) == 0),"IsOn 6 fails with normal input");
-}	
+    RUN_TEST((BArrSetBit(MASK1,1,0) == M0), "SetBit");  
+    RUN_TEST((BArrSetBit(M32,3,1) == M32), "SetBit");
+    RUN_TEST((BArrSetBit(123456789,3,0) == 123456785), "SetBit");          
+}   
 
-void test_BArrSetOff()
+static void TestBArrFlipBit()
 {
-	RUN_TEST((BArrSetOff(2147483648,32) == 0UL), "SetBitOf 1 error");
-	RUN_TEST((BArrSetOff(8,4) == 0UL), "Set 2 BitOf error");
+    RUN_TEST((BArrFlipBit(3,2) == 1), "flip");  
+    RUN_TEST((BArrFlipBit(123456785,3) == 123456789), "flip");
+    RUN_TEST((BArrFlipBit(MASK1,1) == M0), "flip");          
+}   
 
-}
+static void TestBArrRotateRight()
+{  
+    RUN_TEST((BArrRotateRight(0,3) == 0), "RotateRight");
+    RUN_TEST((BArrRotateRight(0,3) == 0), "RotateRight");          
+}   
 
-void test_BArrCountOn()
+static void TestBArrRotateLeft()
+{  
+    RUN_TEST((BArrRotateLeft(0,0) == 0), "RotateLeft");         
+} 
+/*
+static void TestBArrToString()
 {
-	RUN_TEST((BArrCountOn(33) == 2UL), "Count return unebitspected value");
-	RUN_TEST((BArrCountOn(~0) == 64UL), "Count return unebitspected value");
-}
-
-void test_BArrCountOff()
+    char* buffer = (char*)malloc(65);
+    RUN_TEST((strcmp(BArrToString(4611686018427387904,buffer),"0100000000000000000000000000000000000000000000000000000000000000") == 0),"tostring");
+    free(buffer);          
+} 
+*/
+static void TestBArrMirror()
 {
-	RUN_TEST((BArrCountOff(33) == 62UL), "Count 1 return unebitspected value");
-	RUN_TEST((BArrCountOff(~0) == 0UL), "Count 2 return unebitspected value");
-}
-
-void test_BArrRotateLeft()
-{
-	RUN_TEST((BArrRotateLeft(MSB,2) == 2UL), "MSB failes to move to the first bit place");
-}
-
-void test_BArrRotateRight()
-{
-	RUN_TEST((BArrRotateRight(1,1) == MSB), "1 failes to move to the MSB bit place");	
-}
-
-void test_BArrMirror()
-{
-	RUN_TEST((BArrMirror(MSB) == 1), "mirror fails to change msb place");
-	RUN_TEST((BArrMirror(1) == MSB), "mirror fails to change 1st bit place");
-	RUN_TEST((BArrMirror(~0) == ~0UL), "mirror fails bla bla");
-}
-
-void test_BArrSetBit()
-{
-	RUN_TEST((BArrSetBit(0,4,1) == 8), "SetBit error");
-}
-
-void test_BArrFlipBit()
-{
-	RUN_TEST((BArrFlipBit(3,2) == 1), "Flip error");
-}
-
-
+    RUN_TEST((BArrMirror(~M0) == ~0), "mirrorr");
+    RUN_TEST((BArrMirror(M8) == ~M8), "mirrorr");  
+} 
 
 int main()
 {
-	char *string_buffer = (char *)calloc(TOTAL_BITS + 1, sizeof(char));
-	test_BArrSetAllBits();
-	test_BArrResetAllBits();	
-	test_BArrSetOn();
-	test_BArrIsOff();
-	test_BArrIsOn();
-	
-	test_BArrSetOff();
-	test_BArrCountOn();	
-	test_BArrCountOff();
-	test_BArrRotateLeft();
-	test_BArrRotateRight();
-
-	test_BArrMirror();
-	test_BArrSetBit();	
-	test_BArrFlipBit();
-	test_BArrFlipBit();
-
-	free(string_buffer);
-	
-
-	return 0;
+    TestBArrSetAllBits();
+    TestBArrResetAllBits();
+    TestBArrIsOn();
+    TestBArrIsOff();
+    TestBArrCountOn();
+    TestBArrCountOff();
+    TestBArrSetOn();
+    TestBArrSetOff();
+    TestBArrSetBit();
+    TestBArrFlipBit();
+    TestBArrRotateRight();
+    TestBArrRotateLeft();
+/*    TestBArrToString();*/
+    TestBArrMirror();
+    
+    return 0;
 }
-
-						
-
-
-

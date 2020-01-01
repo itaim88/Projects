@@ -10,7 +10,7 @@
 #include <stdio.h> /* printf */
 
 #include "sortedlist.h" /* sorted list functions */
-#include "priorityqueue.h" /* priority list functions */
+#include "priorityq.h" /* priority list functions */
 
 #define UNUSED(x) (void)(x)
 

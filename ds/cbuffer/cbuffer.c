@@ -9,7 +9,7 @@
 #include <stddef.h> /*OFFSETOF*/
 #include <string.h> /*memcpy*/
 
-#include "circularbuffer.h" /*circular buffer header*/
+#include "cbuffer.h" /*circular buffer header*/
 
 #define FREE(ptr) free(ptr); ptr = NULL;
 #define MIN_SIZE 1

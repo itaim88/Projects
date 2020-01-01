@@ -12,7 +12,7 @@
 #include <assert.h>    /* assert */
 
 #include "sortedlist.h" /* sorted list functions */
-#include "priorityqueue.h" /* priority list functions */
+#include "priorityq.h" /* priority list functions */
  
 #define FREE(ptr) {free(ptr); ptr = NULL;}
 
