@@ -1,13 +1,14 @@
 
 
 #include <stddef.h> /*size_t */ 
-#include <stdio.h> /*printf */ 
+#include <stdio.h> /*size_t */ 
 #include <stdlib.h> /*malloc */ 
 #include <time.h> /*rand */ 
 
-/*#include "insertion.h"*/
+#include "sorts.h"
 
-#define SIZE 10000
+#define SIZE 20
+#define UB 11
 
 
 #define RED "\x1b[31m"
@@ -24,50 +25,50 @@
                 printf(RED "FAIL: %s\n",mssg);\
             }\
 
-void InsertionSort(int arr[], size_t length)
-    {
-        size_t i = 0;
-        int j = 0;
-        int temp = 0;
 
-        for (i = 1 ; i < length; ++i)
-        {
-     		temp = arr[i];
-     		j = i - 1;
-    
-		 	while ( 0 <= j && temp < arr[j])
-		 	{
-		 		arr[j+1] = arr[j];
-		 		--j;
-		 	}
-     		
-     		arr[j+1] = temp;
-     	}   	
-    }
-  
-int main()
+    int main()
     {
         size_t i = 0;
+        clock_t start, end;
+        double time_use = 0;
+        int *b = NULL;
+    
         int *arr = (int *) malloc(sizeof(int) * SIZE);
         if (NULL == arr)
+        {
+            return 1;
+        }
+        
+        b = (int *) malloc(sizeof(int) * SIZE);
+        if (NULL == b)
         {
             return 1;
         }
        
         for (i = 0; i < SIZE; ++i)
         {
-            arr[i] = rand() % 10000;
+            arr[i] = rand() % UB;
         }
 
-        InsertionSort(arr,SIZE);
-         
+		start = clock();
+        /*BubbleSort(arr,SIZE);*/
+
+        CountingSort(arr,SIZE,-5,UB,b);
+
+		end = clock();
+        time_use = ((double)(end - start)) / CLOCKS_PER_SEC;
+       
         for (i = 0; i < SIZE; ++i)
         {
-            printf("%d\n", arr[i]);
+            printf("%d\n", b[i]);
         }
-
+		
+		printf("time use = %f\n", time_use);
+		
         free(arr);
         arr = NULL;
+        free(b);
+        b = NULL;
 
         return 0;
     }

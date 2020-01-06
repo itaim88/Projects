@@ -4,7 +4,7 @@ CC=gcc
 CFLAGS=-ansi -pedantic-errors -Wall -Wextra -g -I$(INC_DIR)
 
 RPATH=-Wl,-rpath,'$$ORIGIN/../../../lib/$(FOLDER)'
-TARGET=selection
+TARGET=sorts
 FOLDER=debug
 
 #directories
