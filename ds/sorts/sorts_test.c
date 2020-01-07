@@ -25,6 +25,9 @@
                 printf(RED "FAIL: %s\n",mssg);\
             }\
 
+    
+
+
 
     int main()
     {
@@ -32,6 +35,7 @@
         clock_t start, end;
         double time_use = 0;
         int *b = NULL;
+        int count[10] = {0};
     
         int *arr = (int *) malloc(sizeof(int) * SIZE);
         if (NULL == arr)
