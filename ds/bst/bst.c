@@ -119,6 +119,7 @@ int BSTInsert(bst_t *tree, void *data)
     
     runner->child[child_side] = it;
     it->parent = runner;
+    
     return 0;
 }
 
