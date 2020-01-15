@@ -1,16 +1,27 @@
 /*********************************/
-/*    Task                       */
-/*    Author :Itai Marienberg   */
-/*    Reviewed By: Yoav          */
-/*    Date: 15/12/2019           */
+/*                               */
+/*    Author :Itai Marienberg    */
+/*    Reviewed By:               */
+/*					             */
 /*********************************/
 
 #include <stdio.h>
 #include <assert.h>
+#include <string.h>
+
+#include <stack.h>
 
 #define SIZE_OF_FIB 51
 
 int F[SIZE_OF_FIB];
+
+struct Stack
+{
+    void *start;
+    void *current;
+    void *end;
+    size_t element_size; 
+}; 
 
 size_t RecFib(int n)
 {
@@ -108,6 +119,64 @@ char * RecStrcat(char *dst, const char *src)
 	return (RecStrcat(dst, src + 1));
 }
 
+/*char *RecStrstr(char *haystack, char *needle)
+{
+
+	if( 0 == strncmp(haystack,needle,3))
+	{
+		return haystack;
+	}
+
+	return RecStrstr(haystack + 1, needle + 1);
+}*/
+
+void RecSortStack(stack_t *stack)
+{
+	void *holder = StackPeek(stack);
+	void *tmp = NULL;
+	
+	StackPop(stack);
+	
+	if (1 == StackSize(stack))
+	{
+		if (*(int*)holder < *(int*)StackPeek(stack))
+		{
+			tmp = StackPeek(stack);
+			StackPop(stack);
+			StackPush(stack, holder);
+			StackPush(stack, tmp);	
+		}
+		
+		else 
+		{
+			StackPush(stack, holder); 
+		}
+		
+		return;
+	}
+	
+	RecSortStack(stack);
+	
+	if (*(int*)holder < *(int*)StackPeek(stack))
+	{
+		tmp = StackPeek(stack);
+		StackPop(stack);
+		StackPush(stack, holder); 
+		RecSortStack(stack);
+		StackPush(stack, holder); 
+	}
+	
+	else
+	{
+		StackPush(stack, holder); 
+	}
+	
+	return;
+	
+				
+}
+
+
 int main()
 {	
 	int i = 0;
@@ -115,7 +184,19 @@ int main()
 	char src[] = "itai";
 	char dst1[50] = "helloword";
 	char src1[5] = "itai";
-
+	char haystack[10] = "123456789";
+	char needle[10] = "456";
+	int x = 12, y = 7, z = 50, w = 3;
+	
+    stack_t *stack1 = StackCreate(4, 8);
+    stack_t *stack2 = StackCreate(4, 8);
+    StackPush(stack1, &x);
+    StackPush(stack1, &y);
+    StackPush(stack1, &z);
+    StackPush(stack1, &w);
+    
+    RecSortStack(stack1);
+	
 	printf("This is rec Fib test: \n\n");
 
 	for (i = 0; i < SIZE_OF_FIB; ++i)
@@ -152,8 +233,13 @@ int main()
 
 	printf("\n\nThis is RecStrcat test: \n\n");
 
-	printf("itai == %s \n", RecStrcat(dst1, src1));
+	printf("src = helloword, dst = itai \n");
+	printf("result is: %s \n", RecStrcat(dst1, src1));
 	
+	printf("\n\nThis is RecStrstr test: \n\n");
+
+	/*printf("haystack 123456789 needle 456 \n");
+	printf("result is: %s \n", RecStrstr(haystack, needle));*/
 
 	return 0;
 }

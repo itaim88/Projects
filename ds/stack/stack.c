@@ -28,7 +28,7 @@ stack_t* StackCreate(size_t element_size, size_t capacity)
 		return NULL;
 	}
 
-	newstack->start = (void *) malloc(capacity*element_size);
+	newstack->start = (void *) malloc(capacity * element_size);
 	if (NULL == newstack->start)
 	{
 		return NULL;
