@@ -33,58 +33,51 @@
         printf(NORMAL);\
     }\
 }
-/*
-typedef struct BSTNode
-{
-    struct BSTNode *child[2];
-    struct BSTNode *parent;
-    void *node_data;
-} bst_node_t;
 
-struct BSTree
+
+static int CompareFunc(const void *user_data, const void *tree_data)
 {
-    bst_node_t dummy;
-    compare_func_t cmp;
-    void *param;
-};
-*/
-/*
-static int CompareFunc(const void *user_data, const void *tree_data, void *param)
+   
+    return (*(int *)user_data - *(int *)tree_data); 
+}
+
+
+static int ActionFunc(void *param, void *tree_data)
 {
     UNUSED(param);
-    return (*(int *)user_data > *(int *)tree_data);
-}
-*/
-/*
-static int ActionFunc(void *user_data, void *tree_data)
-{
-    UNUSED(user_data);
   
     printf("%d \n", *(int*)tree_data);
     
     return 0;  
-}*/
-/*
+}
+
 static void BSTTest1()
 {
     void *param = NULL;
-    bst_t *tree = BSTCreate(&CompareFunc, param);
+    avl_t *tree = AVLCreate(&CompareFunc);
     int x1 = 20, x2 = 10, x3 = 30, x4 = 3, x5 = 15, x6 = 25, x7 = 35;
-    bst_itr_t it1, it2, it3;
+
+
     
-    printf("BSTTest 1:\n");
-    RUN_TEST(1 == BSTIsEmpty(tree), "is empty1");
+    printf("AVLTTest 1:\n");
+    /*RUN_TEST(1 == AVLIsEmpty(tree), "is empty1");*/
     
-    RUN_TEST(0 == BSTInsert(tree, &x1), "insert1");
-    RUN_TEST(0 == BSTInsert(tree, &x2), "insert1");
-    RUN_TEST(0 == BSTInsert(tree, &x3), "insert1");
-    RUN_TEST(0 == BSTInsert(tree, &x4), "insert1");
-    RUN_TEST(0 == BSTInsert(tree, &x5), "insert1");
-    RUN_TEST(0 == BSTInsert(tree, &x6), "insert1");
-    RUN_TEST(0 == BSTInsert(tree, &x7), "insert1");
+    RUN_TEST(0 == AVLInsert(tree, &x1), "insert1");
+    RUN_TEST(0 == AVLInsert(tree, &x2), "insert1");
+    RUN_TEST(0 == AVLInsert(tree, &x3), "insert1");
+    RUN_TEST(0 == AVLInsert(tree, &x4), "insert1");
+    RUN_TEST(0 == AVLInsert(tree, &x5), "insert1");
+    RUN_TEST(0 == AVLInsert(tree, &x6), "insert1");
+    RUN_TEST(0 == AVLInsert(tree, &x7), "insert1");
     
-    RUN_TEST(7 == BSTSize(tree), "size1");
+    RUN_TEST(7 == AVLSize(tree), "size1");
+
+    AVLForeach(tree,  &ActionFunc, param);
     
+    RUN_TEST(30 == *(int*) AVLFind(tree, &x3), "Find");
+
+
+    /*
     it1 = tree->dummy.child[0];
     
     it1 = BSTNext(it1);
@@ -104,11 +97,12 @@ static void BSTTest1()
     RUN_TEST(15 == *(int*)(it3->child[0]->node_data), "remove1");
     BSTRemove(it3);
     RUN_TEST(25 == *(int*)(tree->dummy.child[0]->node_data), "remove1");
-    BSTDestroy(tree);
+    */
+    AVLDestroy(tree);
     
     printf("\n\n");
 }
-*/
+
 /*
 static void BSTTest2()
 {
@@ -225,8 +219,8 @@ static void BSTTest4()
 
 int main()
 {
-   /* BSTTest1();
-    BSTTest2();
+    BSTTest1();
+    /*BSTTest2();
     BSTTest3();
     BSTTest4();*/
     

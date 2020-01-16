@@ -30,11 +30,24 @@ struct AVLNode
     struct AVLNode *child[NUM_OF_CHILDREN];
 };
 
+typedef struct Wrap
+{
+    void *user_data;
+    compare_func_t cmp;
+}wrap_t;
+
 struct AVLTree
 {
-    compare_func_t cmp;
+    wrap_t wraper;
     avl_node_t *root;
 };
+
+
+
+static int LeftOrRight(const void *wrap, const void *tree_data)
+{
+    return 0 < ((wrap_t *)wrap)->cmp(((wrap_t *)wrap)->user_data, tree_data);
+}
 
 static void Balance(avl_node_t *root)
 {
@@ -49,7 +62,8 @@ avl_t *AVLCreate(compare_func_t cmp)
         return NULL;
     }
 
-    new_root->cmp = cmp;
+    new_root->wraper.cmp = cmp;
+    new_root->wraper.user_data = NULL;
     new_root->root = NULL;
     
     return new_root;       
@@ -65,6 +79,8 @@ static void DestroyHelper(avl_node_t *node)
     if (NULL == node->child[LEFT] && NULL == node->child[RIGHT])
     {
         FREE(node);
+
+        return;
         
     }
 
@@ -73,16 +89,15 @@ static void DestroyHelper(avl_node_t *node)
     FREE(node);
 }
 void AVLDestroy(avl_t *tree) /*postorder*/
-{
-    assert(NULL != tree);
+{ 
 
-    if ( NULL == tree->node)
+    if (NULL == tree->root)
     {
         FREE(tree);
         return; 
     }
 
-    DestroyHelper(tree->node);
+    DestroyHelper(tree->root);
     FREE(tree);
 }
 
@@ -91,9 +106,10 @@ void AVLDestroy(avl_t *tree) /*postorder*/
     Return 0 for success, otherwise: 1
     Complexity of malloc * O(log(n))                            
  ********************************************************************/
-static avl_node_t *CreateNode(avl_node_t *node, void *data)
+static avl_node_t *CreateNode(void *data)
 {
-    node = (avl_node_t *)malloc(sizeof(avl_node_t));
+
+    avl_node_t *node = (avl_node_t *)malloc(sizeof(avl_node_t));
     if (NULL == node)
     {
         return NULL;
@@ -107,29 +123,109 @@ static avl_node_t *CreateNode(avl_node_t *node, void *data)
     return node;
 }
 
-int AVLInsert(avl_t *tree, void *data);
+static int AVLInsertHelper(avl_node_t *node, void *data, wrap_t wraper)
+{
+
+    if (NULL == node->child[LeftOrRight(&wraper, node->data)])
+    {
+        
+        if (NULL == (node->child[LeftOrRight(&wraper, node->data)] = CreateNode(data)))
+        {
+            return 1;
+        } 
+
+        return 0;   
+    }
+
+    AVLInsertHelper(node->child[LeftOrRight(&wraper, node->data)], data, wraper);
+}
+
+int AVLInsert(avl_t *tree, void *data)
+{
+    assert(NULL != tree);
+
+    tree->wraper.user_data = data;
+
+    if (NULL == tree->root)
+    {
+        if (NULL == (tree->root = CreateNode(data)))
+        {
+            return 1;
+        }
+
+        return 0;
+    }
+
+    return AVLInsertHelper(tree->root, data, tree->wraper);
+}
+
 
 /*********************************************** 
     Get a pointer to data to remove from the tree
     Complexity: O(log n)
  ***********************************************/
-void AVLRemove(avl_t *tree, const void *data);
+void AVLRemove(avl_t *tree, const void *data)
+{
+
+}
 
 /*********************************************************************** 
     Gets a pointer to the tree and search if the data exist in the tree
     Returns the data if it was found, otherwise: NULL
     Complexity: avg-case: O(log(n)), worst-case: O(log(n))
  ***********************************************************************/
-void *AVLFind(const avl_t *tree, const void *data);
+static void * AVLFindHelper(avl_node_t *node, wrap_t wraper)
+{
+    if (NULL == node)
+    {
+        return NULL;
+    }
 
-/********************************************************************************** 
-    Gets a tree pointer and action function pointer to operate on the elements in the tree
-    Returns 0 for success, otherwise: non-zero value
-    Complexity: worst-case: O(n) 
- ***********************************************************************************/
-int AVLForeach(avl_t *tree, action_ptr_t action, void *param);
+    if (0 == wraper.cmp(wraper.user_data, node->data))
+    {
+        return wraper.user_data;
+    }
 
-/*inorder*/
+    AVLFindHelper(node->child[LeftOrRight(&wraper, node->data)], wraper);
+   
+} 
+    
+void *AVLFind(const avl_t *tree, const void *data)
+{
+    avl_t *tree_avl = NULL;
+
+    assert(NULL != tree);
+
+    tree_avl = (avl_t *)tree;
+    tree_avl-> wraper.user_data = (void *)data;
+
+    if (NULL == tree_avl)
+    {
+        return NULL;
+    }
+
+    return (AVLFindHelper(tree_avl->root, tree_avl->wraper));
+}
+
+static int ForeachHelper(avl_node_t *node, action_ptr_t action, void *param)
+{
+    if (NULL == node)
+    {
+        return 0;
+    }
+
+    return (ForeachHelper(node->child[LEFT], action, param) +
+                                   action(param,node->data) +
+            ForeachHelper(node->child[RIGHT], action, param));
+
+}
+
+int AVLForeach(avl_t *tree, action_ptr_t action, void *param)
+{
+    assert(NULL != tree);
+
+    return ForeachHelper(tree->root, action, param);
+}  
 
 static size_t SizeHelper(avl_node_t *node)
 {
