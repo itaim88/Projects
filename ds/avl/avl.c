@@ -118,21 +118,16 @@ static avl_node_t *CreateNode(void *data)
 
 static void UpdateHeight(avl_node_t *node)
 {
-    int is_right_null = 0;
-    int is_left_null = 0;
     size_t new_height = 0;
     
-    assert(node);
+    assert(NULL != node);
     
-    is_right_null = !(node->child[RIGHT]);
-    is_left_null = !(node->child[LEFT]);
-    
-    if (!is_right_null)
+    if (NULL != node->child[RIGHT])
     {
         new_height = (node->child[RIGHT])->height + 1;
     }
 
-    if ((!is_left_null) && (new_height <= (node->child[LEFT])->height))
+    if ((NULL != node->child[LEFT]) && (new_height <= (node->child[LEFT])->height))
     {
         new_height = (node->child[LEFT])->height + 1;
     }
@@ -140,32 +135,17 @@ static void UpdateHeight(avl_node_t *node)
     node->height = new_height;
 }
 
-static int AVLInsertHelper(avl_node_t *node, void *data, wrap_t wraper)
+static int AVLInsertHelper(avl_node_t **node_ptr, compare_func_t cmp, void *data)
 {
+    int cmp_result = 0;
+    int success_or_fail = 0;
+    avl_node_t **next = NULL;
 
-    if (NULL == node->child[LeftOrRight(&wraper, node->data)])
+    if (NULL == *node_ptr)
     {
-        
-        if (NULL == (node->child[LeftOrRight(&wraper, node->data)] = CreateNode(data)))
-        {
-            return 1;
-        } 
+        *node_ptr = (CreateNode(data));
 
-        return 0;   
-    }
-
-    return AVLInsertHelper(node->child[LeftOrRight(&wraper, node->data)], data, wraper);
-}
-
-int AVLInsert(avl_t *tree, void *data)
-{
-    assert(NULL != tree);
-
-    tree->wraper.user_data = data;
-
-    if (NULL == tree->root)
-    {
-        if (NULL == (tree->root = CreateNode(data)))
+        if (NULL == *node_ptr)
         {
             return 1;
         }
@@ -173,7 +153,29 @@ int AVLInsert(avl_t *tree, void *data)
         return 0;
     }
 
-    return AVLInsertHelper(tree->root, data, tree->wraper);
+    cmp_result = cmp(data, (*node_ptr)->data);
+
+    if (0 == cmp_result)
+    {
+        return 1;
+    }
+
+    next = &((*node_ptr)->child[cmp_result > 0]);    
+    success_or_fail = AVLInsertHelper(next, cmp, data);
+    
+    if (0 == success_or_fail)
+    {
+        UpdateHeight(*node_ptr);
+        /*Balance(node_ptr);*/
+    }
+    return success_or_fail;
+}
+
+int AVLInsert(avl_t *root, void *data)
+{
+    assert(NULL !=root);
+
+    return (AVLInsertHelper(&(root->root), root->wraper.cmp, data));
 }
 
 static void RemoveAndUpdate(avl_node_t **current_ptr, avl_node_t *remove_node)
@@ -341,7 +343,7 @@ int AVLIsEmpty(const avl_t *tree)
 }*/
 
 
-size_t AVLHeight(const avl_t *tree)
+size_t AVLGetHeight(const avl_t *tree)
 {
     avl_node_t *root = NULL;
 

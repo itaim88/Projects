@@ -73,7 +73,8 @@ static void AVLTest1()
     RUN_TEST(0 == AVLInsert(tree, &x12), "insert1");
 
     RUN_TEST(12 == AVLSize(tree), "size1");
-
+    RUN_TEST(4 == AVLGetHeight(tree), "Height");
+   
     AVLForeach(tree, &ActionFunc, param);
     
     RUN_TEST(30 == *(int*) AVLFind(tree, &x3), "Find");
