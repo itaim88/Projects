@@ -30,9 +30,8 @@ struct PQueue
 
 int MyCompare(const void *node_data, const void *user_data, void *param)
 {
-    return (0 < ((wrap_t *)param)->cmp_func(node_data, 
-                                             user_data, 
-                                             ((wrap_t *)param)->param));
+    return (0 < ((wrap_t *)param)->cmp_func(node_data,user_data, 
+                                     ((wrap_t *)param)->param));
 } 
 
 pq_t *PQCreate(compare_func_ptr cmp_func, void *param)

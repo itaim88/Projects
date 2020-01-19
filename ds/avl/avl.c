@@ -1,10 +1,10 @@
 /*********************************/
 /*   			             	 */
 /*   Data Structures             */
-/*   AVL          */
-/*   Author: Itai Marienberg      */
+/*   AVL                         */
+/*   Author: Itai Marienberg     */
 /*   Last Updated 7/1/20         */
-/*   Reviewed by:          */   
+/*   Reviewed by:                */   
 /*			                   	 */
 /*********************************/
 
@@ -42,12 +42,11 @@ struct AVLTree
     avl_node_t *root;
 };
 
-
-
 static int LeftOrRight(const void *wrap, const void *tree_data)
 {
     return 0 < ((wrap_t *)wrap)->cmp(((wrap_t *)wrap)->user_data, tree_data);
 }
+
 
 static void Balance(avl_node_t *root)
 {
@@ -69,46 +68,40 @@ avl_t *AVLCreate(compare_func_t cmp)
     return new_root;       
 }
 
-/************************************************** 
-    Destroys the AVL data and free it from memory 
-    Complexity o(n) * free                            
- **************************************************/
-static void DestroyHelper(avl_node_t *node)
+static void DestroyNode(avl_node_t *avl_node)
 {
+    avl_node->child[LEFT] = NULL;
+    avl_node->child[RIGHT] = NULL;
+    avl_node->data = NULL;
 
-    if (NULL == node->child[LEFT] && NULL == node->child[RIGHT])
+    free(avl_node); 
+    avl_node = NULL;
+}
+
+static void AVLDestroyHelper(avl_node_t *avl_node)
+{
+    if (NULL == avl_node)
     {
-        FREE(node);
-
         return;
-        
     }
 
-    DestroyHelper(node->child[LEFT]);
-    DestroyHelper(node->child[RIGHT]);
-    FREE(node);
-}
-void AVLDestroy(avl_t *tree) /*postorder*/
-{ 
-
-    if (NULL == tree->root)
-    {
-        FREE(tree);
-        return; 
-    }
-
-    DestroyHelper(tree->root);
-    FREE(tree);
+    AVLDestroyHelper(avl_node->child[LEFT]);
+    AVLDestroyHelper(avl_node->child[RIGHT]);
+    DestroyNode(avl_node);
 }
 
-/********************************************************************* 
-    Gets a pointer to the tree and insert new data in the correct place  
-    Return 0 for success, otherwise: 1
-    Complexity of malloc * O(log(n))                            
- ********************************************************************/
+void AVLDestroy(avl_t *tree)
+{
+    assert(NULL != tree);
+
+    AVLDestroyHelper(tree->root);
+
+    tree->root = NULL;
+    free(tree); tree = NULL;
+}
+
 static avl_node_t *CreateNode(void *data)
 {
-
     avl_node_t *node = (avl_node_t *)malloc(sizeof(avl_node_t));
     if (NULL == node)
     {
@@ -118,9 +111,33 @@ static avl_node_t *CreateNode(void *data)
     node->child[LEFT] = NULL;
     node->child[RIGHT] = NULL;
     node->data = data;
-    node->height = 0; /* need to check*/
+    node->height = 0; 
   
     return node;
+}
+
+static void UpdateHeight(avl_node_t *node)
+{
+    int is_right_null = 0;
+    int is_left_null = 0;
+    size_t new_height = 0;
+    
+    assert(node);
+    
+    is_right_null = !(node->child[RIGHT]);
+    is_left_null = !(node->child[LEFT]);
+    
+    if (!is_right_null)
+    {
+        new_height = (node->child[RIGHT])->height + 1;
+    }
+
+    if ((!is_left_null) && (new_height <= (node->child[LEFT])->height))
+    {
+        new_height = (node->child[LEFT])->height + 1;
+    }
+    
+    node->height = new_height;
 }
 
 static int AVLInsertHelper(avl_node_t *node, void *data, wrap_t wraper)
@@ -137,7 +154,7 @@ static int AVLInsertHelper(avl_node_t *node, void *data, wrap_t wraper)
         return 0;   
     }
 
-    AVLInsertHelper(node->child[LeftOrRight(&wraper, node->data)], data, wraper);
+    return AVLInsertHelper(node->child[LeftOrRight(&wraper, node->data)], data, wraper);
 }
 
 int AVLInsert(avl_t *tree, void *data)
@@ -159,22 +176,79 @@ int AVLInsert(avl_t *tree, void *data)
     return AVLInsertHelper(tree->root, data, tree->wraper);
 }
 
-
-/*********************************************** 
-    Get a pointer to data to remove from the tree
-    Complexity: O(log n)
- ***********************************************/
-void AVLRemove(avl_t *tree, const void *data)
+static void RemoveAndUpdate(avl_node_t **current_ptr, avl_node_t *remove_node)
 {
-
+    avl_node_t *target_destroy = NULL;
+    
+    assert (current_ptr);
+   
+    if (NULL == (*current_ptr)->child[RIGHT])
+    {
+        target_destroy = *current_ptr;
+        *current_ptr = (*current_ptr)->child[LEFT];
+        remove_node->data = target_destroy->data;
+        DestroyNode(target_destroy);
+        return;
+    }
+    
+    RemoveAndUpdate(&((*current_ptr)->child[RIGHT]), remove_node);
+    UpdateHeight(*current_ptr);
+    /*Balance(current_ptr);*/
 }
 
-/*********************************************************************** 
-    Gets a pointer to the tree and search if the data exist in the tree
-    Returns the data if it was found, otherwise: NULL
-    Complexity: avg-case: O(log(n)), worst-case: O(log(n))
- ***********************************************************************/
-static void * AVLFindHelper(avl_node_t *node, wrap_t wraper)
+static void RemoveNode(avl_node_t **avl_node_ptr)
+{
+    int right_child = !((*avl_node_ptr)->child[LEFT]);
+    int left_child = !((*avl_node_ptr)->child[RIGHT]);
+    avl_node_t *destroy_target = NULL;
+
+    /* case of 1 or 0 children, connect parent of the avl_node to its child
+       if there are no children the parent will be connected to the left side,
+       which holds NULL value.
+     */ 
+    if (right_child + left_child > 0)
+    {
+        destroy_target = *avl_node_ptr;
+        *avl_node_ptr = (*avl_node_ptr)->child[right_child];
+        DestroyNode(destroy_target);
+        destroy_target = NULL;
+    }
+    /* case of two children, swap data with prev and destroy */
+    else
+    {
+        RemoveAndUpdate(&((*avl_node_ptr)->child[LEFT]), *avl_node_ptr);
+        UpdateHeight(*avl_node_ptr);
+        /*Balance(avl_node_ptr);*/
+    }
+    
+}
+
+static void RemoveHelper(avl_node_t **avl_node_ptr, compare_func_t cmp, const void *data)
+{
+    int cmp_result = cmp(data, (*avl_node_ptr)->data);
+
+    if (0 == cmp_result)
+    {
+        RemoveNode(avl_node_ptr);
+        avl_node_ptr = NULL;
+    }
+    else
+    {
+        /* go to right child if compare is positive, else go left */
+        RemoveHelper(&(*avl_node_ptr)->child[cmp_result > 0], cmp, data);
+        UpdateHeight(*avl_node_ptr);
+        /*Balance(avl_node_ptr);*/
+    }
+}
+
+void AVLRemove(avl_t *tree, const void *data)
+{
+    assert(NULL != tree);
+
+    RemoveHelper(&(tree->root), tree->wraper.cmp, data);
+}
+
+static void *AVLFindHelper(avl_node_t *node, wrap_t wraper)
 {
     if (NULL == node)
     {
@@ -186,8 +260,7 @@ static void * AVLFindHelper(avl_node_t *node, wrap_t wraper)
         return wraper.user_data;
     }
 
-    AVLFindHelper(node->child[LeftOrRight(&wraper, node->data)], wraper);
-   
+    return AVLFindHelper(node->child[LeftOrRight(&wraper, node->data)], wraper);
 } 
     
 void *AVLFind(const avl_t *tree, const void *data)
@@ -217,7 +290,6 @@ static int ForeachHelper(avl_node_t *node, action_ptr_t action, void *param)
     return (ForeachHelper(node->child[LEFT], action, param) +
                                    action(param,node->data) +
             ForeachHelper(node->child[RIGHT], action, param));
-
 }
 
 int AVLForeach(avl_t *tree, action_ptr_t action, void *param)
@@ -252,7 +324,7 @@ int AVLIsEmpty(const avl_t *tree)
     return (NULL == tree->root);
 }
 
-static size_t GetHeightHelper(avl_node_t *node)
+/*static size_t GetHeightHelper(avl_node_t *node)
 {
     size_t height_left = 0;
     size_t height_right = 0;
@@ -265,21 +337,19 @@ static size_t GetHeightHelper(avl_node_t *node)
     height_left = 1 + GetHeightHelper(node->child[LEFT]);
     height_right = 1 + GetHeightHelper(node->child[RIGHT]);
 
-  return height_left > height_right? height_left : height_right;
-}
+  return (height_left > height_right? height_left : height_right);
+}*/
 
-size_t AVLGetHeight(const avl_t *tree)
+
+size_t AVLHeight(const avl_t *tree)
 {
+    avl_node_t *root = NULL;
+
     assert(NULL != tree);
 
-    if(NULL == tree->root)
-    {
-        return 0;
-    }
+    root = tree->root;
 
-    return GetHeightHelper(tree->root);
-
+    return (NULL == root) ? 0 : (root->height);
 }
-
 
    

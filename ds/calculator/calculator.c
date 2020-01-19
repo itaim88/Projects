@@ -2,7 +2,7 @@
 /*   			             	 */
 /*   Data Structures             */
 /*   Caclculator                 */
-/*   Author: Yonatan Zaken       */
+/*   Author: Itai Marienberg       */
 /*   Last Updated 12/1/20         */
 /*   Reviewed by:           */   
 /*			                   	 */
