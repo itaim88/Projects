@@ -1,15 +1,15 @@
 /*********************************/
 /*   			             	 */
 /*   Data Structures             */
-/*   AVL         */
-/*   Author: Itai Marienberg      */
-/*   Last Updated 7/1/20         */
-/*   Reviewed by:          */   
+/*   AVL                         */
+/*   Author: Itai Marienberg     */
+/*   Last Updated 20/1/20        */
+/*   Reviewed by:                */   
 /*			                   	 */
 /*********************************/
 
 #include <stdio.h> /* printf */
-#include <assert.h>
+#include <assert.h> /* assert */
 
 #include "avl.h"
 
@@ -118,7 +118,6 @@ static void AVLTest2()
     RUN_TEST(0 == AVLInsert(tree, &x5), "insert1");
     RUN_TEST(0 == AVLInsert(tree, &x6), "insert1");
 
-   
     AVLDestroy(tree);
 
     printf("\n\n");  

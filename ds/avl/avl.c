@@ -8,8 +8,8 @@
 /*			                   	 */
 /*********************************/
 
-#include <stdlib.h>
-#include <assert.h>
+#include <stdlib.h> /*malloc*/
+#include <assert.h> /*assert*/
 
 #include "avl.h"
 
