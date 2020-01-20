@@ -170,7 +170,6 @@ static void RadixCountingSort(int *src, int *dest, size_t *hist, size_t size, in
     
 }
 
-
 int RadixSort(int *arr, size_t size, int num_of_bits)
 {
     int mask = (1 << num_of_bits) - 1;

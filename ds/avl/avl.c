@@ -158,32 +158,32 @@ static void Rotate(avl_node_t **node, int side)
     return; 
 }
 
-static void Balance(avl_node_t **root)
+static void Balance(avl_node_t **node)
 {
     int balance_factor = 0;
     
-    assert(NULL != root);
+    assert(NULL != node);
     
-    balance_factor = CalcBalanceFactor(*root);
+    balance_factor = CalcBalanceFactor(*node);
     
     if (balance_factor < (-1))
     {   
-        if (CalcBalanceFactor((*root)->child[RIGHT]) > 0)
+        if (CalcBalanceFactor((*node)->child[RIGHT]) > 0)
         {
-            Rotate(&(*root)->child[RIGHT], RIGHT);
+            Rotate(&(*node)->child[RIGHT], RIGHT);
         }
         
-        Rotate(root, LEFT);
+        Rotate(node, LEFT);
     }
 
     else if (balance_factor > 1)
     {
-        if (CalcBalanceFactor((*root)->child[LEFT]) < 0)
+        if (CalcBalanceFactor((*node)->child[LEFT]) < 0)
         {
-            Rotate(&(*root)->child[LEFT], LEFT);
+            Rotate(&(*node)->child[LEFT], LEFT);
         }
         
-        Rotate(root, RIGHT);
+        Rotate(node, RIGHT);
     }
 
     return;

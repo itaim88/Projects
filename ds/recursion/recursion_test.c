@@ -119,16 +119,18 @@ char * RecStrcat(char *dst, const char *src)
 	return (RecStrcat(dst, src + 1));
 }
 
-/*char *RecStrstr(char *haystack, char *needle)
+void RECFlipLinkList(head->next)
 {
-
-	if( 0 == strncmp(haystack,needle,3))
+	if (NULL == node->next)
 	{
-		return haystack;
+		return;
 	}
-
-	return RecStrstr(haystack + 1, needle + 1);
-}*/
+	
+	new_head = RECFlipLinkList(node->next);
+	node->next->next = node;
+	node->next = NULL;
+	return new_head;
+}
 
 void RecSortStack(stack_t *stack)
 {
