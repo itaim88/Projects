@@ -73,7 +73,7 @@ static void AVLTest1()
     RUN_TEST(0 == AVLInsert(tree, &x12), "insert1");
 
     RUN_TEST(12 == AVLSize(tree), "size1");
-    RUN_TEST(4 == AVLGetHeight(tree), "Height");
+    RUN_TEST(3 == AVLGetHeight(tree), "Height");
    
     AVLForeach(tree, &ActionFunc, param);
     
@@ -104,20 +104,31 @@ static void AVLTest1()
     printf("\n\n");
 }
 
-/*
+
 static void AVLTest2()
 {
+    void *param = NULL;
+    avl_t *tree = AVLCreate(&CompareFunc);
+    int x1 = 20, x2 = 15, x3 = 30, x4 = 10, x5 = 32, x6 = 8;
+
+    RUN_TEST(0 == AVLInsert(tree, &x1), "insert1");
+    RUN_TEST(0 == AVLInsert(tree, &x2), "insert1");
+    RUN_TEST(0 == AVLInsert(tree, &x3), "insert1");
+    RUN_TEST(0 == AVLInsert(tree, &x4), "insert1");
+    RUN_TEST(0 == AVLInsert(tree, &x5), "insert1");
+    RUN_TEST(0 == AVLInsert(tree, &x6), "insert1");
 
    
-    
+    AVLDestroy(tree);
+
     printf("\n\n");  
 }
-*/
+
 
 int main()
 {
     AVLTest1();
-    /*AVLTest2();*/
+    AVLTest2();
  
     return 0;
 }

@@ -3,7 +3,7 @@
 /*   Data Structures             */
 /*   AVL                         */
 /*   Author: Itai Marienberg     */
-/*   Last Updated 7/1/20         */
+/*   Last Updated 20/1/20        */
 /*   Reviewed by:                */   
 /*			                   	 */
 /*********************************/
@@ -47,12 +47,6 @@ static int LeftOrRight(const void *wrap, const void *tree_data)
     return 0 < ((wrap_t *)wrap)->cmp(((wrap_t *)wrap)->user_data, tree_data);
 }
 
-
-static void Balance(avl_node_t *root)
-{
-
-}
-
 avl_t *AVLCreate(compare_func_t cmp)
 {
     avl_t *new_root = (avl_t *)malloc(sizeof(avl_t));
@@ -68,14 +62,13 @@ avl_t *AVLCreate(compare_func_t cmp)
     return new_root;       
 }
 
-static void DestroyNode(avl_node_t *avl_node)
+static void DestroyNode(avl_node_t *node)
 {
-    avl_node->child[LEFT] = NULL;
-    avl_node->child[RIGHT] = NULL;
-    avl_node->data = NULL;
+    node->child[LEFT] = NULL;
+    node->child[RIGHT] = NULL;
+    node->data = NULL;
 
-    free(avl_node); 
-    avl_node = NULL;
+    FREE(node);
 }
 
 static void AVLDestroyHelper(avl_node_t *avl_node)
@@ -97,7 +90,7 @@ void AVLDestroy(avl_t *tree)
     AVLDestroyHelper(tree->root);
 
     tree->root = NULL;
-    free(tree); tree = NULL;
+    FREE(tree);
 }
 
 static avl_node_t *CreateNode(void *data)
@@ -135,6 +128,67 @@ static void UpdateHeight(avl_node_t *node)
     node->height = new_height;
 }
 
+static int GetHeightHelper(avl_node_t *node)
+{
+    return ((NULL == node) ? 0 : (node->height + 1));
+}
+
+static int CalcBalanceFactor(avl_node_t *node)
+{
+    assert (NULL != node);
+    
+    return (GetHeightHelper(node->child[LEFT]) -
+            GetHeightHelper(node->child[RIGHT]));
+}
+
+static void Rotate(avl_node_t **node, int side)
+{
+    avl_node_t *child_rot = NULL;
+    
+    assert(NULL != node);
+    
+    child_rot = (*node)->child[!side];
+    (*node)->child[!side] = child_rot->child[side];
+    child_rot->child[side] = *node;
+    *node = child_rot;
+
+    UpdateHeight((*node)->child[side]);
+    UpdateHeight(*node);
+    
+    return; 
+}
+
+static void Balance(avl_node_t **root)
+{
+    int balance_factor = 0;
+    
+    assert(NULL != root);
+    
+    balance_factor = CalcBalanceFactor(*root);
+    
+    if (balance_factor < (-1))
+    {   
+        if (CalcBalanceFactor((*root)->child[RIGHT]) > 0)
+        {
+            Rotate(&(*root)->child[RIGHT], RIGHT);
+        }
+        
+        Rotate(root, LEFT);
+    }
+
+    else if (balance_factor > 1)
+    {
+        if (CalcBalanceFactor((*root)->child[LEFT]) < 0)
+        {
+            Rotate(&(*root)->child[LEFT], LEFT);
+        }
+        
+        Rotate(root, RIGHT);
+    }
+
+    return;
+}
+
 static int AVLInsertHelper(avl_node_t **node_ptr, compare_func_t cmp, void *data)
 {
     int cmp_result = 0;
@@ -166,8 +220,9 @@ static int AVLInsertHelper(avl_node_t **node_ptr, compare_func_t cmp, void *data
     if (0 == success_or_fail)
     {
         UpdateHeight(*node_ptr);
-        /*Balance(node_ptr);*/
+        Balance(node_ptr);
     }
+
     return success_or_fail;
 }
 
@@ -190,12 +245,13 @@ static void RemoveAndUpdate(avl_node_t **current_ptr, avl_node_t *remove_node)
         *current_ptr = (*current_ptr)->child[LEFT];
         remove_node->data = target_destroy->data;
         DestroyNode(target_destroy);
+
         return;
     }
     
     RemoveAndUpdate(&((*current_ptr)->child[RIGHT]), remove_node);
     UpdateHeight(*current_ptr);
-    /*Balance(current_ptr);*/
+    Balance(current_ptr);
 }
 
 static void RemoveNode(avl_node_t **avl_node_ptr)
@@ -204,10 +260,6 @@ static void RemoveNode(avl_node_t **avl_node_ptr)
     int left_child = !((*avl_node_ptr)->child[RIGHT]);
     avl_node_t *destroy_target = NULL;
 
-    /* case of 1 or 0 children, connect parent of the avl_node to its child
-       if there are no children the parent will be connected to the left side,
-       which holds NULL value.
-     */ 
     if (right_child + left_child > 0)
     {
         destroy_target = *avl_node_ptr;
@@ -215,14 +267,13 @@ static void RemoveNode(avl_node_t **avl_node_ptr)
         DestroyNode(destroy_target);
         destroy_target = NULL;
     }
-    /* case of two children, swap data with prev and destroy */
+
     else
     {
         RemoveAndUpdate(&((*avl_node_ptr)->child[LEFT]), *avl_node_ptr);
         UpdateHeight(*avl_node_ptr);
-        /*Balance(avl_node_ptr);*/
-    }
-    
+        Balance(avl_node_ptr);
+    }   
 }
 
 static void RemoveHelper(avl_node_t **avl_node_ptr, compare_func_t cmp, const void *data)
@@ -236,10 +287,9 @@ static void RemoveHelper(avl_node_t **avl_node_ptr, compare_func_t cmp, const vo
     }
     else
     {
-        /* go to right child if compare is positive, else go left */
         RemoveHelper(&(*avl_node_ptr)->child[cmp_result > 0], cmp, data);
         UpdateHeight(*avl_node_ptr);
-        /*Balance(avl_node_ptr);*/
+        Balance(avl_node_ptr);
     }
 }
 
@@ -326,23 +376,6 @@ int AVLIsEmpty(const avl_t *tree)
     return (NULL == tree->root);
 }
 
-/*static size_t GetHeightHelper(avl_node_t *node)
-{
-    size_t height_left = 0;
-    size_t height_right = 0;
-
-    if(NULL == node->child[LEFT] && NULL == node->child[RIGHT])
-    {
-        return 0;
-    }
-
-    height_left = 1 + GetHeightHelper(node->child[LEFT]);
-    height_right = 1 + GetHeightHelper(node->child[RIGHT]);
-
-  return (height_left > height_right? height_left : height_right);
-}*/
-
-
 size_t AVLGetHeight(const avl_t *tree)
 {
     avl_node_t *root = NULL;
@@ -351,7 +384,7 @@ size_t AVLGetHeight(const avl_t *tree)
 
     root = tree->root;
 
-    return (NULL == root) ? 0 : (root->height);
+    return ((NULL == root) ? 0 : (root->height));
 }
 
    
