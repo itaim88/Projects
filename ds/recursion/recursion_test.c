@@ -132,52 +132,52 @@ void RECFlipLinkList(head->next)
 	return new_head;
 }
 
-void RecSortStack(stack_t *stack)
+
+void StackSortRec(stack_t *stack)
 {
-	void *holder = StackPeek(stack);
-	void *tmp = NULL;
-	
-	StackPop(stack);
-	
-	if (1 == StackSize(stack))
+	int num = 0, curr = 0;
+
+	if (2 > StackSize(stack))
 	{
-		if (*(int*)holder < *(int*)StackPeek(stack))
-		{
-			tmp = StackPeek(stack);
-			StackPop(stack);
-			StackPush(stack, holder);
-			StackPush(stack, tmp);	
-		}
-		
-		else 
-		{
-			StackPush(stack, holder); 
-		}
-		
 		return;
 	}
-	
-	RecSortStack(stack);
-	
-	if (*(int*)holder < *(int*)StackPeek(stack))
+
+	else if (2 == StackSize(stack))
 	{
-		tmp = StackPeek(stack);
-		StackPop(stack);
-		StackPush(stack, holder); 
-		RecSortStack(stack);
-		StackPush(stack, holder); 
+		num = *(int *)StackPop(stack);
 	}
-	
+
+	if (num > *(int *)StackPeek(stack))
+	{
+		StackPush(stack, &num);
+	}
+
 	else
 	{
-		StackPush(stack, holder); 
+		curr = *(int *)StackPop(stack);
+		StackPush(stack, &num);
+		StackPush(stack, &curr);
 	}
-	
-	return;
-	
-				
-}
 
+	return;
+	}
+
+		num = *(int *)StackPop(stack);
+		StackSortRec(stack);
+
+	if (num < *(int *)StackPeek(stack))
+	{
+		curr = *(int *)StackPop(stack);
+		StackPush(stack, &num);
+		StackSortRec(stack);
+		StackPush(stack, &curr);
+	}
+
+	else
+	{
+		StackPush(stack, &num);
+	}
+}
 
 int main()
 {	
