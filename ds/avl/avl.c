@@ -9,7 +9,7 @@
 /*********************************/
 
 #include <stdlib.h> /*malloc*/
-#include <assert.h> /*assert*/
+#include <assert.h> /*assert**/
 
 #include "avl.h"
 
