@@ -19,7 +19,7 @@ INC_DIR=./../include
 LIB_DIR=./../lib/$(FOLDER)
 
 $(OUT_DIR)/$(TARGET).out: $(OBJ_DIR)/$(TARGET)_test.o $(LIB_DIR)/lib$(TARGET).so | $(OUT_DIR) 
-	$(CC) -o $@  $< -L$(LIB_DIR) -l$(TARGET) $(RPATH)
+	$(CC) -o $@  $< -L$(LIB_DIR) -l$(TARGET) -lm $(RPATH)
 
 $(LIB_DIR)/lib$(TARGET).so: $(OBJ_DIR)/$(TARGET).o | $(LDEP)
 	$(CC) -shared -o $@ $< -L$(LIB_DIR) $(LLIB) $(LPATH)

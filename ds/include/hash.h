@@ -7,7 +7,7 @@ typedef struct Hash hash_t;
 
 typedef size_t (*hash_func_t)(const void *data);
 typedef int (*action_func_t)(void *data1, void *datab2);
-typedef int (*match_func_t)(const void *data1, const void *data2);
+typedef int (*match_func_t)(void *data1, void *data2);
 
 /*
 *   Returns a pointer to the HASH data structure

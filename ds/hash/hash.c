@@ -1,7 +1,7 @@
 /*********************************/
 /*   			             	 */
 /*   Data Structures             */
-/*   Hash                        */
+/*   Hash Table                  */
 /*   Author: Itai Marienberg     */
 /*   Last Updated 21/1/20        */
 /*   Reviewed by:                */   
@@ -51,7 +51,6 @@ hash_t *HashCreate(size_t table_size, hash_func_t hash_func, match_func_t is_mat
 			for (j = 0; j < i ; ++j)
 			{
 				DLLDestroy(new_hash->table[j]);
-				
 			}
 
 		free(new_hash);
@@ -88,27 +87,44 @@ int HashInsert(hash_t *hash_table, void *data)
 
 	position = hash_table->table[hash_table->hash_func(data)];
 
-	return(NULL != DLLInsert(position, DLLBegin(position),data));	
+	return (NULL != DLLInsert(position, DLLBegin(position),data));	
 }
 
-/*
-*	Gets a pointer to the Hash Table and removes the data given 
-*	Complexity: O(1)
-*/
+static void *HashRemoveHelper(hash_t *hash_table, const void *data)
+{
+	size_t hash_key = 0;
 
-void HashRemove(hash_t *hash_table, const void *data);
+	assert(NULL != hash_table);
 
-/*	given a pointer to the data searched and the hash table.
-*	Complexity: O(1),
-*/
+	hash_key = hash_table->hash_func(data);
 
-void *HashFind(const hash_t *hash_table, const void *data);
+   return ((DLLFind(DLLBegin(hash_table->table[hash_key]),
+			DLLEnd(hash_table->table[hash_key]),
+		    hash_table->is_match, (void *)data)));
+ 
+}
 
-/*
-*	Gets the hash tableand a action function pointer to operate on the elements in the table
-*	Returns 0 for success, otherwise: non-zero value
-*	Complexity: worst-case: O(n) 
-*/
+void HashRemove(hash_t *hash_table, const void *data)
+{
+	assert(NULL != hash_table);	
+
+	DLLRemove(HashRemoveHelper(hash_table, data));
+}
+
+void *HashFind(const hash_t *hash_table, const void *data)
+{
+	size_t hash_key = 0;
+	void *node_data = NULL;
+
+	assert(NULL != hash_table);	
+
+	hash_key = hash_table->hash_func(data);
+	node_data = DLLGetData(HashRemoveHelper((hash_t *)hash_table, data));
+
+	DLLPushFront(hash_table->table[hash_key], (void *)data);
+
+	return node_data;
+}
 
 int HashForeach(hash_t *hash_table, action_func_t action, void *param)
 {

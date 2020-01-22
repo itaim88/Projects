@@ -95,7 +95,6 @@ iterator_t DLLInsert(dll_t *dll, iterator_t it, void *data)
     node_t *new_node = NULL;
     
     assert(NULL != dll);
-    assert(NULL != data);
     assert(NULL != it);
        
     new_node = (node_t *)malloc(sizeof(node_t));

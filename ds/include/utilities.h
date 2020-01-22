@@ -3,24 +3,21 @@
 
 #include <stdio.h>
 
-#define GREEN "\033[;032m"
-#define RED   "\033[;031m"
-#define RESET "\033[0m"
+#define UNUSED(var) (void)var
 
-#define RUN_TEST(test)\
-{\
-  if(test)\
-  {\
-    printf(GREEN);\
-    printf("SUCCESS\n");\
-    printf(RESET);\
-  }\
-  else\
-  {\
-    printf(RED);\
-    printf("FAIL \n");\
-    printf(RESET);\
-  }\
-}
+#define RED "\033[31m"
+#define GREEN "\033[32m"
+#define WHITE "\033[0m"
 
+#define TEST(test, errMsg) if (test)\
+						   {\
+						      printf(GREEN);\
+						      printf("%s\n", "SUCCESS");\
+						   }\
+						   else\
+						   {\
+						      printf(RED);\
+						      printf("%s, %s\n", "FAILURE", errMsg);\
+						   }\
+						   printf(WHITE);
 #endif
