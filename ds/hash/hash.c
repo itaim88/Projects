@@ -26,7 +26,6 @@ struct Hash
 	dll_t *table[1];
 };
 
-
 hash_t *HashCreate(size_t table_size, hash_func_t hash_func, match_func_t is_match)
 {
 	size_t i = 0;
@@ -87,7 +86,7 @@ int HashInsert(hash_t *hash_table, void *data)
 
 	position = hash_table->table[hash_table->hash_func(data)];
 
-	return (NULL != DLLInsert(position, DLLBegin(position),data));	
+	return (NULL == DLLInsert(position, DLLBegin(position),data));	
 }
 
 static void *HashRemoveHelper(hash_t *hash_table, const void *data)
@@ -98,7 +97,7 @@ static void *HashRemoveHelper(hash_t *hash_table, const void *data)
 
 	hash_key = hash_table->hash_func(data);
 
-   return ((DLLFind(DLLBegin(hash_table->table[hash_key]),
+    return ((DLLFind(DLLBegin(hash_table->table[hash_key]),
 			DLLEnd(hash_table->table[hash_key]),
 		    hash_table->is_match, (void *)data)));
  
@@ -115,14 +114,20 @@ void *HashFind(const hash_t *hash_table, const void *data)
 {
 	size_t hash_key = 0;
 	void *node_data = NULL;
+	iterator_t iter;
 
 	assert(NULL != hash_table);	
 
 	hash_key = hash_table->hash_func(data);
-	node_data = DLLGetData(HashRemoveHelper((hash_t *)hash_table, data));
+	iter = (HashRemoveHelper((hash_t *)hash_table, data));
 
-	DLLPushFront(hash_table->table[hash_key], (void *)data);
-
+	node_data = DLLGetData(iter);
+	if (NULL != node_data)
+	{	
+		DLLRemove(iter);
+		DLLPushFront(hash_table->table[hash_key], (void *)data);
+	}
+	
 	return node_data;
 }
 

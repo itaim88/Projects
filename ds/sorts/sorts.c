@@ -15,6 +15,7 @@
 #define YES 1
 #define NO 0
 #define NUM_OF_BIT_IN_INT 32
+
 void BubbleSort(int arr[], size_t length)
 {
     size_t i = 0;
