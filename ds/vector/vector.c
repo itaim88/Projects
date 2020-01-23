@@ -55,20 +55,21 @@ void VectorDestroy(vector_t* myvector)
 
 int VectorPushBack(vector_t *myvector, const void *data)
 {
+	int status = 0;
 	assert(NULL != myvector);
 	assert(NULL != data);
 
 	if (myvector->size == myvector->capacity)
 	{
 		myvector->capacity *= 2;
-		VectorReserve( myvector, (myvector->capacity));
+		status = VectorReserve( myvector, (myvector->capacity));
 	}
 
 	memcpy(((char *)myvector->start + ((myvector->size * myvector->element_size)
 											  )), data, myvector->element_size);
 	++(myvector->size);
 
-	return 0;
+	return status;
 }
 
 void VectorPopBack(vector_t *myvector)
@@ -116,7 +117,7 @@ size_t VectorSize(const vector_t *myvector)
 	return (myvector->size);	
 }
 
-void* VectorGetItemAddress(const vector_t *myvector, size_t position)
+void *VectorGetItemAddress(const vector_t *myvector, size_t position)
 {
 	assert(NULL != myvector);
 

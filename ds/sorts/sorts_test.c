@@ -26,12 +26,26 @@
             }\
 
     
-
-
-
     int main()
     {
         size_t i = 0;
+        int src[6] = {4,1,7,9,2,5};
+        int dst[6] = {0,0,0,0,0,0};
+        size_t size = 6;
+
+        MergeSort(src, dst, size);
+
+        for (i = 0; i < size; ++i)
+        {
+            printf("%d\n", dst[i]);  
+        }
+
+         for (i = 0; i < size; ++i)
+        {
+            printf("%d\n", src[i]);  
+        }
+
+        /*size_t i = 0;
         clock_t start, end;
         double time_use = 0;
         int *b = NULL;
@@ -55,7 +69,7 @@
         }
 
 		start = clock();
-        /*BubbleSort(arr,SIZE);*/
+        BubbleSort(arr,SIZE);
 
         CountingSort(arr,SIZE,-5,UB,b);
 
@@ -72,8 +86,10 @@
         free(arr);
         arr = NULL;
         free(b);
-        b = NULL;
+        b = NULL;*/
 
+      
+      
         return 0;
     }
     

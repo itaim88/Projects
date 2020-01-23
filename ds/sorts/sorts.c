@@ -211,3 +211,79 @@ int RadixSort(int *arr, size_t size, int num_of_bits)
 
     return 0;
 }
+
+void Merge(int src[], int dst[], int lower_bound, int mid, int upper_bound)
+{
+    int left = lower_bound;
+    int right = mid + 1;
+    int dest_indx = lower_bound;
+    
+    while ( left <= mid && right <= upper_bound)
+    {
+        if (src[left] <= src[right])
+        {
+            dst[dest_indx] = src[left];
+            ++left;
+        } 
+
+        else
+        {
+            dst[dest_indx] = src[right]; 
+            ++right;
+        } 
+
+        ++dest_indx; 
+    }
+
+    if (left > mid)
+    {
+        while (right <= upper_bound)
+        {
+            dst[dest_indx] = src[right];
+            ++right;
+            ++dest_indx;      
+        }
+    }
+
+    else 
+    {
+        while (left <= mid)
+        {
+            dst[dest_indx] = src[left];
+            ++left;
+            ++dest_indx;      
+        }
+    }
+
+    for (dest_indx = lower_bound; dest_indx <= upper_bound; ++dest_indx)
+    {
+        src[dest_indx] = dst[dest_indx];
+    }
+
+}
+
+void MergeSortHelp(int src[], int dst[], int lower_bound, int upper_bound)
+{
+   size_t mid = 0;
+
+   if (lower_bound < upper_bound)
+    {
+        mid = (lower_bound + upper_bound) / 2;
+    
+        MergeSortHelp(src, dst, lower_bound, mid);
+        MergeSortHelp (src, dst, mid + 1, upper_bound);
+        Merge(src, dst, lower_bound, mid, upper_bound);
+
+    }
+}
+
+void MergeSort(int src[], int dst[], size_t size)
+{
+    int lower_bound = 0;
+    int upper_bound = size - 1;
+
+    assert(NULL != src);
+    assert(NULL != dst);
+
+    MergeSortHelp(src, dst, lower_bound, upper_bound);
+}
