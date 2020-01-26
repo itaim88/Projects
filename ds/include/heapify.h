@@ -3,11 +3,13 @@
 
 #include <stddef.h> /* size_t */
 
+#include "./../include/priorityq.h"
+
 /* Rearranges an array to maintain that the root element is greater or less than or equal to the keys of its children. Time Complexity O(log(n))*/
 void HeapifyUp(void *arr, size_t size, size_t index, size_t element_size,
-                                             cmp_func cmp, void *param);
+                                             compare_func_ptr cmp, void *param);
 
 void HeapifyDown(void *arr, size_t size, size_t index, size_t element_size,
-                                               cmp_func cmp, void *param);
+                                              compare_func_ptr cmp, void *param);
 
 #endif

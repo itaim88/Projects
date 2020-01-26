@@ -5,10 +5,9 @@ CFLAGS=-ansi -pedantic-errors -Wall -Wextra -g -I$(INC_DIR)
 
 RPATH=-Wl,-rpath,'$$ORIGIN/../../../lib/$(FOLDER)'
 LPATH=-Wl,-rpath,'$$ORIGIN'
-TARGET=priorityq
+TARGET=heapify
 FOLDER=debug
-DEP=sortedlist
-DEP2=vector
+DEP=vector
 HDEP=$(patsubst %,$(INC_DIR)/%.h,$(DEP))
 LDEP=$(patsubst %,$(LIB_DIR)/lib%.so,$(DEP))
 LLIB=$(patsubst %,-l%,$(DEP))
@@ -20,7 +19,7 @@ INC_DIR=./../include
 LIB_DIR=./../lib/$(FOLDER)
 
 $(OUT_DIR)/$(TARGET).out: $(OBJ_DIR)/$(TARGET)_test.o $(LIB_DIR)/lib$(TARGET).so | $(OUT_DIR) 
-	$(CC) -o $@  $< -L$(LIB_DIR) -l$(TARGET) $(RPATH)
+	$(CC) -o $@  $< -L$(LIB_DIR) -l$(TARGET) -lheapify $(RPATH)
 
 $(LIB_DIR)/lib$(TARGET).so: $(OBJ_DIR)/$(TARGET).o | $(LDEP)
 	$(CC) -shared -o $@ $< -L$(LIB_DIR) $(LLIB) $(LPATH)
@@ -31,8 +30,8 @@ $(OBJ_DIR)/$(TARGET).o: $(TARGET).c $(INC_DIR)/$(TARGET).h $(HDEP)| $(OBJ_DIR)
 $(OBJ_DIR)/$(TARGET)_test.o: $(TARGET)_test.c $(INC_DIR)/$(TARGET).h | $(OBJ_DIR)
 	$(CC) -c -o $@ $< $(CFLAGS)
 
-$(LIB_DIR)/libsortedlist.so:
-	cd ./../ && make $(FOLDER)_sortedlist;
+$(LIB_DIR)/libvector.so:
+	cd ./../ && make $(FOLDER)_task;
 
 $(OBJ_DIR):
 	-mkdir obj; mkdir $(OBJ_DIR);
