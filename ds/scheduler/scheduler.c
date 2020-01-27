@@ -33,7 +33,9 @@ int PriorityFunc(const void *node_data, const void *user_data, void *param)
 {
     task_t *t1 = (task_t *)node_data;
     task_t *t2 = (task_t *)user_data;
-    return (TaskGetTimeToRun(t1) - TaskGetTimeToRun(t2)); /*some students prefered to do t2 -t1, i think it`s just diffrent way of thinking*/
+    /*return (TaskGetTimeToRun(t1) - TaskGetTimeToRun(t2));*/ /*for pq*/
+
+	return (TaskGetTimeToRun(t2) - TaskGetTimeToRun(t1)); /*for heapify*/
 }
 
 scheduler_t *SchedulerCreate()

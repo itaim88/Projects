@@ -57,7 +57,6 @@ int VectorPushBack(vector_t *myvector, const void *data)
 {
 	int status = 0;
 	assert(NULL != myvector);
-	assert(NULL != data);
 
 	if (myvector->size == myvector->capacity)
 	{

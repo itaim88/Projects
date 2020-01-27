@@ -11,15 +11,15 @@
 #include <stdlib.h>    /* malloc */
 #include <assert.h>    /* assert */
 
-#include "./../include/vector.h" /* vector functions */
-#include "./../include/priorityq.h" /* priority queue functions */
-#include "./../include/heapify.h" /* heapify functions */
+#include "vector.h" /* vector functions */
+#include "priorityq.h" /* priority queue functions */
+#include "heapify.h" /* heapify functions */
 
 typedef struct Wrapper
 {
     compare_func_ptr cmp_func;
     void *param;
-}wrap_t;
+} wrap_t;
 
 struct PQueue
 {
@@ -39,25 +39,35 @@ static void SwapIMP(void **ptr1, void **ptr2)
 	*ptr2 = tmp;
 }
 
-void HeapifyUp(void *arr, size_t size, size_t index, size_t element_size,
+static void HeapifyUp(void *arr, size_t size, size_t index, size_t element_size,
                                               compare_func_ptr cmp, void *param)
 {
-	void **new_data = VectorGetItemAddress(arr, index + 1);
-	void **parent = VectorGetItemAddress(arr, (index + 1) / 2);
+	void **new_data = NULL;
+	void **parent = NULL;
 
 	assert(NULL != arr);
 
-	while ((0 < index ) && (0 < (cmp(*new_data, *parent, param))))
+	while (0 < index )
 	{
-		SwapIMP(parent, new_data);
-		index = (index - 1) / 2;
-		new_data = parent;
-		parent = VectorGetItemAddress(arr, ((index + 1) / 2));
+		new_data = VectorGetItemAddress(arr, index + 1);
+		parent = VectorGetItemAddress(arr, (index + 1) / 2);
+
+		if(0 <= (cmp(*new_data, *parent, param)))
+		{
+			SwapIMP(parent, new_data);
+			index = (index - 1) / 2;
+			new_data = parent;
+			parent = VectorGetItemAddress(arr, ((index + 1) / 2));
+		}
+
+		else
+		{
+			break;
+		}
 	}
 }
 
-
-void HeapifyDown(void *arr, size_t size, size_t index, size_t element_size,
+static void HeapifyDown(void *arr, size_t size, size_t index, size_t element_size,
                                                 compare_func_ptr cmp, void *param)
 {
 	void **left_child = NULL;
@@ -71,13 +81,13 @@ void HeapifyDown(void *arr, size_t size, size_t index, size_t element_size,
 
 	assert(NULL != arr);
 
-	parent = VectorGetItemAddress(arr, index + 1);
-	left_child = VectorGetItemAddress(arr, left_index + 1);
-	right_child = VectorGetItemAddress(arr, right_index + 1);
-
 	while (1 < size && left_index < size)              
 	{
-		if (0 < cmp(*left_child, *parent, param))
+		parent = VectorGetItemAddress(arr, index + 1);
+		left_child = VectorGetItemAddress(arr, left_index + 1);
+		right_child = VectorGetItemAddress(arr, right_index + 1);
+
+		if (0 <= cmp(*left_child, *parent, param))
 		{
 			bigger = left_index;
 		}
@@ -89,7 +99,7 @@ void HeapifyDown(void *arr, size_t size, size_t index, size_t element_size,
 
 		if (right_index < size)
 		{
-			if (0 < cmp(*right_child, *left_child, param))
+			if (0 <= cmp(*right_child, *left_child, param))
 			{
 				bigger = right_index;
 			}
@@ -103,7 +113,7 @@ void HeapifyDown(void *arr, size_t size, size_t index, size_t element_size,
 			left_index = (((index + 1) * 2) - 1);
 			right_index = ((index + 1) * 2);
 		}
-		
+
 		else
 		{
 			break;
@@ -113,7 +123,7 @@ void HeapifyDown(void *arr, size_t size, size_t index, size_t element_size,
 
 pq_t *PQCreate(compare_func_ptr cmp_ptr, void *param)
 {
-	pq_t *new_ptr = (pq_t *) malloc(sizeof(*new_ptr));
+	pq_t *new_ptr = (pq_t *)malloc(sizeof(*new_ptr));
 	if (NULL != new_ptr)
 	{
 		new_ptr->wrap.param = param;
@@ -129,7 +139,7 @@ pq_t *PQCreate(compare_func_ptr cmp_ptr, void *param)
 
 	}
 
-	 return new_ptr;
+	return new_ptr;
 }
 
 void PQDestroy(pq_t *pq)
@@ -154,9 +164,7 @@ void *PQDequeue(pq_t *pq)
     last_member = VectorGetItemAddress(pq->pqueue, PQSize(pq));
 
     SwapIMP(first_member, last_member);
-
     VectorPopBack(pq->pqueue);
-
     HeapifyDown(pq->pqueue, PQSize(pq), 0, sizeof(void *), pq->wrap.cmp_func, pq->wrap.param);
 
     return removed;
@@ -222,9 +230,8 @@ void *PQErase(pq_t *pq, match_func_pq m_ptr, void *data)
 {
 	size_t size = 0;
 	size_t i = 0;
-	void **current = NULL;
-	void **last = NULL;
-	void **ret_val = NULL;
+	void **current = NULL, **last = NULL;
+	void *ret_val = NULL;
 
 	assert(NULL != pq);  
 
@@ -237,10 +244,20 @@ void *PQErase(pq_t *pq, match_func_pq m_ptr, void *data)
 
 		if (1 == m_ptr(data,*current))
 		{
+			ret_val = *current;
+			if (current == last)
+			{
+				VectorPopBack(pq->pqueue);
+
+				break;
+			}
+
 			SwapIMP(current, last);
  			VectorPopBack(pq->pqueue);
- 			ret_val = current;
- 			HeapifyDown(pq->pqueue, size, i, sizeof(void *), pq->wrap.cmp_func, pq->wrap.param);
+ 			HeapifyDown(pq->pqueue, PQSize(pq), i, sizeof(void *),
+ 			 				   pq->wrap.cmp_func, pq->wrap.param);
+ 			HeapifyUp(pq->pqueue, PQSize(pq), i, sizeof(void *),
+ 							 pq->wrap.cmp_func, pq->wrap.param);
 
  			break;
 		} 

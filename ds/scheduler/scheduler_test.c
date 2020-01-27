@@ -171,9 +171,15 @@ static void TestSchedulerRun()
     SchedulerAddTask(s, &Print, 1, &g_arr_test[1]);
     w.uid = SchedulerAddTask(s, &Remove, 7, &w);
 
+
     RUN_TEST(7 == SchedulerSize(s));
-    
+
+	printf("here1\n");
+
     SchedulerRun(s);
+
+	printf("here2\n");
+
     printf("stop\n");
     SchedulerRun(s);
     RUN_TEST(6 == SchedulerSize(s)); 
