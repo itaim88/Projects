@@ -25,21 +25,27 @@
                 printf(RED "FAIL: %s\n",mssg);\
             }\
 
-    
+static int Compare(const void *data1, const void *data2)   
+{
+	return (*(int*) data1 - *(int*)data2);
+}
+	
     int main()
     {
         size_t i = 0;
-        int src[6] = {4,1,7,9,2,5};
+        int src[9] = {7,6,10,5,9,2,1,15,7};
         int dst[6] = {0,0,0,0,0,0};
-        size_t size = 6;
+        size_t size = 9;
 
-        MergeSort(src, dst, size);
+        /*MergeSort(src, dst, size);*/
 
-        for (i = 0; i < size; ++i)
+		QuickSort(src, 9, 4, &Compare);
+
+        /*for (i = 0; i < size; ++i)
         {
             printf("%d\n", dst[i]);  
         }
-
+*/
          for (i = 0; i < size; ++i)
         {
             printf("%d\n", src[i]);  

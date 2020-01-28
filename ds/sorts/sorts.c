@@ -9,8 +9,9 @@
 #include <stdlib.h> /*malloc*/
 #include <stdio.h>
 #include <assert.h> /*assert*/
+#include <alloca.h> /*assert*/
 
-#include "sorts.h"
+#include "./../include/sorts.h"
 
 #define YES 1
 #define NO 0
@@ -286,4 +287,90 @@ void MergeSort(int src[], int dst[], size_t size)
     assert(NULL != dst);
 
     MergeSortHelp(src, dst, lower_bound, upper_bound);
+}
+
+
+/*static void Median((void *arr, size_t num_elements, size_t element_size, int(*compar)(const void *data1, const void *data2)))
+{
+    void *end_address = arr + ((num_elements - 1) * element_size);
+    void *mid_address = arr + ((end_indx / 2) * element_size);
+
+    if (0 < cmp_fuc(mid_address, arr)); if mid > arr
+    {
+        Swap(arr ,mid_address, element_size);        
+    }
+
+    if (0 < cmp_fuc(end_address, arr));
+    {
+        Swap(arr ,end_address, element_size);        
+    }
+
+    if (0 < cmp_fuc(mid_address, end_address))
+    {
+        Swap(mid_address ,end_address, element_size);        
+    }
+
+    Swap(end_address, arr, element_size); pivot is first now 
+}*/
+
+static void SwapQ(void *arr ,size_t indx1, size_t indx2, size_t element_size)
+{
+   char *tmp = (char *) alloca(element_size); 
+   
+   *tmp = *((char *)arr + (indx1 * element_size));
+   *((char *)arr + (indx1 * element_size)) =  *((char *)arr + (indx2 * element_size));
+   *((char *)arr + (indx2 * element_size)) = *(char *)tmp;
+}
+
+size_t Partition(void *arr, size_t low, size_t upper, size_t element_size ,cmp_func cmp)
+{
+   size_t pivot_indx = low;
+   size_t start = low;
+   size_t end = upper; 
+
+   while (start < end) 
+    {
+        while (0 >= cmp((char *)arr + (start * element_size), (char *)arr + (pivot_indx * element_size)))
+        {
+            ++start;
+        } 
+
+        while ((0 < cmp((char *)arr + (end * element_size),(char *)arr + (pivot_indx * element_size))))
+        {
+            --end;
+        }
+        
+        if (start < end)
+        {
+            SwapQ(arr, start , end, element_size);  
+        }
+    }
+
+    SwapQ(arr, low, end, element_size);
+    
+    return end;      
+}
+
+static void QuickSortIMP(void *arr, size_t low, size_t upper, size_t element_size, cmp_func cmp)
+{
+    size_t location = 0;
+
+    if (low < upper) 
+    { 
+        location = Partition(arr, low, upper, element_size, cmp);
+        QuickSortIMP(arr, low, location - 1, element_size, cmp);
+        QuickSortIMP(arr, location + 1, upper, element_size, cmp);     
+    }
+}
+
+void QuickSort(void *arr, size_t num_elements, size_t element_size, cmp_func cmp)
+{ 
+    size_t low = 0;
+    size_t upper = 0;
+
+    assert(NULL != arr);
+
+    upper = num_elements - 1;
+
+    QuickSortIMP(arr, low, upper, element_size, cmp);
 }

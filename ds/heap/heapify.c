@@ -39,7 +39,7 @@ static void SwapIMP(void **ptr1, void **ptr2)
 	*ptr2 = tmp;
 }
 
-static void HeapifyUp(void *arr, size_t size, size_t index, size_t element_size,
+void HeapifyUp(void *arr, size_t size, size_t index, size_t element_size,
                                               compare_func_ptr cmp, void *param)
 {
 	void **new_data = NULL;
@@ -67,7 +67,7 @@ static void HeapifyUp(void *arr, size_t size, size_t index, size_t element_size,
 	}
 }
 
-static void HeapifyDown(void *arr, size_t size, size_t index, size_t element_size,
+void HeapifyDown(void *arr, size_t size, size_t index, size_t element_size,
                                                 compare_func_ptr cmp, void *param)
 {
 	void **left_child = NULL;
