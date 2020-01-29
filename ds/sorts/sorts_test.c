@@ -33,13 +33,13 @@ static int Compare(const void *data1, const void *data2)
     int main()
     {
         size_t i = 0;
-        int src[9] = {7,6,10,5,9,2,1,15,7};
+        int src[13] = {7,6,10,5,9,2,1,15,7,20,8,2500,100};
         int dst[6] = {0,0,0,0,0,0};
-        size_t size = 9;
+        size_t size = 13;
 
         /*MergeSort(src, dst, size);*/
 
-		QuickSort(src, 9, 4, &Compare);
+		QuickSort(src, 13, 4, &Compare);
 
         /*for (i = 0; i < size; ++i)
         {

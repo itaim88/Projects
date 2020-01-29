@@ -36,22 +36,26 @@ int main()
     int src[13] = {1,2,3,4,5,6,7,8,9,10,11,12,13};
     void *res = NULL;
     int x1 = 6;
+    int x2 = 14;
 
-    res = BinarySearch(src, 4, 13, Compare, &x1, NULL);
+   
 
     printf("BinarySearchTest\n\n");
 
+    res = BinarySearch(src, 4, 13, Compare, &x1, NULL);
     printf("yes 6 is here, res = %d\n", *(int*)res);
-    printf("NOT found test NULL = %d\n",  NULL == res);
+    res = BinarySearch(src, 4, 13, Compare, &x2, NULL);
+    printf("NOT found, NULL is return  = %d\n",  NULL == res);
 
     printf("\n\n");  
 
     printf("JumpSearchTest\n\n");
 
     res = JumpSearch(src, 4, 13, Compare, &x1, NULL);
-
     printf("yes 6 is here, res = %d\n", *(int*)res);
-    printf("NOT found test NULL = %d\n",  NULL == res);
+
+    res = JumpSearch(src, 4, 13, Compare, &x2, NULL);
+    printf("NOT found, NULL is return = %d\n",  NULL == res);
  
    
 

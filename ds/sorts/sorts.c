@@ -10,6 +10,7 @@
 #include <stdio.h>
 #include <assert.h> /*assert*/
 #include <alloca.h> /*assert*/
+#include <string.h> /*assert*/
 
 #include "./../include/sorts.h"
 
@@ -290,36 +291,14 @@ void MergeSort(int src[], int dst[], size_t size)
 }
 
 
-/*static void Median((void *arr, size_t num_elements, size_t element_size, int(*compar)(const void *data1, const void *data2)))
-{
-    void *end_address = arr + ((num_elements - 1) * element_size);
-    void *mid_address = arr + ((end_indx / 2) * element_size);
-
-    if (0 < cmp_fuc(mid_address, arr)); if mid > arr
-    {
-        Swap(arr ,mid_address, element_size);        
-    }
-
-    if (0 < cmp_fuc(end_address, arr));
-    {
-        Swap(arr ,end_address, element_size);        
-    }
-
-    if (0 < cmp_fuc(mid_address, end_address))
-    {
-        Swap(mid_address ,end_address, element_size);        
-    }
-
-    Swap(end_address, arr, element_size); pivot is first now 
-}*/
-
 static void SwapQ(void *arr ,size_t indx1, size_t indx2, size_t element_size)
 {
    char *tmp = (char *) alloca(element_size); 
    
-   *tmp = *((char *)arr + (indx1 * element_size));
-   *((char *)arr + (indx1 * element_size)) =  *((char *)arr + (indx2 * element_size));
-   *((char *)arr + (indx2 * element_size)) = *(char *)tmp;
+   memcpy(tmp, (char *)arr + (indx1 * element_size), element_size);
+   memcpy((char *)arr + (indx1 * element_size), 
+          (char *)arr + (indx2 * element_size), element_size);
+   memcpy((char *)arr + (indx2 * element_size), tmp, element_size);
 }
 
 size_t Partition(void *arr, size_t low, size_t upper, size_t element_size ,cmp_func cmp)

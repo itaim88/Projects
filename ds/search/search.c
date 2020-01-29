@@ -39,6 +39,8 @@ void *JumpSearch(void *arr, size_t elm_size, size_t num_of_elm, cmp_func cmp, co
       	}
     }
 
+    return BinarySearch((char *)arr + (start * elm_size), elm_size, jump + 1, cmp, data, param);
+/*
     for(i = start; i < end; ++i) 
     { 
     	if(0 == cmp((char *)arr + (i * elm_size), data))
@@ -46,8 +48,8 @@ void *JumpSearch(void *arr, size_t elm_size, size_t num_of_elm, cmp_func cmp, co
      		return (char *)arr + (i * elm_size);
     	}
     }
-
-    return NULL;
+*/
+   /* return NULL;*/
     
 }
 
