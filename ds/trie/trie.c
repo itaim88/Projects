@@ -77,12 +77,32 @@ void TrieDestroy(trie_t *trie)
     trie = NULL;
 }
 
+static status_t InsertIMP(trie_node_t *node, char *data)
+{
+    if('\0' != *data &&  NULL == node)
+    {
+        /* creat insert   */
+    }
+
+    if('\0' == *data && AVAILABLE == node->is_available)
+    {
+        return SUCCESS;
+    }
+
+    else if (NOT_AVAILABLE == node->is_available)
+    {
+        return Fail; 
+    }
+
+    InsertIMP()
+}
 
 status_t TrieInsert(trie_t *trie, char *data)
 {
-    
-}
+    assert(NULL != trie);
 
+    return InsertIMP(trie->root, data);
+}
 
 bool_t TrieIsEmpty(const trie_t *trie)
 {
