@@ -10,26 +10,46 @@
 #include <stddef.h>    /* size_t */
 #include <stdlib.h>    /* malloc */
 #include <assert.h>    /* assert */
+#include <string.h> 
 
-#include "ip.h" /*  */
 #include "trie.h" /* */
 #include "dhcp.h" /*  */
 
+#define BITS_IN_BYTE 8
+
 struct DHCP
 {
-	trie_t trie;
+	trie_t *trie;
 	ip_t subnet_mask;
 	size_t avaliable_bits;
-}dhcp_t;
+};
 
-/*
-* DhcpCreate() - 
-* Returns pointer to the Dhcp, will return NULL if failed. 
-* @subnet_mask_reserved_bits: dhcp reserved bits in address. 
-* ex: 255.255.255.0/24: the first 24 bits are dhcp reserved. 
-* complexity of malloc();       
-*/
-dhcp_t *DhcpCreate(ip_t subnet_mask, size_t subnet_mask_reserved_bits);
+dhcp_t *DhcpCreate(ip_t subnet_mask, size_t subnet_mask_reserved_bits)
+{
+	dhcp_t *new_dhcp = NULL;
+
+	assert(NULL != subnet_mask);
+
+	new_dhcp = (dhcp_t *) malloc(sizeof(new_dhcp));
+	if (NULL == new_dhcp)
+	{
+		return new_dhcp;
+	}
+
+	new_dhcp->trie = TrieCreate();
+	if(NULL == new_dhcp->trie)
+	{
+		free(new_dhcp);
+		new_dhcp = NULL;
+		return NULL;
+	}
+
+	memcpy(new_dhcp->subnet_mask, subnet_mask, (sizeof(ip_t)));
+	new_dhcp->avaliable_bits = (sizeof(ip_t) * BITS_IN_BYTE) -
+										subnet_mask_reserved_bits;
+
+	return 	new_dhcp;								
+}
 
 /*
 * DhcpDetroy() -
@@ -37,7 +57,7 @@ dhcp_t *DhcpCreate(ip_t subnet_mask, size_t subnet_mask_reserved_bits);
 * undefined behaviour for @dhcp NULL pointer
 * complexity: free();                  
 */
-void DhcpDetroy(dhct_t *dhcp);
+void DhcpDetroy(dhcp_t *dhcp);
 
 /*
 * DhcpAllocIp() -

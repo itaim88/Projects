@@ -53,7 +53,7 @@ bool_t TrieIsEmpty(const trie_t *trie);
 
 /*
 * TrieSize() -
-* Counts the number of elements in the trie.
+* Counts the number of edges in the trie.
 * undefined behaviour for @trie NULL pointer
 * complexity: O(n)                 
 */
@@ -66,6 +66,17 @@ size_t TrieSize(const trie_t *trie);
 * complexity: O(n)                 
 */
 size_t TrieCountLeafs(const trie_t *trie);
+
+/* 
+* Updates the availbility of the nodes according to the user data
+* undefined behaviour for @trie NULL pointer
+* undefined behaviour for @data NULL pointer
+* complexity: O(n)   
+*/
+void FreeLeaf(trie_t *trie, char *data);
+
+/* check if char data is avialble*/
+bool_t TrieIsAvailable(trie_t *trie, char *data);
 
 #endif 
 

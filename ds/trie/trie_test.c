@@ -38,6 +38,36 @@
 
 static void TrieTest1()
 {
+    trie_t *new_tree = NULL;
+    char *ip1 = "1";
+    char *ip2 = "101";
+    char *ip3 = "010";
+    
+
+
+    printf("Trie Test 1:\n");  
+    new_tree = TrieCreate(); 
+
+    RUN_TEST(1 == TrieIsEmpty(new_tree), "TrieIsEmpty");
+    RUN_TEST(0 == TrieSize(new_tree), "insert");
+    RUN_TEST(0 == TrieInsert(new_tree, ip1), "insert");
+    RUN_TEST(1 == TrieSize(new_tree), "insert");
+
+    RUN_TEST(0 == TrieInsert(new_tree, ip2), "insert");
+    RUN_TEST(3 == TrieSize(new_tree), "size");
+    RUN_TEST(1 == TrieCountLeafs(new_tree), "trie");
+    FreeLeaf(new_tree, ip2);
+    RUN_TEST(0 == TrieCountLeafs(new_tree), "trie");
+
+    RUN_TEST(3 == TrieSize(new_tree), "size");
+    RUN_TEST(1 == TrieIsAvailable(new_tree, ip2), "trie");
+    RUN_TEST(1 == TrieIsAvailable(new_tree, ip1), "trie");
+
+    RUN_TEST(0 == TrieInsert(new_tree, ip3), "insert");
+    RUN_TEST(0 == TrieIsAvailable(new_tree, ip3), "trie");
+
+
+    TrieDestroy(new_tree);
 
 }
 

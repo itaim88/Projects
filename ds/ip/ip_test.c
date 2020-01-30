@@ -1,17 +1,18 @@
 /*********************************/
 /*   			             	 */
 /*   Data Structures             */
-/*   dhcp                  */
-/*   Author: Itai Marienberg     */
-/*   Last Updated 20/1/20        */
-/*   Reviewed by:                */   
+/*   trie         */
+/*   Author: Itai Marienberg      */
+/*   Last Updated        */
+/*   Reviewed by:          */   
 /*			                   	 */
 /*********************************/
 
 #include <stdio.h> /* printf */
-#include <assert.h> /* assert */
+#include <assert.h>
+#include <stdlib.h>
 
-#include "./../include/dhcp.h"
+#include "trie.h"
 
 #define UNUSED(x) (void)(x)
 
@@ -32,13 +33,30 @@
         printf("FAIL %s\n", error_message);\
         printf(NORMAL);\
     }\
-
-static void Test()
-{
-
 }
+
+
+
+static void ipTest1()
+{
+    unsigned char ip[4] = {7, 5, 2, 0};
+    unsigned char *ans = malloc(33);
+    IPConvertAddress(ip, ans); 
+
+    printf("%s\n" ,ans); 
+
+    free(ans);               
+}
+
 int main()
-{   
-    Test();
+{
+    ipTest1();
+  
     return 0;
 }
+
+
+
+
+
+
