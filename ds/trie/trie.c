@@ -1,19 +1,17 @@
 /*********************************/
 /*   			             	 */
 /*   Data Structures             */
-/*   trie          */
-/*   Author: Itai Marienberg      */
-/*   Last Updated          */
-/*   Reviewed by:          */   
+/*   trie                        */
+/*   Author: Itai Marienberg     */
+/*                               */   
 /*			                   	 */
 /*********************************/
 
-#include <stdlib.h>
-#include <assert.h>
+#include <stdlib.h> /* size_t */
+#include <assert.h> /*assert */
 
-#include "trie.h"
+#include "trie.h" /*trie funcs */
 
-#define UNUSED(x) (void)(x)
 #define BITS_IN_BYTE 8
 #define IP_SIZE 32
 

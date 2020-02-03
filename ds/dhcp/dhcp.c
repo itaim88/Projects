@@ -1,6 +1,6 @@
 /*********************************/
 /*   			             	 */
-/*                          */
+/*   DHCP                        */
 /*   Itai Marienberg	         */
 /*   Last Updated                */
 /*   Reviewed by                 */   
@@ -22,7 +22,6 @@
 #define MIN 0
 #define MAX 255
 
-
 struct DHCP
 {
 	trie_t *trie;
@@ -30,10 +29,11 @@ struct DHCP
 	size_t available_bits;
 };
 
-/**************************************************************************/
+/*****************************************************************************/
+
 static int ReservedAddresses(trie_t *trie);
 
-/**************************************************************************/
+/*****************************************************************************/
 
 dhcp_t *DhcpCreate(ip_t subnet_mask, size_t subnet_mask_reserved_bits)
 {
