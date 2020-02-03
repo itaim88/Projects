@@ -21,14 +21,14 @@
 
 static unsigned char ByteMirror(unsigned int x)
 {
-	x = ((x & m1) >> 4)  | ((x & ~m1) << 4);
-	x = ((x & m2) >> 2)  | ((x & ~m2) << 2);
-	x = ((x & m3) >> 1)  | ((x & ~m3) << 1);
+	x = ((x & m1) >> 4) | ((x & ~m1) << 4);
+	x = ((x & m2) >> 2) | ((x & ~m2) << 2);
+	x = ((x & m3) >> 1) | ((x & ~m3) << 1);
 
 	return x;
 }
 
-void IPConvertAddress(ip_t ip_address, unsigned char *ip_str)
+void IPConvertAddress(unsigned char *ip_address, unsigned char *ip_str)
 {
 	unsigned char j = 0 , i = 0;
 	unsigned char *runner = ip_str;
@@ -43,7 +43,7 @@ void IPConvertAddress(ip_t ip_address, unsigned char *ip_str)
 
 		j = 0;
 
-		while (j < BYTS_IN_BYTE)
+		while (j < BITS_IN_BYTE)
 		{
 			*runner = (mask & (res >> j)) + 48;
 			++j;
@@ -55,8 +55,6 @@ void IPConvertAddress(ip_t ip_address, unsigned char *ip_str)
 
 	*runner = '\0';
 }
-
-
 
 
  

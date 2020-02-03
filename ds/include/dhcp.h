@@ -4,6 +4,7 @@
 #include <stddef.h> /*size_t*/
 #include "ip.h"     /*ip_t*/
 
+typedef unsigned char ip_t[ADDRESS_SIZE_IN_BYTES];
 
 typedef struct DHCP dhcp_t;
 
@@ -55,13 +56,13 @@ alc_status_t DhcpAllocIp(dhcp_t *dhcp, ip_t requested_ip, ip_t allocated_ip);
 /*
 * DhcpFreeIp() -
 * frees the @ip_address from the dhcp
-* undefined behaviour for @dhcp NULL pointer
+* undefined behaviour for @dhcp NULL pointer and when free resereved addresses
 * return value: 
     - SUCCESS 
     - ADDRESS_NOT_FOUND   
 * complexity: Olog(n)            
 */
-free_status_t DhcpFreeIp(dhcp_t *dhcp, ip_t ip_address);
+void DhcpFreeIp(dhcp_t *dhcp, ip_t ip_address);
 
 /*
 * DhcpCountFree() -

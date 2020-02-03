@@ -22,7 +22,7 @@ typedef enum Bool
 * Returns pointer to the Trie, will return NULL if failed. 
 * complexity of malloc()      
 */
-trie_t *TrieCreate();
+trie_t *TrieCreate(size_t hight);
 
 /*
 * TrieDetroy() -
@@ -38,7 +38,7 @@ void TrieDestroy(trie_t *trie);
 * undefined behaviour for @trie NULL pointer
 * complexity: malloc()                 
 */
-status_t TrieInsert(trie_t *trie, char *data);
+status_t TrieInsert(trie_t *trie, unsigned char *data);
 
 /*
 * TrieIsEmpty() -
@@ -57,15 +57,15 @@ bool_t TrieIsEmpty(const trie_t *trie);
 * undefined behaviour for @trie NULL pointer
 * complexity: O(n)                 
 */
-size_t TrieSize(const trie_t *trie);
+size_t TrieEdgeCount(const trie_t *trie);
 
 /*
 * TrieCountLeafs() -
-* Counts the number of leafs in the trie.
+* Counts the number of Used leafs in the trie.
 * undefined behaviour for @trie NULL pointer
 * complexity: O(n)                 
 */
-size_t TrieCountLeafs(const trie_t *trie);
+size_t TrieCountOccupiedLeafs(const trie_t *trie);
 
 /* 
 * Updates the availbility of the nodes according to the user data
@@ -73,10 +73,12 @@ size_t TrieCountLeafs(const trie_t *trie);
 * undefined behaviour for @data NULL pointer
 * complexity: O(n)   
 */
-void FreeLeaf(trie_t *trie, char *data);
+void TrieFreeLeaf(trie_t *trie, unsigned char *data);
 
 /* check if char data is avialble*/
-bool_t TrieIsAvailable(trie_t *trie, char *data);
+bool_t TrieIsAvailable(trie_t *trie, unsigned char *data);
+
+void TreeFindNextAvail(trie_t *trie, unsigned char *ip_buffer);
 
 #endif 
 

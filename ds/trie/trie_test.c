@@ -34,46 +34,60 @@
     }\
 }
 
-
-
 static void TrieTest1()
 {
     trie_t *new_tree = NULL;
-    char *ip1 = "1";
-    char *ip2 = "101";
-    char *ip3 = "010";
+    unsigned char ip1[4] = {100,8,5,7};
+    unsigned char ip2[4] = {100,8,0,252};
+    int check = 0;
     
-
-
     printf("Trie Test 1:\n");  
-    new_tree = TrieCreate(); 
+    new_tree = TrieCreate(10); 
 
-    RUN_TEST(1 == TrieIsEmpty(new_tree), "TrieIsEmpty");
-    RUN_TEST(0 == TrieSize(new_tree), "insert");
+    RUN_TEST(1 == TrieIsEmpty(new_tree), "TrieIsEmpty")
+    RUN_TEST(0 == TrieEdgeCount(new_tree), "size");
     RUN_TEST(0 == TrieInsert(new_tree, ip1), "insert");
-    RUN_TEST(1 == TrieSize(new_tree), "insert");
+    RUN_TEST(10 == TrieEdgeCount(new_tree), "size");
 
     RUN_TEST(0 == TrieInsert(new_tree, ip2), "insert");
-    RUN_TEST(3 == TrieSize(new_tree), "size");
-    RUN_TEST(1 == TrieCountLeafs(new_tree), "trie");
-    FreeLeaf(new_tree, ip2);
-    RUN_TEST(0 == TrieCountLeafs(new_tree), "trie");
+    RUN_TEST(19 == TrieEdgeCount(new_tree), "size");
+    RUN_TEST(2 == TrieCountOccupiedLeafs(new_tree), "CountLeafs");
+    
 
-    RUN_TEST(3 == TrieSize(new_tree), "size");
+    TrieFreeLeaf(new_tree, ip2);
+    check = TrieCountOccupiedLeafs(new_tree);
+    RUN_TEST(1 == TrieCountOccupiedLeafs(new_tree), "TrieCountLeafs");
+    
     RUN_TEST(1 == TrieIsAvailable(new_tree, ip2), "trie");
-    RUN_TEST(1 == TrieIsAvailable(new_tree, ip1), "trie");
-
-    RUN_TEST(0 == TrieInsert(new_tree, ip3), "insert");
-    RUN_TEST(0 == TrieIsAvailable(new_tree, ip3), "trie");
-
+    RUN_TEST(0 == TrieIsAvailable(new_tree, ip1), "trie");
 
     TrieDestroy(new_tree);
 
 }
 
+static void TrieTest2()
+{
+    trie_t *new_tree = NULL;
+    unsigned char ip1[4] = {100,8,5,7};
+    unsigned char ip2[4] = {100,8,0,252};
+    unsigned char buff[4] = {4,3,2,1};
+    int check = 0;
+    
+    printf("Trie Test 2:\n");  
+    new_tree = TrieCreate(10); 
+
+    TreeFindNextAvail(new_tree, buff);
+
+    TrieDestroy(new_tree);
+
+}
+
+
+
 int main()
 {
     TrieTest1();
+    TrieTest2();
   
     return 0;
 }
