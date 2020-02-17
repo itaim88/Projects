@@ -11,7 +11,7 @@
 #include <stdlib.h> /* malloc */
 #include <assert.h> /* assert */
 
-#include "dllist.h" /* doubley linked list functions */
+#include "./../include/dllist.h" /* doubley linked list functions */
 
 #define FREE(ptr) {free(ptr); ptr = NULL;}
 
