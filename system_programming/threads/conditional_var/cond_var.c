@@ -9,7 +9,7 @@ int producer_work = 0;
 char consumer_work[11] = "i`m working";
 int threads_counter = 0;
 pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
-pthread_cond_t cond = PTHREAD_COND_INITIALIZER;
+pthread_cond_t start_working = PTHREAD_COND_INITIALIZER;
 sem_t producer_waits = {0};
 
 static void *Producer(void *param)
@@ -29,18 +29,16 @@ static void *Producer(void *param)
         {
             pthread_mutex_unlock(&mutex);
             pthread_mutex_lock(&mutex);
-
         }
 
         threads_counter = 0;
-        pthread_cond_broadcast(&cond);
+        pthread_cond_broadcast(&start_working);
         pthread_mutex_unlock(&mutex);
 
         for (i = 0; i < CONSUMERS; ++i)
         {
             sem_wait(&producer_waits);
         }
-
     }
 
     return NULL;
@@ -54,7 +52,7 @@ static void *Consumer(void *param)
 
         pthread_mutex_lock(&mutex);
         ++threads_counter;
-        pthread_cond_wait(&cond, &mutex);
+        pthread_cond_wait(&start_working, &mutex);
         printf("consumer: %s\n", consumer_work);
         pthread_mutex_unlock(&mutex);
 
@@ -75,7 +73,7 @@ int main()
     status = pthread_create(&prod_thread, NULL, Producer, NULL);
     if (0 != status)
     {
-        printf("prod_thread create error");
+        printf("ERROR");
         return 1;
     }
 
@@ -84,7 +82,7 @@ int main()
         status = pthread_create(&cons_thread[i], NULL, Consumer, &i);
         if (0 != status)
         {
-            printf("cons_thread %ld create error\n", i);
+            printf("ERROR\n");
             return 1;
         }
     }
@@ -92,7 +90,7 @@ int main()
     status = pthread_join(prod_thread, NULL);
     if (0 != status)
     {
-        printf("prod_pthread create error \n");
+        printf("ERROR\n");
         return 1;
     }
 
@@ -101,13 +99,13 @@ int main()
         status = pthread_join(cons_thread[i], NULL);
         if (0 != status)
         {
-            printf("cons_pthread create error \n");
+            printf("ERROR\n");
             return 1;
         }
     }
 
     pthread_mutex_destroy(&mutex);
-    pthread_cond_destroy(&cond);
+    pthread_cond_destroy(&start_working);
     sem_destroy(&producer_waits);
 
     return 0;
