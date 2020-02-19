@@ -1,41 +1,35 @@
-/*********************************/
-/*   			             	 */
-/*   System Programming          */
-/*   signals               		 */
-/*   Itai Marienberg			 */
-/*********************************/
+#define _POSIX_C_SOURCE 199309L
 
-#include <stdio.h>		/* perror() 	*/
-#include <stdlib.h>		/* exit()   	*/
-#include <sys/types.h>	/* fork()   	*/
-#include <sys/wait.h>	/* wait()   	*/
-#include <unistd.h>		/* exec()  		*/
-#include <string.h>		/* strcat() 	*/
-#include <signal.h>		/* sigaction()	*/
+#include <stdio.h>
+#include <unistd.h>
+#include <signal.h>
+#include <stdlib.h>
+#include <string.h>
+#include <sys/types.h>
+#include <sys/wait.h>
 
-
-void SigusrHandler(int sig_num)
+void handler(int sig, siginfo_t *info, void *ucontext)
 {
-	/*struct sigaction sa;
-	sa.sa_handler = SigusrHandler;*/
-	/*sigaction(SIGUSR1, &sa, NULL);*/
-	write(1, "pong\n", 6);
+    write(1, "ping\n", 6);
+    kill(info->si_pid, SIGUSR2);
 }
 
-int main(int argc, char *const argv[])
+int main(int argc, char *argv[])
 {
-	struct sigaction sa;
-
-	sa.sa_handler = SigusrHandler;
-	sigemptyset(&sa.sa_mask);
-	sigaction(SIGUSR1, &sa, NULL);
-
-	while(1)
-	{
-		sleep(1);
-		kill(agrv[1], SIGUSR1);
-		pause();
-	}
-
-	return 0;
-} 
+    pid_t pid = 0;
+    size_t i = 0;
+    struct sigaction sa;
+    
+    memset(&sa, 0, sizeof(sa)); 
+    sa.sa_sigaction = handler;
+    sa.sa_flags = SA_SIGINFO;
+    sigaction(SIGUSR1, &sa, NULL);
+    
+    while (i < 500)
+    {   
+        pause();
+        ++i; 
+    }            
+    
+    return 0;
+}
