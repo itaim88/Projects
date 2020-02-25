@@ -5,12 +5,12 @@
 
 #include "wd.h"
 
-int main()
+int main(int argc, char *argv[])
 {
     status_t status;
-    time_t sleep_delay = 100;
+    time_t sleep_delay = 20;
     
-    wd_t *wd = WDStart("app.c", &status);
+    wd_t *wd = WDStart("/home/codesila/git/system_programming/watchdogtimer/outdebug/app", &status);
  
     while (sleep_delay)
     {
@@ -21,7 +21,7 @@ int main()
     
     printf("App is alive!\n");
     
-    sleep_delay = 10;
+    sleep_delay = 3;
     
     while (sleep_delay)
     {

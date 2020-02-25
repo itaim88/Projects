@@ -19,14 +19,14 @@ static status_t SemaphoreInitIMP(wd_t *wrap, status_t *status)
 {
     if (SEM_FAILED == (wrap->sem_p2 = sem_open("/sem_wd_ready", O_CREAT, 0644, 0)))
     {
-        *status = FAIL;
-        return FAIL;
+        *status = SYSCALL_FAIL;
+        return SYSCALL_FAIL;
     }
     
     if (SEM_FAILED == (wrap->sem_p1 = sem_open("/sem_app_ready", O_CREAT, 0644, 0)))
     {
-        *status = FAIL;
-        return FAIL;
+        *status = SYSCALL_FAIL;
+        return SYSCALL_FAIL;
     }
     return SUCCESS;
 }
@@ -56,13 +56,16 @@ int main(int argc, char *argv[])
         return 1;    
     }
     
-    strcpy(wrap->filename, "/home/codesila/git/system_programming/watchdogtimer/outdebug/app");
+    strcpy(wrap->exec_filename, argv[0]);
+    strcpy(wrap->my_filename, argv[1]);
     
     WDSchedulerRun(wrap);
     
-    sem_close(wrap->sem_p1);
-    sem_close(wrap->sem_p2);
-       
+
+    sem_close(sem_stop_flag);
+    printf("FREE WRAP IN MAIN WD\n");
+    free(wrap); wrap = NULL;
+      
     return 0;
 }
 
