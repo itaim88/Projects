@@ -92,12 +92,14 @@ ilrd_uid_t SchedulerAddTask(scheduler_t *s, task_func to_do, time_t interval, vo
     
     return new_task->uid;
 }
+
 /*
 int CompareUid(void *task1, void *task2)
 {
     return (UIDIsSame(((task_t*)task1)->uid,((task_t*)task2)->uid));
 }
 */
+
 int IsMatch(void *task1, void *uid)
 {
     return (UIDIsSame(((task_t*)task1)->uid,*(ilrd_uid_t *)uid));
