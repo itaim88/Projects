@@ -14,8 +14,8 @@ struct WatchDog
     scheduler_t *s;
     sem_t *sem_p1;
     sem_t *sem_p2;
-    const char *my_filename;
-    const char *exec_filename;
+    char my_filename;
+    char exec_filename[100];
     status_t status;
 };
 
