@@ -10,6 +10,7 @@ public class singlyLinkedList {
 	}
 	
 	public listIterator find(Object data) {
+		
 		listIterator iterNext = begin();
 		listIterator iterPrev = begin();
 		
@@ -34,7 +35,6 @@ public class singlyLinkedList {
 	public long size() {
 		
 		long size = 0L;
-		
 		listIterator iter = begin();
 	
 		while (iter.hasNext())
