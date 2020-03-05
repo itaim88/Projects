@@ -2,6 +2,7 @@
 *
 !/**/
 !**.c
+!**.java
 !**.h
 !.gitignore
 !**.md

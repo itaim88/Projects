@@ -6,30 +6,38 @@ public class singlyLinkedList {
 	
 	public Boolean isEmpty(){
 		
-		
-		return (null == head.getNextNode());
-		
+		return (null == head.getNextNode());	
 	}
 	
 	public listIterator find(Object data) {
 		
-		Object 
+		listIterator iterNext = begin();
+		listIterator iterPrev = begin();
 		
-		while (iter.ha)
+		while (iterPrev.hasNext())
+		{
+			if (data.equals(iterNext.next()))
+			{
+				return iterPrev;
+			}
+			
+			iterPrev.next();
+		}
+		
+		if (data.equals(iterNext.next()))
+		{
+			return iterPrev;
+		}
 		
 		return null;
 	}
 	
-	public int size() {
+	public long size() {
 		
-		long size = 1L;
+		long size = 0L;
 		
 		listIterator iter = begin();
-		if (null == iter)
-		{
-			return 0;
-		}
-		
+	
 		while (iter.hasNext())
 		{
 			++size;
@@ -41,7 +49,7 @@ public class singlyLinkedList {
 	
 	public Object popFront(){
 		
-		Object data =  head.getNextNode().getNextNode();
+		Object data =  head.getNextNode().getData();
 		head.nextNode = head.getNextNode().getNextNode();
 		
 		return data;		
@@ -54,6 +62,7 @@ public class singlyLinkedList {
 	}
 	
 	public listIterator begin() {	
+		
 		listIterator itr = new listIteratorImp();
 	
 		return itr;	
@@ -65,15 +74,18 @@ public class singlyLinkedList {
 		private node nextNode;
 			
 		public node(Object data, node nextNode) {
+			
 			this.data = data;
 			this.nextNode = nextNode;
 		}
 			
-		public Object getData() {	
+		public Object getData() {
+			
 			return data;
 		}
 		
 		public node getNextNode() {
+			
 			return nextNode;
 		}
 	}
@@ -83,18 +95,21 @@ public class singlyLinkedList {
 		node currentNode;
 		
 		listIteratorImp() {
-			currentNode = head.getNextNode();
+			currentNode = head;
 		}
 		
 		@Override
 		public Object next() {
+			
 			Object currentData = currentNode.getData();
 			currentNode = currentNode.getNextNode();
+			
 			return currentData;
 		}
 	
 		@Override
 		public Boolean hasNext() {
+			
 			return (null != currentNode.getNextNode());
 		}
 	}
