@@ -5,12 +5,11 @@ public class singlyLinkedList {
 	private node head = new node(null, null);
 	
 	public Boolean isEmpty(){
-		
+
 		return (null == head.getNextNode());	
 	}
 	
 	public listIterator find(Object data) {
-		
 		listIterator iterNext = begin();
 		listIterator iterPrev = begin();
 		
