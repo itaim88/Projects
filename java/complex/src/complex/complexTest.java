@@ -1,12 +1,9 @@
 package complex;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 
-import org.junit.jupiter.api.BeforeAll;
+
+import static org.junit.Assert.*;
+
 import org.junit.jupiter.api.Test;
 
 class complexTest {
@@ -21,24 +18,24 @@ class complexTest {
 		System.out.println("test Math");
 		
 		res1_2 = obj1.add(obj2);
-		assertEquals(3, res1_2.getReal());
-		assertEquals(4, res1_2.getImg());
+		assertEquals(3, res1_2.getReal(),5);
+		assertEquals(4, res1_2.getImg(),3);
 		System.out.println(res1_2.toString());
 		
 		res1_2 = obj2.subtract(obj1);
-		assertEquals(1, res1_2.getReal());
-		assertEquals(2, res1_2.getImg());
+		assertEquals(1, res1_2.getReal(),3);
+		assertEquals(2, res1_2.getImg(),3);
 		System.out.println(res1_2.toString());
 	
 		res1_2 = obj2.multiplyBy(obj1);
 		System.out.println(res1_2.toString());
-		assertEquals(-1, res1_2.getReal());
-		assertEquals(5, res1_2.getImg());
+		assertEquals(-1, res1_2.getReal(),3);
+		assertEquals(5, res1_2.getImg(),3);
 		
 		res1_2 = obj2.divideBy(obj1);
 		System.out.println(res1_2.toString());
-		assertEquals((2.5), res1_2.getReal());
-		assertEquals((0.5), res1_2.getImg());
+		assertEquals((2.5), res1_2.getReal(),3);
+		assertEquals((0.5), res1_2.getImg(),3);
 		
 		System.out.println("end test Math");	
 	}
@@ -50,12 +47,12 @@ class complexTest {
 		System.out.println(setTest.toString());
 		setTest.setImg(7);
 		setTest.setReal(8);
-		assertEquals(8, setTest.getReal());
-		assertEquals(7, setTest.getImg());
+		assertEquals(8, setTest.getReal(),3);
+		assertEquals(7, setTest.getImg(),3);
 		
 		setTest.setValue(0, 1);
-		assertEquals(0, setTest.getReal());
-		assertEquals(1, setTest.getImg());
+		assertEquals(0, setTest.getReal(),3);
+		assertEquals(1, setTest.getImg(),3);
 		
 		assertEquals(false, setTest.isReal());
 		assertEquals(true, setTest.isImg());
@@ -76,18 +73,18 @@ class complexTest {
 		
 		String str = "4+2.83i";
 		Complex c = Complex.parse(str);
-		assertEquals(4, c.getReal());
-		assertEquals(2.83, c.getImg());
+		assertEquals(4, c.getReal(),4);
+		assertEquals(2.83, c.getImg(),4);
 		
 		str = "4 + 2.83i";
 		c = Complex.parse(str);
-		assertEquals(4, c.getReal());
-		assertEquals(2.83, c.getImg());
+		assertEquals(4, c.getReal(),4);
+		assertEquals(2.83, c.getImg(),4);
 		
 		str = "-4 + -2.83i";
 		c = Complex.parse(str);
-		assertEquals(-4, c.getReal());
-		assertEquals(-2.83, c.getImg());
+		assertEquals(-4, c.getReal(),4);
+		assertEquals(-2.83, c.getImg(),4);
 		
 	}
 	
