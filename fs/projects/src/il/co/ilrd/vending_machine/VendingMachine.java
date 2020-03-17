@@ -4,12 +4,10 @@ public class VendingMachine {
 	private double balance = 0d;
 	private State state;
 	private Monitor imp;
+	private int[] stock;
 	
 	public VendingMachine(int[] stock, Monitor imp) {
-		for (Product item : Product.values()) {
-			item.setStock(stock[item.ordinal()]);   
-		}
-		
+		this.stock = stock;
 		this.imp = imp;
 		state = State.WAIT_FOR_COIN;
 	}
@@ -20,6 +18,11 @@ public class VendingMachine {
 		imp.print("Your change is " + String.valueOf(balance));
 		balance = 0d;
 	}
+	
+	private void ReduceStock(int index) {
+		--stock[index];
+	}
+	
 	
 	public enum State {
 		WAIT_FOR_COIN {
@@ -47,11 +50,11 @@ public class VendingMachine {
 					if (key == products[i].getKey()) {
 						drink = products[i];
 						
-						if (drink.isAvilable()) {	
+						if (0 < mac.stock[key]) {	
 							
 							if  (drink.getPrice() <= mac.balance) {
 								mac.balance -= drink.getPrice();
-								drink.setStock(drink.getStock() - 1);
+								mac.ReduceStock(key);
 								mac.imp.print("The product is: " +drink.toString());
 							}
 							
@@ -59,7 +62,7 @@ public class VendingMachine {
 						}
 						
 						else {
-							mac.imp.print(drink.getStock()+" "+drink.toString() +" products in the machine");
+							mac.imp.print(mac.stock[key]+" "+drink.toString() +" products in the machine");
 						}
 					}
 				}
@@ -76,6 +79,5 @@ public class VendingMachine {
 		}
 		
 		public abstract void gotOrder(VendingMachine mac, int key);
-	
 	}	
 }
