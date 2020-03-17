@@ -34,5 +34,8 @@ class VendingTest {
 		assertEquals(true, Product.WATER.isAvilable()); 
 		m.insertCoin(11);
 		m.order(Product.WATER.getKey());
+		
+		m.insertCoin(100);
+		m.returnChange();
 	}
 }

@@ -1,17 +1,13 @@
 package vendingMachine;
 
 public class VendingMachine {
-	double balance = 0d;
+	private double balance = 0d;
 	private State state;
-	Monitor imp;
+	private Monitor imp;
 	
 	public VendingMachine(int[] stock, Monitor imp) {
-		Product[] products = Product.values();
-		int i = 0;
-		
-		for (Product item : products) {
-			item.setStock(stock[i]);
-			++i;
+		for (Product item : Product.values()) {
+			item.setStock(stock[item.ordinal()]);   
 		}
 		
 		this.imp = imp;
