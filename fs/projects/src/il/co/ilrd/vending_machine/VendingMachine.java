@@ -50,7 +50,7 @@ public class VendingMachine {
 					if (key == products[i].getKey()) {
 						drink = products[i];
 						
-						if (0 < mac.stock[key]) {	
+						if (0 < mac.stock[drink.getStockIndex()]) {	
 							
 							if  (drink.getPrice() <= mac.balance) {
 								mac.balance -= drink.getPrice();
@@ -62,7 +62,7 @@ public class VendingMachine {
 						}
 						
 						else {
-							mac.imp.print(mac.stock[key]+" "+drink.toString() +" products in the machine");
+							mac.imp.print(mac.stock[drink.getStockIndex()]+" "+drink.toString() +" products in the machine");
 						}
 					}
 				}
