@@ -1,15 +1,23 @@
 package il.co.ilrd.singleton;
 
 public class Sync {
-	private Sync rs = null;
+	private static Sync rs = null;
 	
-	public Sync getResource() {
-			synchronized(this) {
-				if (rs == null) {
-					rs = new Sync();
-				}
-			}
-			
+	public synchronized static Sync getResource() {
+		if (rs == null) {
+			rs = new Sync();
+		}
+		
 		return rs;
 	}
+	
+	public static void main(String[] args) {
+		Sync d = Sync.getResource(); 
+		Sync d2 = Sync.getResource(); 
+
+		System.out.println(d == d2); // return true
+	}
 }
+
+
+
