@@ -3,8 +3,8 @@ package il.co.ilrd.concurrency;
 import java.util.concurrent.atomic.*;
 
 public class ProdCons1 {
-	//volatile protected static AtomicBoolean flag = new AtomicBoolean(true);
-	static volatile int x = 0;
+	//static volatile int x = 0;
+	private static AtomicInteger x = new AtomicInteger();
 	static volatile boolean flag = true;
 
 	public class Consumer implements Runnable {
@@ -12,9 +12,9 @@ public class ProdCons1 {
 		@Override
 		public void run() {
 			while (flag) {
-				if (x == 1) {
+				if (1 == x.get()) {
 				System.out.println("pong ");
-				--x;
+				x.decrementAndGet();
 				}
 			}
 		}	
@@ -25,9 +25,9 @@ public class ProdCons1 {
 		@Override
 		public void run() {
 			while (flag) {
-				if (x == 0) {
+				if (0 == x.get()) {
 				System.out.println("ping ");
-				++x;
+				x.incrementAndGet();
 				}
 		    }
 		}	
