@@ -8,7 +8,6 @@ public class ProdCons1 {
 	static volatile boolean flag = true;
 
 	public class Consumer implements Runnable {
-
 		@Override
 		public void run() {
 			while (flag) {
@@ -29,7 +28,7 @@ public class ProdCons1 {
 				System.out.println("ping ");
 				x.incrementAndGet();
 				}
-		    }
+			}
 		}	
 	}
 	public static void main(String[] args) {
