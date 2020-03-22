@@ -19,10 +19,16 @@ package il.co.ilrd.singleton;
     public static void main(String[] args) {
     	DoubleCheck d = DoubleCheck.getResource(); 
     	
-    	for (int i = 0; i < 100; ++i) {
+    	for (int i = 0; i < 100_000; ++i) {
     		DoubleCheck d2 = DoubleCheck.getResource(); 
-			System.out.println(d == d2); 
+    		if (d != d2) {
+				System.out.println("Not singleton");
+				return;
+			}
 		}
+    	
+		System.out.println("singleton");
+		
     }
 }
 

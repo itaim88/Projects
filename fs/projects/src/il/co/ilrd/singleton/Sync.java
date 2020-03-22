@@ -14,10 +14,14 @@ public class Sync {
 	public static void main(String[] args) {
 		Sync d = Sync.getResource(); 
 		
-		for (int i = 0; i < 100; ++i) {
+		for (int i = 0; i < 100_000; ++i) {
 			Sync d2 = Sync.getResource(); 
-			System.out.println(d == d2); 
+			if (d != d2) {
+				System.out.println("Not singleton");
+				return;
+			}
 		}
+		System.out.println("singleton");
 	}
 }
 

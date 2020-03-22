@@ -15,10 +15,15 @@ public class Resource {
     public static void main(String[] args) {
     	Resource r1 = Resource.getInstance();
     	
-    	for (int i = 0; i < 100; ++i) {
+    	for (int i = 0; i < 100_000; ++i) {
     		Resource r2 = Resource.getInstance();
-    		System.out.println(r1 == r2); 
-		}  
+    		if (r1 != r2) {
+				System.out.println("Not singleton");
+				return;
+			}
+		}
+		System.out.println("singleton");
+    
    }
 }
 

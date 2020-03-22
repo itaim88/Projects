@@ -22,10 +22,15 @@ package il.co.ilrd.singleton;
 	    public static void main(String[] args) {
 	        Animals max = Animals.DOG;
 	        
-	        for (int i = 0; i < 100; ++i) {
+	        for (int i = 0; i < 100_000; ++i) {
 	        	Animals max2 = Animals.DOG;
-	        	System.out.println(max == max2);
-			} 
+	        	if (max != max2) {
+					System.out.println("Not singleton");
+					return;
+				}
+			}
+	        
+			System.out.println("singleton");	 
 	    }
 	}
 	
