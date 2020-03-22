@@ -6,7 +6,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class OneProdMultiCons {
 	private static AtomicInteger x = new AtomicInteger();
 	static int num = 0;
-	static Integer lock = 1;
+	static Object lock = new Object();
 	private static final int NUM_THREADS = 3;
 	private final static Semaphore semaphore = new Semaphore(-NUM_THREADS + 1);
 	
@@ -16,7 +16,7 @@ public class OneProdMultiCons {
 			while (true) {
 				semaphore.release();
 	
-				synchronized (lock) {
+				synchronized(lock) {
 					try {
 						x.incrementAndGet();
 						lock.wait();
@@ -34,7 +34,6 @@ public class OneProdMultiCons {
 		@Override
 		public void run() {
 			while (true) {
-	
 				for (int i = 0; i < NUM_THREADS; ++i) {
 					x.decrementAndGet();
 				}
@@ -49,12 +48,7 @@ public class OneProdMultiCons {
 				synchronized(lock) {
 					++num;
 					System.out.println("producer: " + num);
-				}
-				
-				//while (0 != x.get());
-					
-				synchronized(lock) {	
-				lock.notifyAll();
+					lock.notifyAll();
 				}
 			}		
 		}		
