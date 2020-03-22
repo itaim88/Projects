@@ -18,9 +18,9 @@ package il.co.ilrd.singleton;
 	}
     public static void main(String[] args) {
     	DoubleCheck d = DoubleCheck.getResource(); 
-    	DoubleCheck d2 = DoubleCheck.getResource(); 
- 
+    	
     	for (int i = 0; i < 100; ++i) {
+    		DoubleCheck d2 = DoubleCheck.getResource(); 
 			System.out.println(d == d2); 
 		}
     }

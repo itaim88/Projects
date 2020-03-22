@@ -13,9 +13,9 @@ public class Sync {
 	
 	public static void main(String[] args) {
 		Sync d = Sync.getResource(); 
-		Sync d2 = Sync.getResource(); 
-
+		
 		for (int i = 0; i < 100; ++i) {
+			Sync d2 = Sync.getResource(); 
 			System.out.println(d == d2); 
 		}
 	}

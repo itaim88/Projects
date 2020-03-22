@@ -14,9 +14,9 @@ public class Resource {
 
     public static void main(String[] args) {
     	Resource r1 = Resource.getInstance();
-    	Resource r2 = Resource.getInstance();
     	
     	for (int i = 0; i < 100; ++i) {
+    		Resource r2 = Resource.getInstance();
     		System.out.println(r1 == r2); 
 		}  
    }
