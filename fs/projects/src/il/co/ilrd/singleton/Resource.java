@@ -16,7 +16,9 @@ public class Resource {
     	Resource r1 = Resource.getInstance();
     	Resource r2 = Resource.getInstance();
     	
-        System.out.println(r1 == r2); // return true
+    	for (int i = 0; i < 100; ++i) {
+    		System.out.println(r1 == r2); 
+		}  
    }
 }
 

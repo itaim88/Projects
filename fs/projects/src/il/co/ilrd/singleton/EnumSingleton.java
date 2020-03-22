@@ -23,7 +23,9 @@ package il.co.ilrd.singleton;
 	        Animals max = Animals.DOG;
 	        Animals max2 = Animals.DOG;
 	 
-	        System.out.println(max == max2); // return true
+	        for (int i = 0; i < 100; ++i) {
+	        	System.out.println(max == max2);
+			} 
 	    }
 	}
 	

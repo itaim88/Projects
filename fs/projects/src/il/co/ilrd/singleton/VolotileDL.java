@@ -20,8 +20,10 @@ public class VolotileDL {
 	public static void main(String[] args) {
 		VolotileDL d = VolotileDL.getResource(); 
 		VolotileDL d2 = VolotileDL.getResource(); 
-
-		System.out.println(d == d2); // return true
+		
+		for (int i = 0; i < 100; ++i) {
+			System.out.println(d == d2); 
+		}
 	}
 }
 

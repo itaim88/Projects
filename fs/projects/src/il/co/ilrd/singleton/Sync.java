@@ -15,7 +15,9 @@ public class Sync {
 		Sync d = Sync.getResource(); 
 		Sync d2 = Sync.getResource(); 
 
-		System.out.println(d == d2); // return true
+		for (int i = 0; i < 100; ++i) {
+			System.out.println(d == d2); 
+		}
 	}
 }
 

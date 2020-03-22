@@ -20,7 +20,9 @@ package il.co.ilrd.singleton;
     	DoubleCheck d = DoubleCheck.getResource(); 
     	DoubleCheck d2 = DoubleCheck.getResource(); 
  
-        System.out.println(d == d2); // return true
+    	for (int i = 0; i < 100; ++i) {
+			System.out.println(d == d2); 
+		}
     }
 }
 
