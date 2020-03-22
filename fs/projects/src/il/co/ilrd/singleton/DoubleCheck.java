@@ -28,7 +28,6 @@ package il.co.ilrd.singleton;
 		}
     	
 		System.out.println("singleton");
-		
     }
 }
 

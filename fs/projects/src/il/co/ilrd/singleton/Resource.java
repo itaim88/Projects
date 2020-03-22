@@ -22,8 +22,8 @@ public class Resource {
 				return;
 			}
 		}
+    	
 		System.out.println("singleton");
-    
    }
 }
 

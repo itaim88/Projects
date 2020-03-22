@@ -7,7 +7,7 @@ public class ListProdCons {
 	static LinkedList<Integer> list = new LinkedList<Integer>();
 	private final static Semaphore semaphore = new Semaphore(0);
 	Integer num = 0;
-	private static final int NUM_THREADS = 33;
+	private static final int NUM_THREADS = 50;
 	
 	public class Consumer implements Runnable {
 		@Override
@@ -20,7 +20,7 @@ public class ListProdCons {
 				e.printStackTrace();
 			}
 			
-			synchronized(this) {
+			synchronized(ListProdCons.this) {
 			System.out.println("remove "+list.remove());
 			}	
 		}	
@@ -29,7 +29,7 @@ public class ListProdCons {
 	public class Producer implements Runnable {
 		@Override
 		public void run() {
-			synchronized(this) {
+			synchronized(ListProdCons.this) {
 			list.add(++num);
 			System.out.println("add " + list.peekLast());
 			semaphore.release();
@@ -47,7 +47,7 @@ public class ListProdCons {
 		}
 	
 		try {
-			Thread.sleep(1000);
+			Thread.sleep(10000);
 		} catch (InterruptedException e) {	
 			e.printStackTrace();
 		}

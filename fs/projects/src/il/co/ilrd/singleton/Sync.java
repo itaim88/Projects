@@ -21,6 +21,7 @@ public class Sync {
 				return;
 			}
 		}
+		
 		System.out.println("singleton");
 	}
 }
