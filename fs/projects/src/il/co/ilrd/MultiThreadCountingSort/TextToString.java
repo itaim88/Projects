@@ -6,15 +6,12 @@ import java.nio.file.Paths;
 import java.util.stream.Stream;
  
 public class TextToString {
-
-    public static void main(String[] args) 
-    {
+	
+    public static void main(String[] args) {
         String filePath = "d:/words.txt";
  
         System.out.println(readLineByLineJava8( filePath ) );
     }
- 
-    //Read file content into string with - Files.lines(Path path, Charset cs)
  
     public static String readLineByLineJava8(String filePath) 
     {

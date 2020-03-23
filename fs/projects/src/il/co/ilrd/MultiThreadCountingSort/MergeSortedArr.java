@@ -6,23 +6,21 @@ import java.util.PriorityQueue;
 public class MergeSortedArr {
 	
 	public char[] mergeKSortedArray(char[][] arr) {
-		//PriorityQueue is heap in Java 
+		
 		PriorityQueue<ArrayContainer> queue = new PriorityQueue<ArrayContainer>();
 		int total = 0;
  
-		//add arrays to heap
-		for (int i = 0; i < arr.length; i++) {
+		for (int i = 0; i < arr.length; ++i) {
 			queue.add(new ArrayContainer(arr[i], 0));
 			total = total + arr[i].length;
 		}
  
-		int m = 0;
+		int index = 0;
 		char result[] = new char[total];
  
-		//while heap is not empty
-		while(!queue.isEmpty()){
+		while(!queue.isEmpty()) {
 			ArrayContainer ac = queue.poll();
-			result[m++] = ac.arr[ac.index];
+			result[index++] = ac.arr[ac.index];
  
 			if(ac.index < ac.arr.length-1){
 				queue.add(new ArrayContainer(ac.arr, ac.index+1));

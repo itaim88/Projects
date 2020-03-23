@@ -15,6 +15,11 @@ public class ThreadCountingSort {
 		}
 		
 		else {
+			//create threads in for loop
+			// synchronized indexs to sort
+			// is it possible to workin the same time on my counting sort? is the array nedds to static?
+			// merge with threads? not sure if posiible
+			
 			int startIndex = 0;
 			int endIndex = length - 1;
 			int jump = length / numberOfThreads;
@@ -43,11 +48,11 @@ public class ThreadCountingSort {
 		int chunks = arrayToSplit.length / chunkSize + (rest > 0 ? 1 : 0); 
 		char[][] arrays = new char[chunks][];
 		
-		for(int i = 0; i < (rest > 0 ? chunks - 1 : chunks); ++i){
+		for (int i = 0; i < (rest > 0 ? chunks - 1 : chunks); ++i){
 		    arrays[i] = Arrays.copyOfRange(arrayToSplit, i * chunkSize, i * chunkSize + chunkSize);
 		}
 		
-		if(rest > 0) { 
+		if (rest > 0) { 
 		    arrays[chunks - 1] = Arrays.copyOfRange(arrayToSplit, (chunks - 1) * chunkSize, (chunks - 1) * chunkSize + rest);
 		}
 		
