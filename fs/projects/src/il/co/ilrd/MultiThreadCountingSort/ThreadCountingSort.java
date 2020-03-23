@@ -2,53 +2,56 @@ package il.co.ilrd.MultiThreadCountingSort;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
-public class ThreadCountingSort {
-	public void ThreadCountSort(String str, int numberOfThreads) {
-		char arr[] = str.toCharArray();
-		int length = arr.length;
-		CountingSort obj = new CountingSort(); 
+public class ThreadCountingSort extends Thread  {
+	static Object lock = new Object();
+	static AtomicInteger threadCount = new AtomicInteger();
+
+	//static String str ="shhljovaiswwmylpvnbcdrjtqqjmnleopigqughiopfwedrrxabcriampojncgemnhkicdeal";
+	static String path = "d:/words.txt";
+	static String str =  TextToString.readLineByLineJava8(path);
+	static char arr[] = str.toCharArray();
+	static int length = arr.length;
+	CountingSort obj = new CountingSort(); 
+	static int startIndex = 0;
+	static int endIndex = length - 1;
+	static int numThreads = 7;
+	static int jump = length / numThreads;
+	static int factor = 0;
+
+	@Override
+	public void run() {
+		ThreadCountingSort t = new ThreadCountingSort();
+		t.ThreadCountSort(numThreads);	
 		
-		if (0 == numberOfThreads) {
-			obj.sort(arr, 0, length - 1);
-			System.out.println(Arrays.toString(arr));
-		}
-		
-		else {
-			//create threads in for loop
-			// synchronized indexs to sort
-			// is it possible to workin the same time on my counting sort? is the array nedds to static?
-			// merge with threads? not sure if posiible
-			
-			int startIndex = 0;
-			int endIndex = length - 1;
-			int jump = length / numberOfThreads;
-			int factor = 0;
-			
-			for (int i = 0; i < numberOfThreads - 1; ++i) {
-				obj.sort(arr,startIndex + factor, jump - 1 + factor);
+	}
+	
+	public void ThreadCountSort(int numberOfThreads) {
+		synchronized (lock) {
+			threadCount.incrementAndGet();
+			if(threadCount.get() < numberOfThreads) {
+				obj.sort(arr, factor, jump - 1 + factor);	 
 				factor += jump;
 			}
-			
-			obj.sort(arr, factor, endIndex);
-			char splitArr[][] = splitArray(arr, length/numberOfThreads);
-			/*for (int i = 0; i < splitArr.length; i++) {
-				System.out.println(Arrays.toString(splitArr[i]));
-		    }*/
-			
-			MergeSortedArr ms = new MergeSortedArr();
-			char[] res = ms.mergeKSortedArray(splitArr);
-			System.out.println(Arrays.toString(res));
+		
+			else  {
+				obj.sort(arr, factor, endIndex);
+				char splitArr[][] = splitArray(arr, length/numberOfThreads);
+				MergeSortedArr ms = new MergeSortedArr();
+				char[] res = ms.mergeKSortedArray(splitArr);
+				System.out.println(Arrays.toString(res));
+				return;
+			}
 		}
 	}
 
-			
-	public static char[][] splitArray(char[] arrayToSplit, int chunkSize){	   
+	public static char[][] splitArray(char[] arrayToSplit, int chunkSize) {	   
 		int rest = arrayToSplit.length % chunkSize;  
 		int chunks = arrayToSplit.length / chunkSize + (rest > 0 ? 1 : 0); 
 		char[][] arrays = new char[chunks][];
 		
-		for (int i = 0; i < (rest > 0 ? chunks - 1 : chunks); ++i){
+		for (int i = 0; i < (rest > 0 ? chunks - 1 : chunks); ++i) {
 		    arrays[i] = Arrays.copyOfRange(arrayToSplit, i * chunkSize, i * chunkSize + chunkSize);
 		}
 		
@@ -58,6 +61,6 @@ public class ThreadCountingSort {
 		
 		return arrays; 
 	}
-	
+
 }
 	
