@@ -7,7 +7,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class ThreadCountingSort extends Thread  {
 	static Object lock = new Object();
 	static AtomicInteger threadCount = new AtomicInteger();
-	//static String str ="shhljovaiswwmylpvnbcdrjtqqjmnleopigqughiopfwedrrxabcriampojncgemnhkicdeal";
 	static String path = "d:/words.txt";
 	static String str =  TextToString.readLineByLineJava8(path);
 	static char arr[] = str.toCharArray();
