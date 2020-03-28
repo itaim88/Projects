@@ -18,7 +18,7 @@ public class ObjectAnalyzer  {
 	
 	System.out.println("Foo super class is: "+fooSuper);
 	System.out.println("Foo Modifiers: "+fooModifire);	
-	
+	//
 	for(Field i : fields) {
 		System.out.println(i);
 	}
