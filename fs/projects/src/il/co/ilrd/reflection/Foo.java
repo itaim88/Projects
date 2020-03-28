@@ -1,5 +1,5 @@
 package il.co.ilrd.reflection;
-
+//
 public class Foo {
 	 int x = 4;
 	 String str ="Hello";
