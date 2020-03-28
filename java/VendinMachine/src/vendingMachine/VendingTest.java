@@ -13,6 +13,7 @@ class VendingTest {
 		
 		VendingMachine m = new VendingMachine(pruducts, imp);
 		
+		m.order(11);
 		
 		m.insertCoin(11);
 		m.order(Product.COLA.getKey());
@@ -37,5 +38,8 @@ class VendingTest {
 		
 		m.insertCoin(100);
 		m.returnChange();
+		
+		
+		
 	}
 }

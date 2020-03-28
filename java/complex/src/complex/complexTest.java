@@ -1,9 +1,6 @@
 package complex;
 
-
-
 import static org.junit.Assert.*;
-
 import org.junit.jupiter.api.Test;
 
 class complexTest {

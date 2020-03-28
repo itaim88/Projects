@@ -25,15 +25,10 @@ public class VendingMachine {
 		WAIT_FOR_COIN {
 			@Override
 			public void gotOrder(VendingMachine mac, int key) {
-				double Price = 0;
-				String itemName = "";
-	
 				Product[] products = Product.values();
 				for (Product item : products) {
 					if (key == item.getKey()) {
-						Price = item.getPrice();
-						itemName = item.name();
-						mac.imp.print("Your order is "+itemName + " the price is "+ Price);	
+						mac.imp.print("Your order is "+item.name() + " the price is "+ item.getPrice());	
 						return;
 					}
 				}
@@ -44,7 +39,6 @@ public class VendingMachine {
 		WAIT_FOR_ORDER {
 			@Override
 			public void gotOrder(VendingMachine mac, int key) {
-				
 				Product drink;
 				Product[] products = Product.values();
 				
