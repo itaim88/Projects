@@ -1,6 +1,6 @@
 
 package il.co.ilrd.reflection;
-
+//
 import java.lang.reflect.*;
 
 public class ObjectAnalyzer  {
