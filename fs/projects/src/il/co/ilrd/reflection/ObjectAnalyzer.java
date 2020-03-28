@@ -22,7 +22,7 @@ public class ObjectAnalyzer  {
 	for(Field i : fields) {
 		System.out.println(i);
 	}
-	//
+	
 		
 	Method m = Foo.class.getDeclaredMethod("Foo1");
 	m.setAccessible(true);
