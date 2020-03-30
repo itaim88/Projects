@@ -15,7 +15,7 @@ public class ObjectAnalyzer  {
 	Class[] interfaces = fooObj.getInterfaces();
 	Field[] fields = fooObj.getDeclaredFields();
 	Class[] intefaces = fooObj.getInterfaces();
-	Field[] f = obj.getClass().getDeclaredFields();
+	//Field[] f = obj.getClass().getDeclaredFields();
 	
 	System.out.println("Foo super class is: "+fooSuper);
 	System.out.println("Foo Modifiers: "+fooModifire);	
@@ -29,5 +29,4 @@ public class ObjectAnalyzer  {
 	m.invoke(null);
 	
 	}
-
 }
