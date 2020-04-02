@@ -30,7 +30,12 @@ class Test {
 		SinglyLinkedList.Print(list1);
 		System.out.println();
 		Integer i = 4;	
-		assertEquals(i, list1.popFront());
+		try {
+			assertEquals(i, list1.popFront());
+		} catch (GenericException e1) {
+			
+			e1.printStackTrace();
+		}
 		SinglyLinkedList.Print(list1);
 		System.out.println();
 		SinglyLinkedList<Integer> revers = SinglyLinkedList.newReverse(list1);

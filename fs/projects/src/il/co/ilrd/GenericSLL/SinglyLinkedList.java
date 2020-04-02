@@ -10,7 +10,7 @@ public class SinglyLinkedList<T> implements Iterable<T> {
 	private static class Node<T>  {
 	private T data;
 	private Node<T> nextNode;
-
+	
 	private Node(T data, Node<T> nextNode) {
 		this.data = data;
 		this.nextNode = nextNode;
@@ -23,25 +23,20 @@ public class SinglyLinkedList<T> implements Iterable<T> {
 	public Node<T> getNextNode() {
 		return nextNode;
 	}
-	
-	@SuppressWarnings("unused")
-	public void setNextNode(Node<T> nextNode) {
-		this.nextNode = nextNode;
-	}
-	
 	}
 	
 	private static class ListIteratorImp<T> implements Iterator<T> {
 
 	private Node<T> currentNode;
 	SinglyLinkedList<T> list;
-	private volatile int iteratorCounter = 0;
+	private volatile int iteratorCounter;
     
 	private ListIteratorImp(SinglyLinkedList<T> list) {
 		currentNode = list.head;
 		this.list = list;
 		iteratorCounter = list.listCounter;
 	}
+	
 	@Override
 	public boolean hasNext() {
 
@@ -81,13 +76,13 @@ public class SinglyLinkedList<T> implements Iterable<T> {
 		head = newNode;
 	}
 
-	public T popFront() {
-	++listCounter;
+	public T popFront() throws GenericException {
 	
 	if (isEmpty()) {
-			throw new ConcurrentModificationException("Can't pop from Empty List");
+		throw new GenericException("Can't pop from Empty List");
 	}
 	
+	++listCounter;
 	T data = head.getData();
 	head = head.getNextNode();
 	
@@ -108,9 +103,9 @@ public class SinglyLinkedList<T> implements Iterable<T> {
 		for(T e : this) {
 			if (e.equals(data)) {
 		        return iter;
-		    }
+			}
         	
-            iter.next();
+			iter.next();
         }
 		
 		return null;
@@ -147,9 +142,8 @@ public class SinglyLinkedList<T> implements Iterable<T> {
 	public static <E> void Print(SinglyLinkedList<E> list) {
 
 		for (E item : list) {
-			System.out.println(item.toString());
+			System.out.println(item);
 		}
 		
 	}
-	
 }
