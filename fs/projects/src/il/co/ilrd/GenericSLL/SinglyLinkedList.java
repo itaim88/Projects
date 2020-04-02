@@ -31,11 +31,11 @@ public class SinglyLinkedList<T> implements Iterable<T> {
 	
 	}
 	
-    private static class ListIteratorImp<T> implements Iterator<T> {
+	private static class ListIteratorImp<T> implements Iterator<T> {
 
 	private Node<T> currentNode;
-    SinglyLinkedList<T> list;
-    private volatile int iteratorCounter = 0;
+	SinglyLinkedList<T> list;
+	private volatile int iteratorCounter = 0;
     
 	private ListIteratorImp(SinglyLinkedList<T> list) {
 		currentNode = list.head;
@@ -47,7 +47,7 @@ public class SinglyLinkedList<T> implements Iterable<T> {
 
 		if (iteratorCounter != list.listCounter) {
 			throw new ConcurrentModificationException("ERROR: Data Structre have been modified");
-        }
+		}
 		
 		return(currentNode.getNextNode() != null );
 	}
@@ -57,11 +57,11 @@ public class SinglyLinkedList<T> implements Iterable<T> {
 		
 		if (iteratorCounter != list.listCounter) {
 			throw new ConcurrentModificationException("ERROR: Data Structre have been modified");
-        }
+		}
 		
 		if (list.isEmpty()) {
 			throw new NullPointerException("list is empty");
-        }
+		}
 		
 		T data = currentNode.getData();
 		currentNode = currentNode.getNextNode();	
@@ -92,7 +92,7 @@ public class SinglyLinkedList<T> implements Iterable<T> {
 	head = head.getNextNode();
 	
 	return data;
-}
+	}
 
 	public int size() {
 	int size = 0;
@@ -105,10 +105,10 @@ public class SinglyLinkedList<T> implements Iterable<T> {
 	public Iterator<T> find(T data) {
 		Iterator<T> iter = iterator();
 		
-        for(T e : this) {
-        	if (e.equals(data)) {
-                return iter;
-            }
+		for(T e : this) {
+			if (e.equals(data)) {
+		        return iter;
+		    }
         	
             iter.next();
         }
@@ -119,6 +119,7 @@ public class SinglyLinkedList<T> implements Iterable<T> {
 	public boolean isEmpty() {
 		return (head.getNextNode() == null);
 	}
+	
 	public static <E> SinglyLinkedList<E> Merge(SinglyLinkedList<E> list1, SinglyLinkedList<E> list2) {
         SinglyLinkedList<E> newSinglyList = new SinglyLinkedList<>();
         
