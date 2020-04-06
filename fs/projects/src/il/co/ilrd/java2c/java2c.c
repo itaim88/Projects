@@ -1,65 +1,23 @@
 
-#include <stdio.h>/*printf*/
-#include <stdlib.h>/*malloc*/
+#include <stdio.h>	
+#include <stdlib.h>	
+
+#define ARRAY_SIZE 80
+#define ANIMAL_NUM_MASTERS 1
+#define DOG_NUM_MASTERS 2
+#define ANIMAL_NUM_OF_LEGS 5
+#define DOG_NUM_OF_LEGS 4
+
 
 typedef void (*vfunc_t)(void *);
+typedef char *(*to_string_t)(void *);
+typedef int (*get_num_masters_t)(void *);
 
-typedef enum vMetods{CLONE, EQUALS, GET_CLASS, HASH_CODE,
-	                NOTIFY, NOTIFY_ALL, WAIT, TO_STRING,
-	                FINALIZE, NUM_MASTERS, SAY_HELLO
-                    } vmethods_t;
+typedef enum vMetods{HASH_CODE, TO_STRING, FINALIZE, NUM_MASTERS, SAY_HELLO
+                                                                } vmethods_t;
 
-/*******************Java2C function ******************/
+/******************* structs***********************/
 
-void objectClone(void *pointer);
-void objectEquals(void *pointer);
-void objectFinalize(void *pointer);
-void objectGetClass(void *pointer);
-void objectHashCode(void *pointer);
-void objectNotify(void *pointer);
-void objectNotifyAll(void *pointer);
-void objectToString(void *pointer);
-void objectWait(void *pointer);
-void animalSayHello(void *pointer);
-void animalGetNumMasters(void *pointer);
-void animalToString(void *pointer);
-void animalFinalize(void *pointer);
-void dogSayHello(void *pointer);
-void dogFinalize(void *pointer);
-void dogToString(void *pointer);
-void catFinalize(void *pointer);
-void catToString(void *pointer);
-void catSayHello(void *pointer);
-void legendaryToString(void *pointer);
-void legendaryFinalize(void *pointer);
-void legenderySayHello(void *pointer);
-
-/********************vfunc_tables & structs***********************/
-
-vfunc_t object_Vtable[] = {objectClone, objectEquals, objectGetClass,
-                            objectHashCode, objectNotify, objectNotifyAll,
-                			objectWait,objectToString, objectFinalize};
-
-vfunc_t animal_Vtable[] = {objectClone,objectEquals, objectGetClass,
-                            objectHashCode, objectNotify, objectNotifyAll,
-                            objectWait, animalToString, animalFinalize,
-                            animalGetNumMasters, animalSayHello};
-							
-vfunc_t dog_Vtable[] = {objectClone, objectEquals, objectGetClass,
-                		objectHashCode, objectNotify, objectNotifyAll,
-                		objectWait, dogToString, dogFinalize,
-                		animalGetNumMasters, dogSayHello};
-						
-vfunc_t cat_Vtable[] = {objectClone, objectEquals, objectGetClass,
-                        objectHashCode, objectNotify, objectNotifyAll,
-                        objectWait, catToString, catFinalize,
-                        animalGetNumMasters, animalSayHello};
-
-vfunc_t legendary_Vtable[] = {objectClone, objectEquals, objectGetClass,
-				                objectHashCode, objectNotify, objectNotifyAll,
-					            objectWait, legendaryToString, legendaryFinalize,
-				                animalGetNumMasters, legenderySayHello};
-				                
 typedef struct Class{
 	char *name;
 	size_t size;
@@ -93,150 +51,92 @@ typedef struct LegendaryAnimal {
 	cat_t cat;
 } legendary_t;
 
-int counter = 0;
+/*******************Java2C function ******************/
 
-typedef struct Wrapper {
-	object_t *this;
-	int num_masters;
-	char *string_result;
-} wrapper_t;
+void objectFinalize (object_t *this);
+size_t objectHashCode (object_t *this);
+char *objectToString (object_t *this);
+void animalSayHello (animal_t *this);
+int animalGetNumMasters (animal_t *this);
+char *animalToString (animal_t *this);
+void animalFinalize (animal_t *this);
+void dogSayHello (dog_t *this);
+void dogFinalize (dog_t *this);
+char *dogToString (dog_t *this);
+void catFinalize (cat_t *this);
+char *catToString (cat_t *this);
+void catSayHello (cat_t *this);
+char *legendaryToString	(legendary_t *this);
+void legendaryFinalize (legendary_t *this);
+void legenderySayHello (legendary_t *this);
 
-/***************************metadata****************************/
+/************************ vfunc_tables ****************************************/
+
+vfunc_t object_Vtable[] = {(vfunc_t)objectHashCode, (vfunc_t)objectToString,
+					       (vfunc_t)objectFinalize};
+
+vfunc_t animal_Vtable[] = {(vfunc_t)objectHashCode, (vfunc_t)animalToString,
+						  (vfunc_t)animalFinalize, (vfunc_t)animalGetNumMasters,
+						  (vfunc_t)animalSayHello};
+							
+vfunc_t dog_Vtable[] = {(vfunc_t)objectHashCode, (vfunc_t)dogToString,
+					    (vfunc_t)dogFinalize, (vfunc_t)animalGetNumMasters,
+						(vfunc_t)dogSayHello};
+						
+vfunc_t cat_Vtable[] = {(vfunc_t)objectHashCode, (vfunc_t)catToString,
+				        (vfunc_t)catFinalize, (vfunc_t)animalGetNumMasters,
+						(vfunc_t)animalSayHello};
+
+vfunc_t legendary_Vtable[] = {(vfunc_t)objectHashCode, (vfunc_t)legendaryToString,
+						     (vfunc_t)legendaryFinalize, (vfunc_t)animalGetNumMasters,
+						     (vfunc_t)legenderySayHello};
+						     
+/****************** metadata ***********************************/
 
 class_t object_meta = {"Object", sizeof(object_t), NULL, &object_Vtable};
 class_t animal_meta = {"Animal", sizeof(animal_t), &object_meta, &animal_Vtable};
 class_t dog_meta = {"Dog", sizeof(dog_t), &animal_meta, &dog_Vtable};
 class_t cat_meta = {"Cat", sizeof(cat_t), &animal_meta, &cat_Vtable};
-class_t legendary_meta = {"LegendaryAnimal", sizeof(legendary_t), &animal_meta, &legendary_Vtable};
+class_t legendary_meta = {"LegendaryAnimal", sizeof(legendary_t), &cat_meta, &legendary_Vtable};
+						    	
+/************************* global variables & functions*************************/
 
-/************************Implementatin**************************/
+int animal_counter = 0;
+char str[ARRAY_SIZE];
 
-void objectClone(void *pointer)
-{
-    printf("this is java.lang.Object Clone()\n");
-}
-void objectEquals(void *pointer)
-{
-    printf("this is java.lang.Object Equals()\n");
-}
-void objectFinalize(void *pointer)
-{
-    printf("this is java.lang.Object Finalize()\n");
-}
-void objectGetClass(void *pointer)
-{
-    printf("this is java.lang.Object Finalize()\n");
-}
-void objectHashCode(void *pointer)
-{
-    printf("this is java.lang.Object HashCode()\n");
-}
-void objectNotify(void *pointer)
-{
-    printf("this is java.lang.Object Notify()\n");
-}
-void objectNotifyAll(void *pointer)
-{
-    printf("this is java.lang.Object NotifyAll()\n");
-}
-void objectWait(void *pointer)
-{
-    printf("this is java.lang.Object Wait()\n");
-}
-void animalFinalize(void *pointer)
-{
-    printf("this is animal Finalize()\n");
-}
-void dogFinalize(void *pointer)
-{
-    printf("this is dog Finalize()\n");
-}
-void catFinalize(void *pointer)
-{
-    printf("this is cat Finalize()\n");
+void animalShowCounter(){
+	printf("%d\n", animal_counter);
 }
 
-void legendaryFinalize(void *pointer)
+void foo(animal_t *animal)
 {
-   printf("this is egendary Finalize()\n"); 
+	char *str = ((to_string_t)((*animal->obj.metadata->class_Vtable)
+	            [TO_STRING]))(animal);
+	            
+	printf("%s\n", str);
 }
 
-void showCounter()
+/**************** object funcs ************************************************/
+
+size_t objectHashCode(object_t *this) 
 {
-	printf("%d\n", counter);
+	return (size_t)this;
 }
 
-void foo(animal_t *animal, wrapper_t param)
+char *objectToString(object_t *this)
 {
-	(*animal->obj.metadata->class_Vtable)[TO_STRING](&param);
-	printf("%s\n", param.string_result);
-	free(param.string_result);
-}
-
-
-void objectToString(void *pointer)
-{
-	sprintf(((wrapper_t *)pointer)->string_result, "%s@%lu", 
-		    ((object_t *)((wrapper_t *)pointer)->this)->metadata->name, 
-	    	(size_t)(((wrapper_t *)pointer)->this));
-}
-
-
-void animalSayHello(void *pointer)
-{
-	printf("Animal Hello!\n");
-	printf("I have %d legs\n", ((animal_t *)((wrapper_t *)pointer)->this)->num_legs);
-}
-
-void animalGetNumMasters(void *pointer)
-{
-			((wrapper_t *)pointer)->num_masters =
-		((animal_t *)((wrapper_t *)pointer)->this)->num_masters;
-}
-
-void animalToString(void *pointer)
-{
-	((wrapper_t *)pointer)->string_result = (char *) malloc(sizeof(char) * 80);
+	sprintf(str, "%s@%lu", this->metadata->name, (size_t)objectHashCode(this));
 	
-	sprintf(((wrapper_t *)pointer)->string_result, 
-	        "Animal with ID: %d", ((animal_t *)((wrapper_t *)pointer)->this)->ID);
+	return str;
 }
 
-void dogSayHello(void *pointer)
+void objectFinalize(object_t *this) 
 {
-	printf("Dog Hello!\n");
-	printf("I have %d legs\n", ((dog_t *)((wrapper_t *)pointer)->this)->num_legs);
+	free(this);
 }
 
+/************************** Object create *************************************/
 
-void dogToString(void *pointer)
-{
-	((wrapper_t *)pointer)->string_result = (char *)malloc(sizeof(char) * 80);
-	sprintf(((wrapper_t *)pointer)->string_result, "Dog with ID: %d", 
-			((dog_t *)((wrapper_t *)pointer)->this)->animal.ID);
-}
-
-
-void catToString(void *pointer)
-{
-	((wrapper_t *)pointer)->string_result = (char *)malloc(100);
-	sprintf(((wrapper_t *)pointer)->string_result, "Cat with ID: %d",
-	 		((cat_t *)((wrapper_t *)pointer)->this)->animal.ID);
-}
-
-void legendaryToString(void *pointer)
-{
-	((wrapper_t *)pointer)->string_result = (char *)malloc(100);
-	sprintf(((wrapper_t *)pointer)->string_result, "LegendaryAnimal with ID: %d", 
-			((animal_t *)((wrapper_t *)pointer)->this)->ID);
-}
-
-void legenderySayHello(void *pointer)
-{
-	printf("Legendary Hello!\n");
-}
-
-/****************Classes & Constructors*****************************************/
 object_t *objectAlloc(class_t *class)
 {
 	object_t *obj = (object_t *)malloc(class->size);
@@ -244,11 +144,12 @@ object_t *objectAlloc(class_t *class)
 	
 	return obj;
 }
+/*************************Animal **********************************************/
 
-void animalCtor(wrapper_t param, int *num_masters)
+void animalCtor(animal_t *this, int *num_masters)
 {
-	animal_t *animal = (animal_t *)(param.this);
 	static int static_block = 0;
+	char *str = NULL;
 	
 	if (0 == static_block)
 	{
@@ -257,36 +158,61 @@ void animalCtor(wrapper_t param, int *num_masters)
 		++static_block;
 	}
 	
-	printf("Instance initialization block Animal\n");
-
+	{
+		printf("Instance initialization block Animal\n");
+	}
 	
-	animal->ID = ++counter;
-	animal->num_legs = 5;
+	this->ID = ++animal_counter;
+	this->num_legs = ANIMAL_NUM_OF_LEGS;
 	
 	if (num_masters == NULL)
 	{
 		printf("Animal Ctor\n");
-		animal->num_masters = 1;
-		(*animal->obj.metadata->class_Vtable)[SAY_HELLO](&param);
-		showCounter(NULL);
-		(*animal->obj.metadata->class_Vtable)[TO_STRING](&param);
-		printf("%s\n", param.string_result);
-		objectToString(&param);
-		printf("%s\n", param.string_result);
-		free(param.string_result);
+		this->num_masters = ANIMAL_NUM_MASTERS;
+		(*this->obj.metadata->class_Vtable)[SAY_HELLO](this);
+		animalShowCounter(NULL);
+		str = ((to_string_t)((*this->obj.metadata->class_Vtable)[TO_STRING]))(this);
+		printf ("%s\n", str);
+		str = objectToString((object_t *)this);
+		printf("%s\n", str);
 	}
 	
 	else 
 	{
 		printf("Animal Ctor int\n");
-		animal->num_masters = *num_masters;
+		this->num_masters = *num_masters;
 	}
 }
 
-void dogCtor(wrapper_t param)
+void animalSayHello(animal_t *this)
 {
-	dog_t *dog = (dog_t *)(param.this);
-	int i = 2;
+	printf("Animal Hello!\n");
+	printf("I have %d legs\n", this->num_legs);
+}
+
+int animalGetNumMasters(animal_t *this)
+{
+	return this->num_masters;
+}
+
+char *animalToString(animal_t *this)
+{
+	sprintf(str, "Animal with ID: %d", this->ID);
+
+	return str;
+}
+
+void animalFinalize(animal_t *this) 
+{
+	printf("finalize Animal with ID: %d\n", this->ID);
+	objectFinalize((object_t *)this);
+}
+
+/***************************Dog******************************/
+
+void dogCtor(dog_t *this)
+{
+	int dog_num_masters = DOG_NUM_MASTERS;
 	static int static_block = 0;
 	
 	if(0 == static_block)
@@ -295,19 +221,43 @@ void dogCtor(wrapper_t param)
 		++static_block;
 	}
 
-	animalCtor(param, &i);
-	printf("Instance initialization block Dog\n");
+	animalCtor((animal_t *)this, &dog_num_masters);
+	
+	{
+		printf("Instance initialization block Dog\n");
+	}
+
 	printf("Dog Ctor\n");
-	dog->num_legs = 4;
+	
+	this->num_legs = DOG_NUM_OF_LEGS;
 }
 
-void catCtor(wrapper_t param, char *cat_color)
+void dogSayHello(dog_t *this)
 {
-	cat_t *cat = (cat_t *)(param.this);
-	static int static_block = 0;
-	animal_t *animal = NULL;
+	printf("Dog Hello!\n");
+	printf("I have %d legs\n", this->num_legs);
+}
 
-	cat->num_masters = 5;
+char *dogToString(dog_t *this)
+{	
+	sprintf(str, "Dog with ID: %d", this->animal.ID);
+	
+	return str;
+}
+
+void dogFinalize(dog_t *this) 
+{
+	printf("finalize Dog with ID: %d\n", ((animal_t *)this)->ID);
+	objectFinalize((object_t *)this);
+}
+
+/*************************Cat***************************/
+
+void catCtor(cat_t *this, char *colors)
+{
+	static int static_block = 0;
+
+	this->num_masters = 5;
 	
 	if (0 == static_block)
 	{
@@ -315,24 +265,39 @@ void catCtor(wrapper_t param, char *cat_color)
 		++static_block;
 	}
 	
-	if (cat_color == NULL)
+	if (colors == NULL)
 	{
-		catCtor(param, "black");
-		cat->num_masters = 2;
+		catCtor(this, "black");
+		this->num_masters = 2;
 		printf("Cat Ctor\n");
 	}
 	
 	else
 	{
-		animalCtor(param, NULL);
-		cat->colors = cat_color;
-		printf("Cat Ctor with color: %s\n", cat_color);
+		animalCtor((animal_t *)this, NULL);
+		
+		this->colors = colors;
+		printf("Cat Ctor with color: %s\n", colors);
 	}
 }
 
-void legendaryCtor(wrapper_t param)
+char *catToString(cat_t *this)
+{	
+	sprintf(str, "Cat with ID: %d", this->animal.ID);
+	 
+	return str;
+}
+
+void catFinalize(cat_t *this) 
 {
-	legendary_t *legend = (legendary_t *)(param.this);
+	printf("finalize Cat with ID: %d\n", ((animal_t *)this)->ID);
+	objectFinalize((object_t *)this);
+}
+
+/************************ LegendaryAnimal *************************************/
+
+void legendaryCtor(legendary_t *this)
+{
 	static int static_block = 0;
 
 	if (0 == static_block)
@@ -341,49 +306,54 @@ void legendaryCtor(wrapper_t param)
 		++static_block;
 	}
 	
-	catCtor(param, NULL);
+	catCtor((cat_t *)this, NULL);
+	
 	printf("Legendary Ctor\n");
+}
+
+char *legendaryToString(legendary_t *this)
+{	
+	sprintf(str, "LegendaryAnimal with ID: %d", 
+			((animal_t *)this)->ID);
+			
+	return str;
+}
+
+void legenderySayHello(legendary_t *this)
+{
+	(this);
+	
+	printf("Legendary Hello!\n");
+}
+
+void legendaryFinalize(legendary_t *this) 
+{
+	printf("finalize LegendaryAnimal with ID: %d\n",((animal_t *)this)->ID);
+	objectFinalize((object_t *)this);
 }
 
 int main()
 {   
-    animal_t *animal = NULL;
-    dog_t *dog = NULL;
-    cat_t *cat = NULL;
-    legendary_t *legendary = NULL;;
-    cat_t *cat_color = NULL;
-    wrapper_t param_animal = {0};
-    wrapper_t param_dog = {0};
-    wrapper_t param_cat = {0};
-    wrapper_t param_legendary = {0};
-    wrapper_t param_cat_color = {0};
-    animal_t *array[5] = {0};
-    wrapper_t wrapper_array[5] = {0};
+    animal_t *animal = (animal_t *)objectAlloc(&animal_meta);
+	dog_t *dog = (dog_t *)objectAlloc(&dog_meta);
+	cat_t *cat = (cat_t *)objectAlloc(&cat_meta);
+	legendary_t *legendary = (legendary_t *)objectAlloc(&legendary_meta);
+	cat_t *cat_color = NULL;
+	animal_t *animals_array[5] = {0};
     int i = 0;
-    
-    animal = (animal_t *)objectAlloc(&animal_meta);
-	dog = (dog_t *)objectAlloc(&dog_meta);
-	cat = (cat_t *)objectAlloc(&cat_meta);
-	legendary = (legendary_t *)objectAlloc(&legendary_meta);
-
-    param_animal.this = (object_t *)animal;
-    param_dog.this = (object_t *)dog;
-	param_cat.this = (object_t *)cat;
-	param_legendary.this = (object_t *)legendary;
-    
-    animalCtor(param_animal, NULL);
-   	dogCtor(param_dog);
-    catCtor(param_cat, NULL);
-    legendaryCtor(param_legendary);
+    animalCtor(animal, NULL);
+   	dogCtor(dog);
+    catCtor(cat, NULL);
+    legendaryCtor(legendary);
    
-   	showCounter();
+   	animalShowCounter();
    	
-   	printf("%d\n", animal->ID);
-	printf("%d\n", dog->animal.ID);
-	printf("%d\n", cat->animal.ID);
-	printf("%d\n", legendary->cat.animal.ID);
+   	printf("%d\n", ((animal_t *)animal)->ID);
+	printf("%d\n", ((dog_t *)dog)->animal.ID);
+	printf("%d\n", ((cat_t *)cat)->animal.ID);
+	printf("%d\n", ((legendary_t *)legendary)->cat.animal.ID);
 	
-	free(animal), free(dog), free(cat), free(legendary);
+    free(animal), free(dog), free(cat), free(legendary);
 	
 	dog = (dog_t *)objectAlloc(&dog_meta);
 	cat = (cat_t *)objectAlloc(&cat_meta);
@@ -391,45 +361,33 @@ int main()
 	legendary = (legendary_t *)objectAlloc(&legendary_meta);
 	animal = (animal_t *)objectAlloc(&animal_meta);
 	
-	param_dog.this = (object_t *)dog;
-	param_cat.this = (object_t *)cat;
-	param_cat_color.this = (object_t *)cat_color;
-	param_legendary.this = (object_t *)legendary;
-	param_animal.this = (object_t *)animal;
+    dogCtor(dog);
+    catCtor(cat, NULL);
+    catCtor(cat_color, "white");
+    legendaryCtor(legendary);
+	animalCtor(animal, NULL);
 	
-    dogCtor(param_dog);
-    catCtor(param_cat, NULL);
-    catCtor(param_cat_color, "white");
-    legendaryCtor(param_legendary);
-	animalCtor(param_animal, NULL);
-	
- 	array[0] = (animal_t *)dog;
-	array[1] = (animal_t *)cat;
-	array[2] = (animal_t *)cat_color;
-	array[3] = (animal_t *)legendary;
-	array[4] = animal;
-
-	wrapper_array[0] = param_dog;
-	wrapper_array[1] = param_cat;
-	wrapper_array[2] = param_cat_color;
-	wrapper_array[3] = param_legendary;
-	wrapper_array[4] = param_animal;
+ 	animals_array[0] = (animal_t *)dog;
+	animals_array[1] = (animal_t *)cat;
+	animals_array[2] = (animal_t *)cat_color;
+	animals_array[3] = (animal_t *)legendary;
+	animals_array[4] = (animal_t *)animal;
 	
 	for (i = 0; i < 5; ++i)
 	{
-		(*array[i]->obj.metadata->class_Vtable)[SAY_HELLO](&wrapper_array[i]);
-		(*array[i]->obj.metadata->class_Vtable)[NUM_MASTERS](&wrapper_array[i]);
-		printf("%d\n", wrapper_array[i].num_masters);
+		(*animals_array[i]->obj.metadata->class_Vtable)[SAY_HELLO](animals_array[i]);
+		printf("%d\n", ((get_num_masters_t)
+			((*animals_array[i]->obj.metadata->class_Vtable)[NUM_MASTERS]))(animals_array[i]));
 	}
 	
 	for (i = 0; i < 5; ++i)
 	{
-		foo(array[i], wrapper_array[i]);
+		foo(animals_array[i]);
 	}
 	
 	for (i = 0; i < 5; ++i)
 	{
-		free(array[i]);
+		(*animals_array[i]->obj.metadata->class_Vtable)[FINALIZE](animals_array[i]);
 	}
 	
     return 0;

@@ -8,6 +8,7 @@ import java.util.*;
 
 public class CollectionWS {
 
+	@SuppressWarnings("rawtypes")
 	public static void main(String[] args) {
 		
 		int[] arr = {4,8,1,-9,99,3};
@@ -38,12 +39,11 @@ public class CollectionWS {
 		 weekDays.put("Friday", 6);
 		 weekDays.put("Saturday", 7);
 	
-		 Iterator iter =  weekDays.entrySet().iterator();
+		 Iterator<?> iter =  weekDays.entrySet().iterator();
 		 
 		 while (iter.hasNext()) { 
 			 Map.Entry mapElement = (Map.Entry)iter.next(); 
-			 int num = ((int)mapElement.getValue()); 
-			 System.out.println(mapElement.getKey() + " : " + num); 
+			 System.out.println(mapElement.getKey() + " : " + mapElement.getValue()); 
 		}
 	        
 	        
