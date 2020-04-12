@@ -67,7 +67,9 @@ public class Pair<K,V> implements Map.Entry<K,V> {
 		if (getClass() != obj.getClass())
 			return false;
 		
-		Pair<K,V> other = (Pair<K,V>) obj;
+		@SuppressWarnings("unchecked")
+		Pair<K,V> obj2 = (Pair<K,V>) obj;
+		Pair<K,V> other = obj2;
 		if (key == null) {
 			if (other.key != null)
 				return false;
