@@ -91,13 +91,11 @@ public class Pair<K,V> implements Map.Entry<K,V> {
 		T max = null;
 		T min = null;
 		
-		if (array.length == 0) {
-			//exception??
-			
+		if (array.length == 0) {	
 			return new Pair<T,T>(min, max);
 		}
+		
 		if (array.length == 1) {
-			
 			return new Pair<T,T>(array[0],array[0]);
 		}
 	 
@@ -111,7 +109,7 @@ public class Pair<K,V> implements Map.Entry<K,V> {
 			min = array[0];
 		}
 		
-		for (int i = 2; i < array.length - 1; i +=2) {
+		for (int i = 2; i < array.length - 1; i += 2) {
 			
 			if (0 < array[i].compareTo(array[i + 1])) {
 				
@@ -156,12 +154,9 @@ public class Pair<K,V> implements Map.Entry<K,V> {
 		T min = null;
 		
 		if (array.length == 0) {
-			//exception??
-			
 			return new Pair<T,T>(min, max);
 		}
 		if (array.length == 1) {
-			
 			return new Pair<T,T>(array[0],array[0]);
 		}
 		
@@ -176,7 +171,7 @@ public class Pair<K,V> implements Map.Entry<K,V> {
 			min = array[0];
 		}
 		
-		for (int i = 2; i < array.length - 1; i +=2) {
+		for (int i = 2; i < array.length - 1; i += 2) {
 			
 			if (0 < cmp.compare(array[i], array[i + 1])) {
 				
