@@ -89,12 +89,25 @@ public class Pair<K,V> implements Map.Entry<K,V> {
 		return result;
 	}
 	
-	public static<T extends Comparable<T>> Pair<T, T> minMax(T[] array) {
+	/*public static<T extends Comparable<T>> Pair<T, T> minMax(T[] array) {
 		ComperatorPair<T> cmp = new ComperatorPair<T>();
 		
 		return minMax(array, cmp);
+		
+	}*/
+	private static class ComperatorPairTo<T extends Comparable<T>> implements Comparator<T>{
+		@Override
+		public int compare(T arg0, T arg1) {
+			return arg0.compareTo(arg1);
+		}
 	}
 	
+	public static<T extends Comparable<T>> Pair<T, T> minMax(T[] array) {
+		
+		ComperatorPairTo<T> cmp = new ComperatorPairTo<T>();
+		return minMax(array, cmp);
+	}
+
 	public static <T> Pair<T, T> minMax(T[] array, Comparator<T> cmp){
 		T max = null;
 		T min = null;

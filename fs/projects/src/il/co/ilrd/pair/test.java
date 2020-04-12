@@ -3,7 +3,33 @@ package il.co.ilrd.pair;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.util.Comparator;
+
 import org.junit.jupiter.api.Test;
+
+
+class Player implements Comparable<Player> {
+		
+		String name;
+		int points;
+		
+		public Player(String name, int points) {
+			this.name = name;
+			this.points = points;
+		}
+
+		@Override
+		public String toString() {
+			return "Name: " + name + " Rank: "+ points;
+		}
+
+		@Override
+		public int compareTo(Player o) {
+			return this.points - o.points;
+		}
+
+	}
 
 class test {
 
@@ -44,18 +70,38 @@ class test {
 		
 		assertTrue(pair5.equals(pair6)); 
 		assertFalse(pair3.equals(pair4)); 
-		
-		ComperatorPair<Integer> c = new ComperatorPair<>();
-		
-		Pair<Integer,Integer> pair7 = Pair.minMax(arr1, c);
-		assertEquals((Integer)(-100), pair7.getKey());
-		assertEquals((Integer)99, pair7.getValue());
-		
-		Pair<Integer,Integer> pair8 = Pair.minMax(arr, new ComperatorPair<Integer>());
-		assertEquals((Integer)(-100), pair8.getKey());
-		assertEquals((Integer)100, pair8.getValue());
 	}
-}
+
+		class PlayerComperator implements Comparator<Player>{
+
+			@Override
+			public int compare(Player o1, Player o2) {
+				return o1.points - o2.points;
+			}
+		}
+		
+		@Test
+		void testMinMaxCmp() {
+			Player[] p1 = new Player[5];
+			
+			p1[0] = new Player("A", 5);
+			p1[1] = new Player("B", 99);
+			p1[2] = new Player("C", 3);
+			p1[3] = new Player("D", 111);
+			p1[4] = new Player("E", -77);
+			
+			Pair<Player,Player> pair7 = Pair.minMax(p1, new PlayerComperator());
+			
+			System.out.println(pair7.getKey());
+			System.out.println(pair7.getValue());
+		}
+	}
+
+		
+		
+	
+
+	
 
 
 
