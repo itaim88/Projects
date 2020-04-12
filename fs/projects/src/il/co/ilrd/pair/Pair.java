@@ -88,65 +88,9 @@ public class Pair<K,V> implements Map.Entry<K,V> {
 	}
 	
 	public static<T extends Comparable<T>> Pair<T, T> minMax(T[] array) {
-		T max = null;
-		T min = null;
+		ComperatorPair<T> cmp = new ComperatorPair<T>();
 		
-		if (array.length == 0) {	
-			return new Pair<T,T>(min, max);
-		}
-		
-		if (array.length == 1) {
-			return new Pair<T,T>(array[0],array[0]);
-		}
-	 
-		if (0 < array[0].compareTo(array[1])) {
-			max = array[0];
-			min = array[1];
-		}
-		
-		else {
-			max = array[1];
-			min = array[0];
-		}
-		
-		for (int i = 2; i < array.length - 1; i += 2) {
-			
-			if (0 < array[i].compareTo(array[i + 1])) {
-				
-				if(max.compareTo(array[i]) < 0) {
-					max = array[i];
-				}
-				
-				if(min.compareTo(array[i + 1]) > 0) {
-					min = array[i + 1];
-				}
-			} 
-			
-			else {
-				
-				if(max.compareTo(array[i + 1]) < 0) {
-					max = array[i + 1];
-				}
-				
-				if(min.compareTo(array[i]) > 0) {
-					min = array[i];
-				}
-			}
-		}
-		
-		if (array.length % 2 == 1) {
-			
-			int index = array.length - 1;
-			if(max.compareTo(array[index]) < 0) {
-				max = array[index];
-			}
-			
-			if(min.compareTo(array[index]) > 0) {
-				min = array[index];
-			}
-		}
-		
-		return new Pair<T,T>(min,max);
+		return minMax(array, cmp);
 	}
 	
 	public static <T> Pair<T, T> minMax(T[] array, Comparator<T> cmp){
