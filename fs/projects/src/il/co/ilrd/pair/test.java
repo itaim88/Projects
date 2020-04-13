@@ -21,7 +21,7 @@ class Player implements Comparable<Player> {
 
 		@Override
 		public String toString() {
-			return "Name: " + name + " Rank: "+ points;
+			return "Name: " + name + " points: "+ points;
 		}
 
 		@Override
