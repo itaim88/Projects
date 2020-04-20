@@ -40,6 +40,8 @@ public class HashMap<K,V> implements Map<K, V> {
 		for(List<Pair<K,V>> bucket : hashMap) {
 			bucket.clear();
 		}
+		
+		++mode;
 	}
 
 	@Override
@@ -49,10 +51,13 @@ public class HashMap<K,V> implements Map<K, V> {
 			return false;
 		}
 		
-		for(Pair<K,V> pair : this.hashMap.get(getBucket(key))) {
-			if(pair.getKey().equals(key)) {
-				return true;
+		for(Pair<K,V> pair : hashMap.get(getBucket(key))) {
+			try {
+				if(pair.getKey().equals(key)) {return true;}
+			} catch(NullPointerException n) {
+				if (key == pair.getKey()) {return true;}
 			}
+		
 		}	
 		
 		return false;
@@ -60,9 +65,14 @@ public class HashMap<K,V> implements Map<K, V> {
 
 	@Override
 	public boolean containsValue(Object value) {
-		for(V v : values()) {
-			if(v.equals(value)) {
-				return true;
+	
+		for (List<Pair<K,V>> bucket : hashMap) {
+			for (Pair<K,V> p : bucket) {
+				try {
+					if(p.getValue().equals(value)) {return true;}
+				} catch(NullPointerException n) {
+					if (value == p.getValue()) {return true;}
+				}
 			}
 		}
 		
@@ -113,6 +123,8 @@ public class HashMap<K,V> implements Map<K, V> {
 			}
 
 		hashMap.get(getBucket(key)).add(Pair.of(key, value));
+		
+		++mode;
 		
 		return null;
 	}

@@ -6,9 +6,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
-
 import org.junit.jupiter.api.Test;
-import il.co.ilrd.pair.*;
 
 class TestMap {
 
@@ -21,6 +19,7 @@ class TestMap {
 		assertTrue(hash_Map1.containsKey(1));
 		assertFalse(hash_Map1.containsKey(10));
 		Set<Map.Entry<Integer,Integer>> s = hash_Map1.entrySet();
+		@SuppressWarnings("rawtypes")
 		Iterator itera = s.iterator();
 		
 		System.out.println("next " + itera.next());
@@ -28,6 +27,7 @@ class TestMap {
 		System.out.println("next " + itera.next());
 		System.out.println("hasNext " + itera.hasNext());
 		
+		@SuppressWarnings("rawtypes")
 		Iterator itr = hash_Map1.entrySet().iterator();
 		System.out.println(" next " + itr.next());
 		System.out.println(" next " + itr.next());
@@ -120,6 +120,7 @@ class TestMap {
 		assertFalse(hash_Map6.containsValue(null));
 	}
 
+	@SuppressWarnings("unlikely-arg-type")
 	@Test
 	void testGet() {
 		HashMap<Integer, Integer> hash_Map7 = new HashMap<Integer, Integer>();
