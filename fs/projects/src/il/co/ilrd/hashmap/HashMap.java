@@ -92,16 +92,20 @@ public class HashMap<K,V> implements Map<K, V> {
 	@Override
 	public V get(Object key) {
 		Pair<K,V> pair = getEntry(key);
-		if(null == pair) {
-			return null;
-		}
 		
-		return pair.getValue();
+		return (null == pair? null : pair.getValue());
 	}
 
 	@Override
 	public boolean isEmpty() {
-		return (size()==0);
+		
+		for (List<Pair<K,V>> bucket : hashMap) {
+			if (!bucket.isEmpty()) {
+				return false;	
+			}
+		}
+		
+		return true;
 	}
 
 	@Override
@@ -137,15 +141,14 @@ public class HashMap<K,V> implements Map<K, V> {
 
 	@Override
 	public V remove(Object key) {
-
-		if (null == getEntry(key)) {
-
+		
+		Pair<K,V> pair = getEntry(key);
+		if (pair == null) {
+			
 			return null;
 		}
 		
-		Pair<K,V> pair = getEntry(key);
 		hashMap.get(getBucket(key)).remove(pair);
-		
 		++mode;
 		
 		return pair.getValue();

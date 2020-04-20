@@ -29,10 +29,10 @@ class TestMap {
 		
 		@SuppressWarnings("rawtypes")
 		Iterator itr = hash_Map1.entrySet().iterator();
-		System.out.println(" next " + itr.next());
-		System.out.println(" next " + itr.next());
-		System.out.println(" next " + itr.next());
-		System.out.println(" hasNext " + itr.hasNext());
+		System.out.println("next " + itr.next());
+		System.out.println("next " + itr.next());
+		System.out.println("next " + itr.next());
+		System.out.println("hasNext " + itr.hasNext());
 	}
 
 	@Test
