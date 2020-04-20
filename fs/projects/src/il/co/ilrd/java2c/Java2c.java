@@ -120,6 +120,7 @@ class Cat extends Animal{
 	}
 	
 	private String colors;
+	@SuppressWarnings("unused")
 	private int num_masters = 5;
 }
 
@@ -153,6 +154,7 @@ public class Java2c {
 	}
 	//@SuppressWarnings("deprecation")
 	public static void main(String[] args){
+		@SuppressWarnings("unused")
 		Object obj;
 		Animal animal = new Animal();
 		Dog dog = new Dog();

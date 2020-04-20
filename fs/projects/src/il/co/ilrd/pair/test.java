@@ -68,7 +68,7 @@ class test {
 		assertEquals((Integer)(-100), pair6.getKey());
 		assertEquals((Integer)99, pair6.getValue());
 		
-		assertTrue(pair5.equals(pair6)); 
+		assertFalse(pair5.equals(pair6)); 
 		assertFalse(pair3.equals(pair4)); 
 	}
 

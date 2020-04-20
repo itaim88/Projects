@@ -5,11 +5,12 @@ import java.util.List;
 
 public class TestWs {
 
+	@SuppressWarnings("unused")
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-
+		
+		@SuppressWarnings("rawtypes")
 		List rawList;
-		List<?> listOfAnyType = new ArrayList();
+		List<?> listOfAnyType = new ArrayList<>();
 
 		List<Object> listOfObject = new ArrayList<Object>();
 		List<String> listOfString = new ArrayList<String>();
