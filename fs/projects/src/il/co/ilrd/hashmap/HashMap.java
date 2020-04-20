@@ -53,7 +53,7 @@ public class HashMap<K,V> implements Map<K, V> {
 		
 		for(Pair<K,V> pair : hashMap.get(getBucket(key))) {
 			try {
-				if(pair.getKey().equals(key)) {return true;}
+				if (pair.getKey().equals(key)) {return true;}
 			} catch(NullPointerException n) {
 				if (key == pair.getKey()) {return true;}
 			}
@@ -69,8 +69,8 @@ public class HashMap<K,V> implements Map<K, V> {
 		for (List<Pair<K,V>> bucket : hashMap) {
 			for (Pair<K,V> p : bucket) {
 				try {
-					if(p.getValue().equals(value)) {return true;}
-				} catch(NullPointerException n) {
+					if (p.getValue().equals(value)) {return true;}
+				} catch (NullPointerException n) {
 					if (value == p.getValue()) {return true;}
 				}
 			}
@@ -116,14 +116,12 @@ public class HashMap<K,V> implements Map<K, V> {
 	@Override
 	public V put(K key, V value) {
 		
-			Pair<K,V> pair = getEntry(key);
-			
-			if(null != pair) {
-				return pair.setValue(value);
-			}
+		Pair<K,V> pair = getEntry(key);
+		if(null != pair) {
+			return pair.setValue(value);
+		}
 
 		hashMap.get(getBucket(key)).add(Pair.of(key, value));
-		
 		++mode;
 		
 		return null;
@@ -131,6 +129,7 @@ public class HashMap<K,V> implements Map<K, V> {
 
 	@Override
 	public void putAll(Map<? extends K, ? extends V> m) {
+		
 		for(Map.Entry<? extends K, ? extends V> entry : m.entrySet()) {
 			put(entry.getKey(), entry.getValue());
 		}
@@ -190,7 +189,7 @@ public class HashMap<K,V> implements Map<K, V> {
 	
 	private Pair<K,V> getEntry(Object key){
 
-		for(Pair<K,V> pair : this.hashMap.get(getBucket(key))) {
+		for(Pair<K,V> pair : hashMap.get(getBucket(key))) {
 			
 			if (pair.getKey() == null && pair.getKey() == (key)) {
 				return pair;
