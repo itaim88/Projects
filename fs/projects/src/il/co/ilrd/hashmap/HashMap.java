@@ -15,13 +15,10 @@ import java.util.Set;
 import il.co.ilrd.pair.Pair;
 
 public class HashMap<K,V> implements Map<K, V> {
-
 	private List<List<Pair<K, V>>> hashMap;
 	private final int capacity;
 	private final static int DEFAULT_VALUE = 16; 
-	private Set<Map.Entry<K, V>> entrySet;
-	private Set<K> keySet;
-	private Collection<V> valCollection;
+
 	private int mode = 0;
 	
 	public HashMap() {
@@ -47,17 +44,10 @@ public class HashMap<K,V> implements Map<K, V> {
 	@Override
 	public boolean containsKey(Object key) {
 		
-		if(0 > getBucket(key)) {
-			return false;
-		}
-		
 		for(Pair<K,V> pair : hashMap.get(getBucket(key))) {
-			try {
-				if (pair.getKey().equals(key)) {return true;}
-			} catch(NullPointerException n) {
-				if (key == pair.getKey()) {return true;}
+			if (isMatch(pair.getKey(), key)) {
+				return true;
 			}
-		
 		}	
 		
 		return false;
@@ -68,10 +58,8 @@ public class HashMap<K,V> implements Map<K, V> {
 	
 		for (List<Pair<K,V>> bucket : hashMap) {
 			for (Pair<K,V> p : bucket) {
-				try {
-					if (p.getValue().equals(value)) {return true;}
-				} catch (NullPointerException n) {
-					if (value == p.getValue()) {return true;}
+				if (isMatch(p.getValue(), value)) {
+					return true;
 				}
 			}
 		}
@@ -81,12 +69,7 @@ public class HashMap<K,V> implements Map<K, V> {
 
 	@Override
 	public Set<Map.Entry<K, V>> entrySet() {
-		
-		if(null == entrySet) {
-			entrySet = new EntrySet();
-		}
-	
-		return entrySet;
+		return  new EntrySet();
 	}
 
 	@Override
@@ -110,11 +93,7 @@ public class HashMap<K,V> implements Map<K, V> {
 
 	@Override
 	public Set<K> keySet() {
-		if(null == keySet) {
-			keySet = new KeySet();
-		}
-		
-		return keySet;
+		return new KeySet();
 	}
 
 	@Override
@@ -141,17 +120,19 @@ public class HashMap<K,V> implements Map<K, V> {
 
 	@Override
 	public V remove(Object key) {
-		
-		Pair<K,V> pair = getEntry(key);
-		if (pair == null) {
-			
-			return null;
-		}
-		
-		hashMap.get(getBucket(key)).remove(pair);
+		List<Pair<K,V>> bucket = hashMap.get(getBucket(key));
 		++mode;
 		
-		return pair.getValue();
+		for (Pair<K,V> pair : bucket) {
+			if(isMatch(pair.getKey(),key)) {
+				V value = pair.getValue();
+				bucket.remove(pair);
+				
+				return value;
+			}
+		}
+			
+		return null;
 	}
 
 	@Override
@@ -167,14 +148,18 @@ public class HashMap<K,V> implements Map<K, V> {
 
 	@Override
 	public Collection<V> values() {
-		
-		if (valCollection == null) {
-			valCollection = new ValueCollection();
-		}
-		
-		return valCollection;
+		return new ValueCollection();
 	}
 	
+	private boolean isMatch(Object obj1, Object obj2) {
+		try {
+			if (obj1.equals(obj2)) {return true;}
+		} catch (NullPointerException n) {
+			if (obj1 == obj2) {return true;}
+		}
+		
+		return false;
+	}
 	private int getBucket(Object key) {
 		
 		if (key == null) {
