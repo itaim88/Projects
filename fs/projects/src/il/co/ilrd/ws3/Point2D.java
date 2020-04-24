@@ -2,7 +2,7 @@ package il.co.ilrd.ws3;
 
 import static java.lang.Math.*;
 
-class Point2D {
+public class Point2D {
 
 		public static void foo(Integer i) {System.out.println("Integer");}
 		public static void foo(short i) {System.out.println("s");}
