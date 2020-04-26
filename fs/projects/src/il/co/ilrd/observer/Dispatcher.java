@@ -16,6 +16,8 @@ public class Dispatcher<T> {
 		for(Callback<T> call: callbackList) {
 			call.notifyDeath();
 		}
+		
+		callbackList.clear();
 	}
 	
 	public void updateAll(T msg) {
@@ -42,10 +44,17 @@ public class Dispatcher<T> {
 		
 		private void notifyDeath() {  
 			runnable.run();
+			dispatcher = null;
 		}
 		
 		public void stopService() {
-			dispatcher.callbackList.remove(this);	
+			try {
+				dispatcher.callbackList.remove(this);	
+			} catch (NullPointerException e) {
+				System.out.println("You're not signed to the serice");
+			}
+			
+			dispatcher = null;
 		}
 	}
 }
