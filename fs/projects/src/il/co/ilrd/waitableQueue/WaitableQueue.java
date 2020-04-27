@@ -8,13 +8,15 @@ import java.util.concurrent.locks.ReentrantLock;
 
 public class WaitableQueue<E> {
 	private Queue<E> queue;
-	private static final int DEFAULT_CAPACITY = 11; 
+	private  final int DEFAULT_CAPACITY; 
 	
 	public WaitableQueue() {
+		DEFAULT_CAPACITY = 11; 
 		queue = new PriorityQueue<>(DEFAULT_CAPACITY);
 	}
 	
-	public WaitableQueue(Comparator<E> comparator) {
+	public WaitableQueue(int DEFAULT_CAPACITY, Comparator<E> comparator) {
+		this.DEFAULT_CAPACITY = DEFAULT_CAPACITY;
 		queue = new PriorityQueue<E>(DEFAULT_CAPACITY,comparator);
 	}
 
