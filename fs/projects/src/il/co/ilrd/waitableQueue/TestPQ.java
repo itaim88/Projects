@@ -46,6 +46,7 @@ class TestPQ {
         for (int i = 0; i < 20; ++i) {
             new Thread(new RunnableEnqueue()).start();
         }
+       
         for (int i = 0; i < 10; ++i) {
             new Thread(new RunnableDequeueWithTime()).start();
         }
@@ -63,13 +64,6 @@ class TestPQ {
         for (int i = 0; i < 100; ++i) {
             new Thread(new RunnableEnqueue()).start();
         }
-        
-        for (int i = 0; i < 10; ++i) {
-        	q.enqueue(null);
-        	Thread.sleep(1);
-        }
-    
-    
+           
     }
-
 }

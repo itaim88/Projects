@@ -3,10 +3,14 @@ package il.co.ilrd.waitableQueue;
 import java.util.Comparator;
 import java.util.PriorityQueue;
 import java.util.Queue;
+import java.util.concurrent.Semaphore;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class WaitableQueue<E> {
+	private Object lock = new Object();
+	private Semaphore sem = new Semaphore(0);
 	private Queue<E> queue;
 	private  final int DEFAULT_CAPACITY; 
 	
@@ -21,7 +25,7 @@ public class WaitableQueue<E> {
 	}
 
 	public void enqueue(E element) {
-		synchronized(this) {
+		synchronized(lock) {
 			try {
 				queue.add(element);
 				
@@ -32,29 +36,26 @@ public class WaitableQueue<E> {
 				System.out.println("NullPointerException");
 			}
 			
-			notify();
+			sem.release();
 		}	
 }
 
-	public  synchronized E dequeue() throws InterruptedException {
-		while (queue.isEmpty()) {
-				wait();
+	public E dequeue() throws InterruptedException {
+		synchronized(lock) {
+			sem.acquire();
+			return queue.remove();
 		}
-		
-		return queue.poll();
 	}
 	
 	public E dequeueWithTimeot(int timeInMillSeconds) throws InterruptedException{
-		long startTime = System.currentTimeMillis();
-		while (timeInMillSeconds > System.currentTimeMillis() - startTime) {
-			synchronized(this) {
-				if(!queue.isEmpty()) {
-					return queue.poll();
-				}	
+		
+		if(sem.tryAcquire(timeInMillSeconds, TimeUnit.SECONDS)) {
+			synchronized (lock) {
+				return queue.remove();	
 			}
 		}
 		
-		return null;
+		else {return null;}
 	}
 }
 
