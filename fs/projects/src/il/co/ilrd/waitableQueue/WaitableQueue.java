@@ -5,11 +5,9 @@ import java.util.PriorityQueue;
 import java.util.Queue;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 
 public class WaitableQueue<E> {
-	private Object lock = new Object();
+	private volatile Object lock = new Object();
 	private Semaphore sem = new Semaphore(0);
 	private Queue<E> queue;
 	private  final int DEFAULT_CAPACITY; 
@@ -27,35 +25,43 @@ public class WaitableQueue<E> {
 	public void enqueue(E element) {
 		synchronized(lock) {
 			try {
+				System.out.println("Thread add");
 				queue.add(element);
 				
 			} catch (ClassCastException e) { 
-				System.out.println("ClassCastException");
+				System.out.println("enqueue ClassCastException");
 			
 			} catch (NullPointerException n) {
-				System.out.println("NullPointerException");
+				System.out.println("enqueue NullPointerException");
 			}
-			
+		}
 			sem.release();
-		}	
+			
 }
 
 	public E dequeue() throws InterruptedException {
-		synchronized(lock) {
 			sem.acquire();
-			return queue.remove();
+			synchronized(lock) {
+				System.out.println("Thread remove");
+				E hold = null;
+			try {
+				hold = queue.remove(); 
+			} catch (Exception e) {
+				System.out.println("dequeue exception");
+			}
+			return hold;
 		}
 	}
 	
-	public E dequeueWithTimeot(int timeInMillSeconds) throws InterruptedException{
+	public E dequeueWithTimeot(int timeInMillSeconds, TimeUnit unit) throws InterruptedException{
 		
-		if(sem.tryAcquire(timeInMillSeconds, TimeUnit.SECONDS)) {
+		if(sem.tryAcquire(timeInMillSeconds, unit)) {
 			synchronized (lock) {
 				return queue.remove();	
 			}
 		}
 		
-		else {return null;}
+		return null;
 	}
 }
 

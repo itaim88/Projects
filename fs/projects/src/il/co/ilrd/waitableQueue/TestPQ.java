@@ -31,7 +31,7 @@ class TestPQ {
         @Override
         public void run() {
             try {
-                System.out.println("dequeueWithTimeot: " + q.dequeueWithTimeot(6));
+                System.out.println("dequeueWithTimeot: " + q.dequeueWithTimeot(6,TimeUnit.MILLISECONDS));
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
