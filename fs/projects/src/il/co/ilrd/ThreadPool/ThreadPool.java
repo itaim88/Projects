@@ -5,16 +5,17 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.FutureTask;
 import java.util.concurrent.RejectedExecutionException;
+import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 
 import il.co.ilrd.waitableQueue.WaitableQueue;
 
 public class ThreadPool {
-
 	private int totalThreads;
 	private WaitableQueue<Task<?>> queue;
 	private WaitableQueue<WorkerThread> threadPool;
 	private volatile boolean shutdownFlag = false;
+	private Semaphore semaphor = new Semaphore(0);
 	
 	public ThreadPool(int totalThreads) {
 		this.totalThreads = totalThreads;
@@ -59,6 +60,14 @@ public class ThreadPool {
 					e.printStackTrace();
 				}
 			}
+			/*
+			try {
+				queue.dequeue().futureTask.cancel(true); / cancel task???
+			} catch (InterruptedException e) {
+				
+				e.printStackTrace();
+			}
+			*/
 		}
 	
 		private void disable() {
@@ -70,16 +79,16 @@ public class ThreadPool {
 		private Callable<T> callable;
 		private int priority;
 		private FutureTask<T> futureTask;
-		
+	
 		private Task(Callable<T> callable, int priority) {
 			this.callable = callable;
 			this.priority = priority;
-			this.futureTask = new FutureTask<>(callable);
+			this.futureTask = new FutureTask<>(this.callable);
 		}
-
+	
 		@Override
 		public int compareTo(Task<T> task) {
-			return this.priority- task.priority;
+			return  task.priority - this.priority;
 		}
 	}
 	
@@ -94,7 +103,7 @@ public class ThreadPool {
 	 */
 	public Future<Object> submit(Runnable runnable, Priority priority) {
 		if (shutdownFlag) {
-			throw new RejectedExecutionException();
+			throw new RejectedExecutionException("the pool is shutdown");
 		}
 		
 		try {
@@ -110,7 +119,7 @@ public class ThreadPool {
 	
 	public <T> Future<T> submit(Runnable runnable, Priority priority, T value) {
 		if (shutdownFlag) {
-			throw new RejectedExecutionException();
+			throw new RejectedExecutionException("the pool is shutdown");
 		}
 		try {
 			Task<T> t = new Task<>(Executors.callable(runnable, value), priority.getPriorityVal());
@@ -123,7 +132,7 @@ public class ThreadPool {
 	
 	public <T> Future<T> submit(Callable<T> callable) {
 		if (shutdownFlag) {
-			throw new RejectedExecutionException();
+			throw new RejectedExecutionException("the pool is shutdown");
 		}
 		try {
 			Task<T> t = new Task<>(callable, Priority.MID.getPriorityVal());
@@ -137,7 +146,7 @@ public class ThreadPool {
 	
 	public <T> Future<T> submit(Callable<T> callable, Priority priority) {
 		if (shutdownFlag) {
-			throw new RejectedExecutionException();
+			throw new RejectedExecutionException("the pool is shutdown");
 		}
 		
 		try {
@@ -163,10 +172,9 @@ public class ThreadPool {
 			}
 			
 		}
-		
 		totalThreads = num;
-
 	}
+	
 	private class ShutDown implements Runnable{
 		@Override
 		public void run() {
@@ -210,10 +218,9 @@ public class ThreadPool {
 		class Pause implements Runnable{
 			@Override
 			public void run() {
-				System.out.println(" run pause 11111111111111");
 				try {
 					System.out.println("in wait");
-					wait();
+					semaphor.acquire(); ;
 					System.out.println("out of wait");
 				} catch (InterruptedException e) {
 					e.printStackTrace();
@@ -228,6 +235,7 @@ public class ThreadPool {
 	}
 	
 	public void resume() {
-		notifyAll();
+		semaphor.release(totalThreads);;
 	}
 }
+

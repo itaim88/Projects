@@ -25,7 +25,6 @@ public class WaitableQueue<E> {
 	public void enqueue(E element) {
 		synchronized(lock) {
 			try {
-				System.out.println("Thread add");
 				queue.add(element);
 				
 			} catch (ClassCastException e) { 
@@ -42,7 +41,6 @@ public class WaitableQueue<E> {
 	public E dequeue() throws InterruptedException {
 			sem.acquire();
 			synchronized(lock) {
-				System.out.println("Thread remove");
 				E hold = null;
 			try {
 				hold = queue.remove(); 
