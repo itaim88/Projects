@@ -4,6 +4,7 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.FutureTask;
+import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
@@ -13,18 +14,20 @@ import il.co.ilrd.waitableQueue.WaitableQueue;
 public class ThreadPool {
 	private int totalThreads;
 	private WaitableQueue<Task<?>> queue;
-	private WaitableQueue<WorkerThread> threadPool;
-	private volatile boolean shutdownFlag = false;
+	private LinkedBlockingDeque<WorkerThread> threadPool = new LinkedBlockingDeque<>();
+	private volatile boolean shutDownFlag = false;
 	private Semaphore semaphor = new Semaphore(0);
+	private int threadPoolSizeKeeper;
+	
 	
 	public ThreadPool(int totalThreads) {
 		this.totalThreads = totalThreads;
+		this.threadPoolSizeKeeper = totalThreads;
 		this.queue = new WaitableQueue<>();
-		this.threadPool = new WaitableQueue<>();
-		 infrastructure();
+		initThreads();
 	}
 	
-	private void infrastructure() {
+	private void initThreads() {
 		for (int i = 0; i < totalThreads; ++i) {
 			new WorkerThread().start();
 		}
@@ -47,62 +50,41 @@ public class ThreadPool {
 	}
 	
 	private class WorkerThread extends Thread{
-		private boolean flag = true;
+		private boolean workFlag = true;
 	
 		@Override
 		public void run() {
-			while(flag) {
-				System.out.println(getName() + " run");
+			while(workFlag) {
 				try {
 					queue.dequeue().futureTask.run();
-				} catch (InterruptedException e) {
-					System.out.println("not running");
+				}catch (Exception e) {
 					e.printStackTrace();
 				}
 			}
-			/*
-			try {
-				queue.dequeue().futureTask.cancel(true); / cancel task???
-			} catch (InterruptedException e) {
-				
-				e.printStackTrace();
-			}
-			*/
 		}
 	
 		private void disable() {
-			flag = false;
+			workFlag = false;
 		}
 	}
 
 	private static class Task<T> implements Comparable<Task<T>> {
-		private Callable<T> callable;
 		private int priority;
 		private FutureTask<T> futureTask;
 	
 		private Task(Callable<T> callable, int priority) {
-			this.callable = callable;
 			this.priority = priority;
-			this.futureTask = new FutureTask<>(this.callable);
+			this.futureTask = new FutureTask<>(callable);
 		}
 	
 		@Override
 		public int compareTo(Task<T> task) {
-			return  task.priority - this.priority;
+			return task.priority - this.priority;
 		}
 	}
-	
-	/**
-	 * Submits a value-returning task for execution and returns a Future 
-	 * representing the pending results of the task. The Future's get method 
-	 * will return the task's result upon successful completion.
-	 * 
-	 * @param runnable
-	 * @param priority
-	 * @return
-	 */
+
 	public Future<Object> submit(Runnable runnable, Priority priority) {
-		if (shutdownFlag) {
+		if (shutDownFlag) {
 			throw new RejectedExecutionException("the pool is shutdown");
 		}
 		
@@ -118,7 +100,7 @@ public class ThreadPool {
 	}
 	
 	public <T> Future<T> submit(Runnable runnable, Priority priority, T value) {
-		if (shutdownFlag) {
+		if (shutDownFlag) {
 			throw new RejectedExecutionException("the pool is shutdown");
 		}
 		try {
@@ -131,7 +113,7 @@ public class ThreadPool {
 	}
 	
 	public <T> Future<T> submit(Callable<T> callable) {
-		if (shutdownFlag) {
+		if (shutDownFlag) {
 			throw new RejectedExecutionException("the pool is shutdown");
 		}
 		try {
@@ -145,7 +127,7 @@ public class ThreadPool {
 	}
 	
 	public <T> Future<T> submit(Callable<T> callable, Priority priority) {
-		if (shutdownFlag) {
+		if (shutDownFlag) {
 			throw new RejectedExecutionException("the pool is shutdown");
 		}
 		
@@ -169,22 +151,26 @@ public class ThreadPool {
 			for (int i = 0; i < totalThreads - num; ++i) {
 				Task<Object> t = new Task<>(Executors.callable(new ShutDown()), Priority.HIGH.getPriorityVal() - 1);
 				queue.enqueue(t);
+				threadPoolSizeKeeper = totalThreads;
 			}
 			
 		}
+		
 		totalThreads = num;
 	}
 	
 	private class ShutDown implements Runnable{
 		@Override
 		public void run() {
-			WorkerThread wt = (WorkerThread)Thread.currentThread();
-			wt.disable();
+			WorkerThread thread = (WorkerThread)Thread.currentThread();
+			thread.disable();
+			threadPool.add(thread);
+			
 		}
 	}
 	
 	public void shutdown() {
-		shutdownFlag = true;
+		shutDownFlag = true;
 		
 		for (int i = 0; i < totalThreads; ++i) {
 			Task<Object> t = new Task<>(Executors.callable(new ShutDown()), Priority.LOW.getPriorityVal() - 1);
@@ -192,25 +178,18 @@ public class ThreadPool {
 		}
 	}
 	
-	/**
-	 * Blocks until all tasks have completed execution after a shutdown request, 
-	 * or the timeout occurs, or the current thread is interrupted, 
-	 * whichever happens first.
-	 * 
-	 * @param timeOut - the maximum time to wait
-	 * @param unit - the time unit of the timeout argument
-	 * @return true if this executor terminated and false if the timeout elapsed before termination
-	 * @throws InterruptedException - if interrupted while waiting
-	 */
 	public boolean awaitTermination(int timeOut, TimeUnit unit) throws InterruptedException {
-		Thread thread = null;
 		
-		for (int i = 0; i < totalThreads; ++i) {
-			thread = threadPool.dequeueWithTimeot(timeOut, unit);
+		for (int i = 0; i < threadPoolSizeKeeper; ++i) {
+			Thread thread = threadPool.poll(timeOut, unit);
+			if (thread == null) {
+				return false;
+			}
+			
 			thread.join();
 		}
 		
-		return (thread == null ? false : true);
+		return true;
 	}
 
 	public void pause() {
@@ -219,9 +198,7 @@ public class ThreadPool {
 			@Override
 			public void run() {
 				try {
-					System.out.println("in wait");
 					semaphor.acquire(); ;
-					System.out.println("out of wait");
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
@@ -235,7 +212,7 @@ public class ThreadPool {
 	}
 	
 	public void resume() {
-		semaphor.release(totalThreads);;
+		semaphor.release(totalThreads);
 	}
 }
 

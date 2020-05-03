@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.RejectedExecutionException;
+import java.util.concurrent.TimeUnit;
 
 import il.co.ilrd.ThreadPool.ThreadPool.Priority;
 
@@ -11,7 +12,7 @@ class Test {
 
 	@org.junit.jupiter.api.Test
 	void test() throws InterruptedException, ExecutionException {
-		int NUM_OF_THREADS = 1;
+		int NUM_OF_THREADS = 4;
 		ThreadPool t = new ThreadPool(NUM_OF_THREADS);
 		Future<Object> f1 = t.submit(new Runnable() {
 			@Override
@@ -40,36 +41,41 @@ class Test {
 		t.resume();
 		
 		Thread.sleep(100);
-		t.setNumOfThreads(3);
+		t.setNumOfThreads(2);
 		
 		
 		t.pause();
 		
-		for (int i = 0; i < 10; ++i) {
+		for (int i = 0; i < 30; ++i) {
 			Future<String> f5 = t.submit(() -> System.out.println("Task #5 is done!"),  Priority.MID, "Task #5");
 			Future<String> f6 = t.submit(() -> System.out.println("Task #6 is done!"),  Priority.LOW, "Task #6");
 			Future<String> f7 = t.submit(() -> System.out.println("Task #7 is done!"),  Priority.HIGH, "Task #7");
 		}
+	
 		Thread.sleep(1000);
 		t.resume();
 		
+		Future<Object> f_long = t.submit(new Runnable() {
+			@Override
+		public void run() {
+				for(int i = 0; i < 1_000_000_000; ++i) {
+					for(int j = 0; j < 1_000_000_000; ++j) {
+						
+					}
+				}
+				
+			}
+			
+		} , Priority.MID); 
 	
 		t.shutdown();
-		
-	
-		Thread.sleep(1000);
-		
+		System.out.println(t.awaitTermination(3, TimeUnit.SECONDS));
+
 		try { Future<String> f8 = t.submit(() -> System.out.println("Task #8 is done!"),  Priority.HIGH, "Task #8");
 		}catch (RejectedExecutionException e) {
 			System.out.println("shutdown");
 	
 		}
-		
-		//t.setNumOfThreads(3);
-		//t.setNumOfThreads(2);
-		//Thread.sleep(10000);
-		//Future<String> f3 = t.submit(() -> System.out.println("Task #3 is done!"),  Priority.MID, "hello");
-		
 	}
 
 }
