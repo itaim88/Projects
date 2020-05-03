@@ -14,7 +14,7 @@ class Test {
 	void test() throws InterruptedException, ExecutionException {
 		int NUM_OF_THREADS = 4;
 		ThreadPool t = new ThreadPool(NUM_OF_THREADS);
-		Future<Object> f1 = t.submit(new Runnable() {
+		Future<?> f1 = t.submit(new Runnable() {
 			@Override
 			public void run() {
 				System.out.println("first task done!");
@@ -55,7 +55,7 @@ class Test {
 		Thread.sleep(1000);
 		t.resume();
 		
-		Future<Object> f_long = t.submit(new Runnable() {
+		Future<?> f_long = t.submit(new Runnable() {
 			@Override
 		public void run() {
 				for(int i = 0; i < 1_000_000_000; ++i) {

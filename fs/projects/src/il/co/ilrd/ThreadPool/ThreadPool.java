@@ -14,20 +14,15 @@ import il.co.ilrd.waitableQueue.WaitableQueue;
 public class ThreadPool {
 	private int totalThreads;
 	private WaitableQueue<Task<?>> queue;
-	private LinkedBlockingDeque<WorkerThread> threadPool = new LinkedBlockingDeque<>();
+	private LinkedBlockingDeque<WorkerThread> WorkingThreads = new LinkedBlockingDeque<>();
 	private volatile boolean shutDownFlag = false;
-	private Semaphore semaphor = new Semaphore(0);
-	private int threadPoolSizeKeeper;
-	
+	private Semaphore pauseSemaphor = new Semaphore(0);
+	private int currentNumberOfThreads= totalThreads;
 	
 	public ThreadPool(int totalThreads) {
 		this.totalThreads = totalThreads;
-		this.threadPoolSizeKeeper = totalThreads;
+		this. currentNumberOfThreads = totalThreads;
 		this.queue = new WaitableQueue<>();
-		initThreads();
-	}
-	
-	private void initThreads() {
 		for (int i = 0; i < totalThreads; ++i) {
 			new WorkerThread().start();
 		}
@@ -83,13 +78,29 @@ public class ThreadPool {
 		}
 	}
 
-	public Future<Object> submit(Runnable runnable, Priority priority) {
+	public Future<?> submit(Runnable runnable) {
 		if (shutDownFlag) {
 			throw new RejectedExecutionException("the pool is shutdown");
 		}
 		
 		try {
-			Task<Object> t = new Task<>(Executors.callable(runnable), priority.getPriorityVal());
+			Task<?> t = new Task<>(Executors.callable(runnable), Priority.MID.getPriorityVal());
+			queue.enqueue(t);
+			
+			return t.futureTask;
+			
+		} catch(NullPointerException e) {
+			throw new NullPointerException();
+		}
+	}
+	
+	public Future<?> submit(Runnable runnable, Priority priority) {
+		if (shutDownFlag) {
+			throw new RejectedExecutionException("the pool is shutdown");
+		}
+		
+		try {
+			Task<?> t = new Task<>(Executors.callable(runnable), priority.getPriorityVal());
 			queue.enqueue(t);
 			
 			return t.futureTask;
@@ -140,32 +151,29 @@ public class ThreadPool {
 		}
 	}
 	
-	public void setNumOfThreads(int num) {
-		if (totalThreads <= num) {
-			for (int i = 0; i < (num - totalThreads); ++i) {
+	public void setNumOfThreads(int newThreadNumber) {
+		if (totalThreads <= newThreadNumber) {
+			for (int i = 0; i < (newThreadNumber - totalThreads); ++i) {
 				new WorkerThread().start();
 			}
 		}
 		
 		else  {
-			for (int i = 0; i < totalThreads - num; ++i) {
-				Task<Object> t = new Task<>(Executors.callable(new ShutDown()), Priority.HIGH.getPriorityVal() - 1);
+			for (int i = 0; i < totalThreads - newThreadNumber; ++i) {
+				Task<Object> t = new Task<>(Executors.callable(new ShutDown()), Priority.HIGH.getPriorityVal() + 1);
 				queue.enqueue(t);
-				threadPoolSizeKeeper = totalThreads;
-			}
-			
+			}	
 		}
 		
-		totalThreads = num;
+		totalThreads = newThreadNumber;
 	}
 	
 	private class ShutDown implements Runnable{
 		@Override
 		public void run() {
 			WorkerThread thread = (WorkerThread)Thread.currentThread();
+			WorkingThreads.add(thread);
 			thread.disable();
-			threadPool.add(thread);
-			
 		}
 	}
 	
@@ -180,8 +188,8 @@ public class ThreadPool {
 	
 	public boolean awaitTermination(int timeOut, TimeUnit unit) throws InterruptedException {
 		
-		for (int i = 0; i < threadPoolSizeKeeper; ++i) {
-			Thread thread = threadPool.poll(timeOut, unit);
+		for (int i = 0; i < totalThreads; ++i) {
+			Thread thread = WorkingThreads.poll(timeOut, unit);
 			if (thread == null) {
 				return false;
 			}
@@ -193,12 +201,12 @@ public class ThreadPool {
 	}
 
 	public void pause() {
-		
+		currentNumberOfThreads = totalThreads;
 		class Pause implements Runnable{
 			@Override
 			public void run() {
 				try {
-					semaphor.acquire(); ;
+					pauseSemaphor.acquire(); ;
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
@@ -212,7 +220,8 @@ public class ThreadPool {
 	}
 	
 	public void resume() {
-		semaphor.release(totalThreads);
+		pauseSemaphor.release(currentNumberOfThreads);
+		currentNumberOfThreads = 0;
 	}
 }
 
