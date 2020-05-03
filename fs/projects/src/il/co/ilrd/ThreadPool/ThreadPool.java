@@ -96,7 +96,7 @@ public class ThreadPool {
 	
 	public <T> Future<T> submit(Callable<T> callable, Priority priority) {
 		if (shutDownFlag) {
-			throw new RejectedExecutionException("the pool is shutdown");
+			throw new RejectedExecutionException("can`t submit class in shutdown");
 		}
 		
 		try {
