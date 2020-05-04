@@ -1,8 +1,8 @@
 package il.co.ilrd.ThreadPool;
 
 import java.util.concurrent.Callable;
-
 import java.util.concurrent.CancellationException;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.LinkedBlockingDeque;
@@ -29,7 +29,6 @@ public class ThreadPool {
 	
 	public ThreadPool(int totalThreads) {
 		this.totalThreads = totalThreads;
-		this.pauseNumberOfThreads = totalThreads;
 		this.queue = new WaitableQueue<>();
 		for (int i = 0; i < totalThreads; ++i) {
 			new WorkerThread().start();
@@ -57,14 +56,15 @@ public class ThreadPool {
 	
 		@Override
 		public void run() {
-		
 			while(workFlag) {
 				try {
 					queue.dequeue().executeTask();
 				} catch (InterruptedException e) {
 					e.printStackTrace();
+					System.err.println(e.getCause());
 				} catch (Exception e) {
 					e.printStackTrace();
+					System.err.println(e.getCause());
 				}
 			}
 		}
@@ -77,7 +77,7 @@ public class ThreadPool {
 		private int priority;
 		private Callable<T> callable;
 		private FutureKeeper<T> FutureKeeper = new FutureKeeper<>();
-		private Semaphore resultBlockSem = new Semaphore(0);
+		
 		
 		private Task(Callable<T> callable, int priority) {
 			this.callable = callable;
@@ -90,7 +90,7 @@ public class ThreadPool {
 					FutureKeeper.returnVal = callable.call();
 				} finally {
 					FutureKeeper.completeFlag = true;
-					 resultBlockSem.release();
+					 FutureKeeper.resultBlockSem.release();
 				}
 			}
 		}
@@ -104,6 +104,7 @@ public class ThreadPool {
 			private volatile boolean completeFlag = false;
 			private volatile boolean cancelleFlag = false;
 			private V returnVal = null;
+			private Semaphore resultBlockSem = new Semaphore(0);
 			
 			@Override
 			public boolean cancel(boolean mayInterruptIfRunning) {
@@ -111,6 +112,10 @@ public class ThreadPool {
 				return !FutureKeeper.isDone();
 			}
 
+			/**
+			 * @return the value of call() return.
+			 * @throws InterruptedException
+			 */
 			@Override
 			public V get() throws CancellationException, InterruptedException {
 				if(!cancelleFlag) {
@@ -122,18 +127,35 @@ public class ThreadPool {
 				throw new CancellationException("task is cancelled");
 			}
 
+			/**
+			 * @param timeout the amount of TimeUnit to wait for the termination
+			 * @param the time unit in which to count the timeout argument
+			 * @return the value of call() return.
+			 * @throws InterruptedException
+			 */
 			@Override
-			public V get(long time, TimeUnit unit) throws TimeoutException, CancellationException, InterruptedException {
+			public V get(long time, TimeUnit unit) throws TimeoutException, ExecutionException, InterruptedException {
 				if(cancelleFlag) {
 					throw new CancellationException("task is cancelled");
 				}
+				try {
+					resultBlockSem.tryAcquire(time , unit);
+				} catch (Exception e) {
+					throw new TimeoutException("task is TimeoutException");
+				}
 				
-				resultBlockSem.tryAcquire(time , unit);
 				return returnVal;
 			}
 			
+			/**
+			 * @return a boolean indicating whether the execution was canceled.
+			 */
 			@Override
 			public boolean isCancelled() {return cancelleFlag;}
+			
+			/**
+			 * @return a boolean indicating whether the execution has finished successfully.
+			 */
 			@Override
 			public boolean isDone() {return completeFlag;}
 			
@@ -147,6 +169,7 @@ public class ThreadPool {
 	public Future<?> submit(Runnable runnable, Priority priority) {
 		return submit(Executors.callable(runnable), priority);
 	}
+	
 	public <T> Future<T> submit(Runnable runnable, Priority priority, T value) {
 		return submit(Executors.callable(runnable, value), priority);
 	}
@@ -167,11 +190,12 @@ public class ThreadPool {
 	
 		} catch(NullPointerException e) {
 			throw new NullPointerException();			
+		} catch(ClassCastException e) {
+			throw new NullPointerException();			
 		}
 	}
 	
 	public void setNumOfThreads(int newThreadNumber) {
-		
 		if (totalThreads <= newThreadNumber) {
 			for (int i = 0; i < newThreadNumber - totalThreads; ++i) {
 				new WorkerThread().start();
@@ -189,6 +213,9 @@ public class ThreadPool {
 		totalThreads = newThreadNumber;
 	}
 	
+	/**
+	 * disables enqueue of new tasks and causing the threads to finish execution
+	 */
 	public void shutdown() {
 		shutDownFlag = true;
 		for (int i = 0; i < totalThreads; ++i) {
@@ -201,6 +228,12 @@ public class ThreadPool {
 		}
 	}
 	
+	/**
+	 * @param timeInSec the amount of seconds to wait for the termination
+	 * @param unit the time unit in which to count the waiting time
+	 * @return true- if succeeded in waiting for the threads, false- if could not join() or caught InterruptedException
+	 * @throws InterruptedException
+	 */
 	public boolean awaitTermination(long timeOut, TimeUnit unit) throws InterruptedException {
 		long timeInMiliSec = TimeUnit.MILLISECONDS.convert(timeOut, unit);
 		long startTime = System.currentTimeMillis();
@@ -218,21 +251,27 @@ public class ThreadPool {
 		return true;
 	}
 
+	/**
+	 * pauses the execution of tasks
+	 */
 	public void pause() {
 		for (int i = 0; i < totalThreads; ++i) {
 			Task<Object> t = new Task<>(Executors.callable(() -> {
-			try {
-				pauseSemaphor.acquire(); 
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-			}), Priority.HIGH.getPriorityVal() + 1);
+				try {
+					pauseSemaphor.acquire(); 
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				}), Priority.HIGH.getPriorityVal() + 1);
 			queue.enqueue(t);
 		}
 		
 		pauseNumberOfThreads = totalThreads;
 	}
 	
+	/**
+	 * resumes the execution of tasks after pause
+	 */
 	public void resume() {
 		pauseSemaphor.release(pauseNumberOfThreads);
 		pauseNumberOfThreads = 0;
