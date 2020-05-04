@@ -33,7 +33,6 @@ class Test {
 		int a = f3.get();
 		assertEquals(6,a);  
 		
-
 			t.pause();
 		
 		
