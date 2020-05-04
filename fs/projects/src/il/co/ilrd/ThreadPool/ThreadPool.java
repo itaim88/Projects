@@ -2,6 +2,7 @@ package il.co.ilrd.ThreadPool;
 
 import java.util.concurrent.Callable;
 import java.util.concurrent.CancellationException;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -77,6 +78,7 @@ public class ThreadPool {
 		private int priority;
 		private Callable<T> callable;
 		private FutureKeeper<T> FutureKeeper = new FutureKeeper<>();
+	
 		
 		
 		private Task(Callable<T> callable, int priority) {
@@ -90,7 +92,7 @@ public class ThreadPool {
 					FutureKeeper.returnVal = callable.call();
 				} finally {
 					FutureKeeper.completeFlag = true;
-					 FutureKeeper.resultBlockSem.release();
+					FutureKeeper.getOnlyOnce.countDown();
 				}
 			}
 		}
@@ -104,7 +106,7 @@ public class ThreadPool {
 			private volatile boolean completeFlag = false;
 			private volatile boolean cancelleFlag = false;
 			private V returnVal = null;
-			private Semaphore resultBlockSem = new Semaphore(0);
+			private CountDownLatch getOnlyOnce = new CountDownLatch(1);
 			
 			@Override
 			public boolean cancel(boolean mayInterruptIfRunning) {
@@ -118,8 +120,8 @@ public class ThreadPool {
 			 */
 			@Override
 			public V get() throws CancellationException, InterruptedException {
-				if(!cancelleFlag) {
-					resultBlockSem.acquire();
+				if(!cancelleFlag ) {
+					getOnlyOnce.await();
 					
 					return returnVal;
 				}
@@ -139,7 +141,7 @@ public class ThreadPool {
 					throw new CancellationException("task is cancelled");
 				}
 				try {
-					resultBlockSem.tryAcquire(time , unit);
+					getOnlyOnce.await(time, unit);
 				} catch (Exception e) {
 					throw new TimeoutException("task is TimeoutException");
 				}
@@ -203,11 +205,12 @@ public class ThreadPool {
 		}
 		
 		else  {
-			for (int i = 0; i < totalThreads - newThreadNumber; ++i) {
 				Task<Object> t = new Task<>(Executors.callable(() -> {
-					((WorkerThread)Thread.currentThread()).disable();
+				((WorkerThread)Thread.currentThread()).disable();
 				}), Priority.HIGH.getPriorityVal() + 1);
-				queue.enqueue(t);
+				
+				for (int i = 0; i < totalThreads - newThreadNumber; ++i) {
+					queue.enqueue(t);
 			}	
 		}
 		totalThreads = newThreadNumber;
@@ -218,12 +221,13 @@ public class ThreadPool {
 	 */
 	public void shutdown() {
 		shutDownFlag = true;
+		Task<Object> t = new Task<>(Executors.callable(() -> {
+			WorkerThread thread = (WorkerThread)Thread.currentThread();
+			thread.disable();
+			workingThreads.add(thread);	
+		}), Priority.LOW.getPriorityVal() - 1);
+
 		for (int i = 0; i < totalThreads; ++i) {
-			Task<Object> t = new Task<>(Executors.callable(() -> {
-				WorkerThread thread = (WorkerThread)Thread.currentThread();
-				thread.disable();
-				workingThreads.add(thread);	
-			}), Priority.LOW.getPriorityVal() - 1);
 			queue.enqueue(t);
 		}
 	}
@@ -255,14 +259,15 @@ public class ThreadPool {
 	 * pauses the execution of tasks
 	 */
 	public void pause() {
+		Task<Object> t = new Task<>(Executors.callable(() -> {
+			try {
+				pauseSemaphor.acquire(); 
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			}), Priority.HIGH.getPriorityVal() + 1);
+		
 		for (int i = 0; i < totalThreads; ++i) {
-			Task<Object> t = new Task<>(Executors.callable(() -> {
-				try {
-					pauseSemaphor.acquire(); 
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-				}), Priority.HIGH.getPriorityVal() + 1);
 			queue.enqueue(t);
 		}
 		

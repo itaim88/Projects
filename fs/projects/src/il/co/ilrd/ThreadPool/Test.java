@@ -30,6 +30,7 @@ class Test {
 
 		System.out.println(f1.get());
 		System.out.println(f2.get());
+		System.out.println(f2.get());
 		int a = f3.get();
 		assertEquals(6,a);  
 		
