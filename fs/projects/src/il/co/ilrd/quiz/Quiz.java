@@ -40,8 +40,37 @@ public class Quiz {
 		return true;
 	}
 	
+	private class CircularBuffer {
+		private int [] arr;
+		private int nextFreeIndex;
+		private int lastIndex;
+		private int sizeN;
+	    
+	    public CircularBuffer(int sizeN){
+			this.sizeN = sizeN;
+			arr = new int[sizeN];
+	    }
+	    public void record(int order_id) {
+			arr[nextFreeIndex] = order_id;
+			lastIndex = nextFreeIndex;
+			nextFreeIndex = (nextFreeIndex + 1) % sizeN;
+	    }
+	    public int getLast(int NthFromLast) {
+	    	return arr[(sizeN + lastIndex - NthFromLast) % sizeN];
+	    }
+	}
+	    
 	public static void main(String[] args) {
 		System.out.println(Quiz.isPermutation("hello", "lohel"));
 		System.out.println(Quiz.isPermutation("helio", "lohel"));
+		
+		Quiz q = new Quiz();
+		CircularBuffer c = q.new CircularBuffer(3);
+		c.record(1);
+		c.record(55);
+		c.record(100);
+		c.record(4000);
+		
+		System.out.println(c.getLast(3));
 	}
 }

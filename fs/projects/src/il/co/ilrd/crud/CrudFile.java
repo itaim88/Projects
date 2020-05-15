@@ -8,10 +8,11 @@ import java.io.PrintWriter;
 import java.io.Serializable;
 
 public class CrudFile implements GenericCrud<String,Integer> {
-	private Integer numberOfLines = 0;
+	private Integer numberOfLines;
 	private BufferedWriter writer;
 	
 	public CrudFile(String filePath) {
+		numberOfLines = 0;
 		try {
 			writer = new BufferedWriter(new FileWriter(filePath, true));	
 		} catch (IOException e) {
@@ -27,9 +28,6 @@ public class CrudFile implements GenericCrud<String,Integer> {
 	@Override
 	public Integer create(String line) {
 		try {
-			if (line == null) {
-				writer.close();
-			}
 			writer.append(line);
 			writer.flush();
 			writer.newLine();
@@ -43,19 +41,15 @@ public class CrudFile implements GenericCrud<String,Integer> {
 
 	@Override
 	public String read(Integer key) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public void update(Integer key, String obj) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public String delete(Integer key) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 }
