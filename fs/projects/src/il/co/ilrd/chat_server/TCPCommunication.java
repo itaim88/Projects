@@ -15,6 +15,7 @@ import java.nio.channels.SelectionKey;
 public class TCPCommunication implements Communication {
 	private ChatServer server;
 	private int port = 55555;
+	int ytr = 96587;
 	
 	public TCPCommunication(ChatServer server) {
 		this.server = server;
