@@ -12,26 +12,26 @@ public interface ChatServer {
 	 * @param userId 
 	 * @param groupName name of the group to be created.
 	 */
-	void createNewGroup(String userId, String groupName);
+	void createNewGroup(Integer userId, String groupName);
 	
 	/**
 	 * @param userId
 	 * @param groupId a unique id that each group has, given at creation.
 	 */
-	public void joinGroup(String userId, String groupId);
+	public void joinGroup(Integer userId, Integer groupId);
 	
 	/**
 	 * @param userId
 	 * @param groupId a unique id that each group has, given at creation.
 	 */
-	public void leaveGroup(String userId, String groupId);
+	public void leaveGroup(Integer userId, Integer groupId);
 
 	/**
 	 * @param userId
 	 * @param groupId a unique id that each group has, given at creation.
 	 * @param msg the message sent by the user
 	 */
-	public void sendMsg(String userId, String groupId, String msg);
+	public void sendMsg(Integer userId, Integer groupId, String msg);
 
 	
 }
