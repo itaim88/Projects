@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Random;
 
 import il.co.ilrd.hashmap.HashMap;
 
@@ -30,13 +31,27 @@ public class ChatServerHub implements ChatServer{
 
 	@Override
 	public void createNewGroup(Integer userId, String groupName) {
-		// TODO Auto-generated method stub
+		//is user exist??
+		User u = users.get(userId);
+		Group newGroup = new Group(u.name, u);
+		groups.put(newGroup.id, newGroup);
 		
+		u.peer.sendCreateGroup(newGroup.id, newGroup.name);
 	}
 
 	@Override
 	public void joinGroup(Integer userId, Integer groupId) {
-		// TODO Auto-generated method stub
+		User u = users.get(userId);
+		Group g = groups.get(groupId);
+		if (u == null || g == null ) {
+			u.peer.sendAddToGRoup(false);	
+		}
+		for(Integer i : g.usersInGroup.keySet()) {
+			users.get(i).peer.sendNewGroupMember(groupId, userId);
+	
+		}
+		g.usersInGroup.put(u.id, new ColorUsrProperties());
+		u.peer.sendAddToGRoup(true);	
 		
 	}
 
@@ -70,14 +85,28 @@ public class ChatServerHub implements ChatServer{
 	}
 	
 	private static class Group {
-		Map<Integer, UsrProperties> users;
+		private Map<Integer, UsrProperties> usersInGroup = new HashMap<Integer, UsrProperties>();
 		private String name;
 		private int id;
 		private static int counterGroup = 1000;
 		
+		public Group(String name, User user) {
+			this.name = name;
+			this.id = ++counterGroup;
+			usersInGroup.put(user.id, new ColorUsrProperties());
+			
+		}	
 	}
-	
 	private static class ColorUsrProperties implements UsrProperties{
-		Color color;
+		private Color color;
+		private Random rand;
+		
+		public ColorUsrProperties() {
+			rand = new Random();
+			float r = rand.nextFloat();
+			float g = rand.nextFloat();
+			float b = rand.nextFloat();
+			this.color = new Color(r, g, b);
+		}
 	}
 }

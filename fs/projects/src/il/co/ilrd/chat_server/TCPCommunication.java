@@ -163,10 +163,10 @@ public class TCPCommunication implements Communication {
 		}
 
 		@Override
-		public void sendAddToGRoup(int status) {}
+		public void sendAddToGRoup(boolean status) {}
 
 		@Override
-		public void sendNewGroupMember(int newUsrID) {}
+		public void sendNewGroupMember(Integer groupId, int newUsrID) {}
 		
 		@Override
 		public void sendLogin(int userID, List<Integer> groupID) {
@@ -195,10 +195,10 @@ public class TCPCommunication implements Communication {
 		}
 		
 		@Override
-		public void sendCreateGroup(int groupID, int groupName) {}
+		public void sendCreateGroup(int groupID, String groupName) {}
 		
 		@Override
-		public void sendLeaveGroup(int status) {}
+		public void sendLeaveGroup(boolean status) {}
 	}
 	
 	public static void main(String[] args) throws IOException {
