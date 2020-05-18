@@ -6,32 +6,31 @@ public interface ChatServer {
 	 * @param name the user's name
 	 * @param peer represents the communicating peer
 	 */
-	public void logIn(String email, String name, Peer peer);
+	public void logIn(int msgId, String email, String name, Peer peer);
 	
 	/**
 	 * @param userId 
 	 * @param groupName name of the group to be created.
 	 */
-	void createNewGroup(Integer userId, String groupName);
+	void createNewGroup(int msgId, Integer userId, String groupName);
 	
 	/**
 	 * @param userId
 	 * @param groupId a unique id that each group has, given at creation.
 	 */
-	public void joinGroup(Integer userId, Integer groupId);
+	public void joinGroup(int msgId, Integer userId, String groupName);
 	
 	/**
 	 * @param userId
 	 * @param groupId a unique id that each group has, given at creation.
 	 */
-	public void leaveGroup(Integer userId, Integer groupId);
+	public void leaveGroup(int msgId, Integer userId, String groupName);
 
 	/**
 	 * @param userId
 	 * @param groupId a unique id that each group has, given at creation.
 	 * @param msg the message sent by the user
 	 */
-	public void sendMsg(Integer userId, Integer groupId, String msg);
+	public void sendMsg(int msgId, Integer userId, String groupName, String msg);
 
-	
 }

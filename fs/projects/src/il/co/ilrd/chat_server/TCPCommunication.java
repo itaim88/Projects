@@ -19,72 +19,12 @@ import java.nio.channels.SelectionKey;
 public class TCPCommunication implements Communication {
 	private ChatServer server;
 	private int port;
-	//private Selector selector = null;
 	private boolean openClientServer = true;
 
 	public TCPCommunication(ChatServer server, int port) {
 		this.port = port;
 		this.server = server;
 	}
-
-	public enum ChatOperation {
-		LOG_IN (1) {
-			@Override
-			void functionHandler(StringTokenizer str, SocketChannel client, TCPCommunication communication) {
-
-				communication.server.logIn(str.nextToken(), str.nextToken(), new SocketPeer(client));
-			}
-		},
-		
-		CREATE_GROUP (2) {
-			@Override
-			void functionHandler(StringTokenizer str, SocketChannel client, TCPCommunication communication) {
-				communication.server.createNewGroup(Integer.parseInt(str.nextToken()), str.nextToken());
-			}
-		},
-		
-		JOIN (3) {
-			@Override
-			void functionHandler(StringTokenizer str, SocketChannel client, TCPCommunication communication) {
-				communication.server.joinGroup(Integer.parseInt(str.nextToken()), Integer.parseInt(str.nextToken()));
-			}
-		},
-	
-		SEND (4) {
-			@Override
-			void functionHandler(StringTokenizer str, SocketChannel client, TCPCommunication communication) {
-				communication.server.sendMsg(Integer.parseInt(str.nextToken()), Integer.parseInt(str.nextToken()), str.nextToken());
-			}	
-			
-		},
-
-		LEAVE (5) {
-			@Override
-			void functionHandler(StringTokenizer str, SocketChannel client, TCPCommunication communication) {
-				communication.server.leaveGroup(Integer.parseInt(str.nextToken()), Integer.parseInt(str.nextToken()));
-			}	
-			
-		},
-		
-		LOGOUT (6) {
-			@Override
-			void functionHandler(StringTokenizer str, SocketChannel client, TCPCommunication communication) {
-				//openClientServer = false;
-
-				}	
-		
-		};
-					
-		private int opNum;
-		
-		private ChatOperation(int opNum)  {
-			this.opNum = opNum;
-			
-		}
-		
-		abstract void functionHandler(StringTokenizer str, SocketChannel client, TCPCommunication communication);
-	}
-	
 
 	@Override
 	public void Init() {
@@ -112,27 +52,31 @@ public class TCPCommunication implements Communication {
 	 
 					// Tests whether this key's channel is ready to accept a new socket connection
 					if (myKey.isAcceptable()) {
-						SocketChannel crunchifyClient = serverSocket.accept();
+						SocketChannel clientChanel = serverSocket.accept();
 	 
 						// Adjusts this channel's blocking mode to false
-						crunchifyClient.configureBlocking(false);
+						clientChanel.configureBlocking(false);
 	 
 						// Operation-set bit for read operations
-						crunchifyClient.register(selector, SelectionKey.OP_READ);
-						System.out.println(("Connection Accepted: " + crunchifyClient.getLocalAddress() + "\n"));
+						clientChanel.register(selector, SelectionKey.OP_READ);
+						System.out.println(("Connection Accepted: " + clientChanel.getLocalAddress() + "\n"));
 	 
 						// Tests whether this key's channel is ready for reading
 					} else if (myKey.isReadable()) {
 						SocketChannel socketclient = (SocketChannel) myKey.channel();
-						ByteBuffer crunchifyBuffer = ByteBuffer.allocate(256);
-						socketclient.read(crunchifyBuffer);
-						String result = new String(crunchifyBuffer.array()).trim();
-	 
+						ByteBuffer buffer = ByteBuffer.allocate(256);
+						try {
+							socketclient.read(buffer);
+						} catch (IOException e) {
+							//ChatOps.LOGOUT.functionHandler(null, socketclient, this);
+							break;
+						}
+						
+						String result = new String(buffer.array()).trim();
 						System.out.println("Message received: " + result);
-					
 						StringTokenizer st = new StringTokenizer(result,"[]");
 						
-						 ChatOperation.valueOf(st.nextToken()).functionHandler(st, socketclient, this);
+						//ChatOps.valueOf(st.nextToken()).functionHandler(st, socketclient, this);
 						
 						if (result.equals("Crunchify")) {
 							socketclient.close();
@@ -156,31 +100,48 @@ public class TCPCommunication implements Communication {
 		public SocketPeer(SocketChannel clientSocket) {
 			this.clientSocket = clientSocket;
 		}
-		
+
 		@Override
+		public void responseMessage(int msgID, int userID, String userName, String groupName, UsrProperties prop,
+				String message, Status status) {
+		
+			
+		}
+
+		@Override
+		public void responseJoinGroup(int msgID, int userID, String userName, String groupName, Status status) {
+			ResponseJoinGroup r = new ResponseJoinGroup(userID, status, userID, groupName, userName);
+		
+		}
+
+		@Override
+		public void responseLogin(int msgID, int userID, Set<String> groupNames, Status status) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void responseCreateGroup(int msgID, String groupName, Status status) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void responseLeaveGroup(int msgID, int userID, String userName, String groupName, Status status) {
+			// TODO Auto-generated method stub
+			
+		}
+		
+	/*	@Override
 		public void sendMessage(String senderName, int groupID, UsrProperties prop, String message) {
 			// TODO Auto-generated method stub	
 		}
 
 		@Override
-		public void sendAddToGRoup(boolean status) {}
-
-		@Override
-		public void sendNewGroupMember(Integer groupId, int newUsrID) {}
-		
-		@Override
-		public void sendLogin(int userID, List<Integer> groupID) {
+		public void sendAddToGRoup(boolean status) {
 			StringBuilder str = new StringBuilder();
-			str.append("LOG_IN[");
-			str.append(userID);
-			str.append("]");
-			
-			for (Integer i : groupID) {
-				str.append("[");
-				str.append(i);
-				str.append("]");
-			}
-			
+			str.append("JOIN[" + status + "]");
+
 			System.out.println(str);
 			byte[] message = new String(str).getBytes();
 			ByteBuffer buffer = ByteBuffer.wrap(message);
@@ -190,15 +151,52 @@ public class TCPCommunication implements Communication {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+		}
+
+		@Override
+		public void sendNewGroupMember(Integer groupId, int newUsrID) {}
+		
+		@Override
+		public void sendLogin(int userID, List<Integer> groupID) {
+			StringBuilder str = new StringBuilder();
+			str.append("LOG_IN[" + userID + "]");
+
+			for (Integer i : groupID) {
+				str.append("[" + i + "]");
+			}
+			
+			System.out.println(str);
+			byte[] message = new String(str).getBytes();
+			ByteBuffer buffer = ByteBuffer.wrap(message);
+			try {
+				clientSocket.write(buffer);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 			
 			
 		}
 		
 		@Override
-		public void sendCreateGroup(int groupID, String groupName) {}
+		public void sendCreateGroup(int groupID, String groupName) {
+			StringBuilder str = new StringBuilder();
+			str.append("CREATE_GROUP[" + groupID + "][" +  groupName + "]");
+
+			System.out.println(str);
+			byte[] message = new String(str).getBytes();
+			ByteBuffer buffer = ByteBuffer.wrap(message);
+			try {
+				clientSocket.write(buffer);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 		
 		@Override
 		public void sendLeaveGroup(boolean status) {}
+*/
+
 	}
 	
 	public static void main(String[] args) throws IOException {
