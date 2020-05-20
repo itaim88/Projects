@@ -2,6 +2,7 @@ package il.co.ilrd.chat_server;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Set;
 
 class Msg implements Serializable {
 	private static final long serialVersionUID = -9094319427169171676L;
@@ -174,9 +175,10 @@ class ResponseLogin extends Response {
 	 */
 	private static final long serialVersionUID = -5773082868149152439L;
 	private int userId;
-	private List<String> groups;
+	private Set<String> groups;
+	private static final ChatOps opId = ChatOps.LOGIN;
 	
-	public ResponseLogin(ChatOps opId, int requestMsgID, Status status, int userId, List<String> groups) {
+	public ResponseLogin(int requestMsgID, Status status, int userId, Set<String> groups) {
 		super(opId, requestMsgID, status);
 		this.userId = userId;
 		this.groups = groups;
@@ -186,7 +188,7 @@ class ResponseLogin extends Response {
 		return userId;
 	}
 
-	public List<String> getGroups() {
+	public Set<String> getGroups() {
 		return groups;
 	}
 }
@@ -225,17 +227,12 @@ class ResponseCreateGroup extends Response {
 	 * 
 	 */
 	private static final long serialVersionUID = -838016303129502199L;
-	private int userId;
 	private String groupName;
+	private static final ChatOps opId = ChatOps.CREATE_GROUP;
 	
-	public ResponseCreateGroup(ChatOps opId, int requestMsgID, Status status, int userId, String groupName) {
+	public ResponseCreateGroup(int requestMsgID, Status status, String groupName) {
 		super(opId, requestMsgID, status);
-		this.userId = userId;
 		this.groupName = groupName;
-	}
-
-	public int getUserId() {
-		return userId;
 	}
 
 	public String getGroupName() {
@@ -251,9 +248,10 @@ class ResponseLeaveGroup extends Response {
 	private int userId;
 	private String groupName;
 	private String senderName;
+	private static final ChatOps opId = ChatOps.LEAVE_GROUP;
 	
-	public ResponseLeaveGroup(ChatOps opId, int requestMsgID, Status status, int userId, String groupName, String senderName) {
-		super(opId, requestMsgID, status);
+	public ResponseLeaveGroup(int requestedMsgID, int userID, String groupName, String senderName, Status status) {
+		super(opId, requestedMsgID, status);
 		this.userId = userId;
 		this.groupName = groupName;
 		this.senderName = senderName;
@@ -283,8 +281,9 @@ class ResponseSend extends Response {
 	private String msg;
 	private String senderName;
 	private UsrProperties prop;
+	private static final ChatOps opId = ChatOps.SEND_MSG ;
 	
-	public ResponseSend(ChatOps opId, int requestMsgID, Status status, int userId, String groupName, String msg, String senderName, UsrProperties prop) {
+	public ResponseSend(int requestMsgID, Status status, int userId, String groupName, String msg, String senderName, UsrProperties prop) {
 		super(opId, requestMsgID, status);
 		this.userId = userId;
 		this.groupName = groupName;

@@ -1,6 +1,7 @@
 package il.co.ilrd.chat_server;
 
 import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -9,7 +10,6 @@ import java.nio.channels.ByteChannel;
 import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
-import java.rmi.server.SocketSecurityException;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -104,98 +104,57 @@ public class TCPCommunication implements Communication {
 		@Override
 		public void responseMessage(int msgID, int userID, String userName, String groupName, UsrProperties prop,
 				String message, Status status) {
-		
+				ResponseSend response = new ResponseSend(msgID, status, userID, groupName, message, userName, prop);
+			try {
+				ObjectOutputStream out = new ObjectOutputStream(clientSocket.socket().getOutputStream());
+				out.writeObject(response);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 			
 		}
-
+	
 		@Override
 		public void responseJoinGroup(int msgID, int userID, String userName, String groupName, Status status) {
-			ResponseJoinGroup r = new ResponseJoinGroup(userID, status, userID, groupName, userName);
-		
+			ResponseJoinGroup response = new ResponseJoinGroup(userID, status, userID, groupName, userName);
+			try {
+				ObjectOutputStream out = new ObjectOutputStream(clientSocket.socket().getOutputStream());
+				out.writeObject(response);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			
 		}
 
 		@Override
 		public void responseLogin(int msgID, int userID, Set<String> groupNames, Status status) {
-			// TODO Auto-generated method stub
-			
+			ResponseLogin response = new ResponseLogin(userID, status, userID, groupNames);
+			try {
+				ObjectOutputStream out = new ObjectOutputStream(clientSocket.socket().getOutputStream());
+				out.writeObject(response);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 
 		@Override
 		public void responseCreateGroup(int msgID, String groupName, Status status) {
-			// TODO Auto-generated method stub
-			
+			ResponseCreateGroup response = new ResponseCreateGroup(msgID, status, groupName);
+			try {
+				ObjectOutputStream out = new ObjectOutputStream(clientSocket.socket().getOutputStream());
+				out.writeObject(response);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
+			
+		
 
 		@Override
 		public void responseLeaveGroup(int msgID, int userID, String userName, String groupName, Status status) {
 			// TODO Auto-generated method stub
 			
 		}
-		
-	/*	@Override
-		public void sendMessage(String senderName, int groupID, UsrProperties prop, String message) {
-			// TODO Auto-generated method stub	
-		}
-
-		@Override
-		public void sendAddToGRoup(boolean status) {
-			StringBuilder str = new StringBuilder();
-			str.append("JOIN[" + status + "]");
-
-			System.out.println(str);
-			byte[] message = new String(str).getBytes();
-			ByteBuffer buffer = ByteBuffer.wrap(message);
-			try {
-				clientSocket.write(buffer);
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-
-		@Override
-		public void sendNewGroupMember(Integer groupId, int newUsrID) {}
-		
-		@Override
-		public void sendLogin(int userID, List<Integer> groupID) {
-			StringBuilder str = new StringBuilder();
-			str.append("LOG_IN[" + userID + "]");
-
-			for (Integer i : groupID) {
-				str.append("[" + i + "]");
-			}
-			
-			System.out.println(str);
-			byte[] message = new String(str).getBytes();
-			ByteBuffer buffer = ByteBuffer.wrap(message);
-			try {
-				clientSocket.write(buffer);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			
-			
-		}
-		
-		@Override
-		public void sendCreateGroup(int groupID, String groupName) {
-			StringBuilder str = new StringBuilder();
-			str.append("CREATE_GROUP[" + groupID + "][" +  groupName + "]");
-
-			System.out.println(str);
-			byte[] message = new String(str).getBytes();
-			ByteBuffer buffer = ByteBuffer.wrap(message);
-			try {
-				clientSocket.write(buffer);
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-		
-		@Override
-		public void sendLeaveGroup(boolean status) {}
-*/
 
 	}
 	
