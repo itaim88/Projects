@@ -8,5 +8,4 @@ public interface Peer {
 	public void responseLogin(int msgID, int userID, Set<String> groupNames,  Status status);
 	public void responseCreateGroup(int msgID, String groupName,  Status status);
 	public void responseLeaveGroup(int msgID, int userID, String userName, String groupName, Status status);
-
 }

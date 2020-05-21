@@ -1,4 +1,4 @@
-package il.co.ilrd.chat_server;
+package il.co.ilrd.chat_client;
 
 import java.io.Serializable;
 import java.util.Set;

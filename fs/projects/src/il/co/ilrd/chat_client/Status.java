@@ -1,4 +1,4 @@
-package il.co.ilrd.chat_server;
+package il.co.ilrd.chat_client;
 
 public enum Status {
 	SUCCESS(0),
@@ -6,8 +6,7 @@ public enum Status {
 	GROUP_NOT_FOUND(2),
 	NOT_IN_GROUP(3),
 	ALREADY_IN_GROUP(4),
-	GROUP_ALREADY_EXISTS(5), 
-	BAD_INPUT(6);
+	GROUP_ALREADY_EXISTS(5);
 	
 	private int code;
 	private Status(int code) {

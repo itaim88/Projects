@@ -33,4 +33,5 @@ public interface ChatServer {
 	 */
 	public void sendMsg(int msgId, Integer userId, String groupName, String msg);
 
+	
 }

@@ -6,4 +6,6 @@ public interface Communication {
 	 * @return Integer that tells the server which method it should execute. 
 	 */
 	public void Init();
+	
+	
 }
