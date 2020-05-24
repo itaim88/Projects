@@ -20,6 +20,13 @@ import java.nio.channels.SocketChannel;
 import java.util.Iterator;
 import java.util.Set;
 
+import il.co.ilrd.chat_msg.Request;
+import il.co.ilrd.chat_msg.ResponseCreateGroup;
+import il.co.ilrd.chat_msg.ResponseJoinGroup;
+import il.co.ilrd.chat_msg.ResponseLeaveGroup;
+import il.co.ilrd.chat_msg.ResponseLogin;
+import il.co.ilrd.chat_msg.ResponseSend;
+
 public class TCPCommunication implements Communication {
 	
 	public ChatServer server;
@@ -72,10 +79,9 @@ public class TCPCommunication implements Communication {
 						ByteArrayInputStream bis = new ByteArrayInputStream(buffer.array());
 			            ObjectInputStream ois = new ObjectInputStream(bis);
 						request = (Request)ois.readObject();
-						request.getOpId().handleMsg(request, channel, this);
-						
-						
+						request.getOpId().handleMsg(request, channel, this);	
 					}
+					
 					keyIterator.remove(); 
 				}
 			}

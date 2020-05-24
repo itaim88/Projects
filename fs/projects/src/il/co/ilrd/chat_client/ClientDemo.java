@@ -1,4 +1,4 @@
-package il.co.ilrd.chat_server;
+package il.co.ilrd.chat_client;
 
 import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
@@ -8,20 +8,9 @@ import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 import java.net.UnknownHostException;
-import java.nio.channels.SocketChannel;
-import java.util.Scanner;
 import java.util.Set;
 
-import il.co.ilrd.chat_msg.RequestCreateGroup;
-import il.co.ilrd.chat_msg.RequestLeaveGroup;
-import il.co.ilrd.chat_msg.RequestLogin;
-import il.co.ilrd.chat_msg.RequestSend;
-import il.co.ilrd.chat_msg.Response;
-import il.co.ilrd.chat_msg.ResponseCreateGroup;
-import il.co.ilrd.chat_msg.ResponseJoinGroup;
-import il.co.ilrd.chat_msg.ResponseLeaveGroup;
-import il.co.ilrd.chat_msg.ResponseLogin;
-import il.co.ilrd.chat_msg.ResponseSend;
+import il.co.ilrd.chat_msg.*;
 
 
 public class ClientDemo {

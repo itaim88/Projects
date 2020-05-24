@@ -2,7 +2,13 @@ package il.co.ilrd.chat_server;
 
 import java.nio.channels.SocketChannel;
 
-import il.co.ilrd.chat_server.Msg;
+import il.co.ilrd.chat_msg.Msg;
+import il.co.ilrd.chat_msg.Request;
+import il.co.ilrd.chat_msg.RequestCreateGroup;
+import il.co.ilrd.chat_msg.RequestJoinGroup;
+import il.co.ilrd.chat_msg.RequestLeaveGroup;
+import il.co.ilrd.chat_msg.RequestLogin;
+import il.co.ilrd.chat_msg.RequestSend;
 
 public enum ChatOps {
 	LOGIN {
