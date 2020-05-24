@@ -39,9 +39,8 @@ public class ClientDemo {
 		}
 
 		Thread responseThread = new Thread(() -> {
-			
-			while (true) {
 
+			while (true) {
 				try {
 					ObjectInputStream ois = new ObjectInputStream(new DataInputStream(clientSocket.getInputStream()));
 					Response rep = (Response) ois.readObject();

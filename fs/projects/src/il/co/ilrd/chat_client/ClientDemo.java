@@ -1,5 +1,6 @@
 package il.co.ilrd.chat_client;
 
+import java.awt.Color;
 import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.IOException;
@@ -8,6 +9,7 @@ import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.HashSet;
 import java.util.Set;
 
 import il.co.ilrd.chat_msg.*;
@@ -17,7 +19,9 @@ public class ClientDemo {
 	int clientId;
 	Set<String> groups;
 	Socket clientSocket;
-
+	
+	MainDetailPanel panel;
+	
 	public ClientDemo(String hostName, int port) {
 		try {
 			clientSocket = new Socket(hostName, port);
@@ -34,7 +38,7 @@ public class ClientDemo {
 				try {
 					ObjectInputStream ois = new ObjectInputStream(new DataInputStream(clientSocket.getInputStream()));
 					Response rep = (Response) ois.readObject();
-					ResponseOps.valueOf(rep.getOpId().toString()).handleResponse(this, rep);
+					ResponseOps.valueOf(rep.getOpId().toString()).handleResponse(this, rep, panel);
 				} catch (IOException | ClassNotFoundException e) {
 					e.printStackTrace();
 				}
@@ -105,40 +109,33 @@ public class ClientDemo {
 	public enum ResponseOps {
 		LOGIN {
 			@Override
-			public void handleResponse(ClientDemo c, Response res) {
+			public void handleResponse(ClientDemo c, Response res, MainDetailPanel panel) {
 				ResponseLogin resp = (ResponseLogin) res;
+				
 				c.clientId = resp.getUserId();
 				c.groups = resp.getGroups();
 
-				System.out.println("welcom to chat hub!");
-				System.out.println("your client id is: " + c.clientId);
-				if (c.groups.size() == 0) {
-					System.out.println("You can now join groups and start chatting");
-				}
-				else {
-					System.out.println("you are member in " + c.groups.size() + " groups:");
-					for (String group : c.groups) {
-						System.out.println(group);
-					}
-				}
-				System.out.println("Enter any operation...");
+				panel.printToTextArea("welcom to chat hub!",  Color.BLACK);
+				panel.printToTextArea("your client id is: " + c.clientId,  Color.BLACK);
+				
+				panel.getGroups(c.groups);
 			}
 		},
 
 		CREATE_GROUP {
 			@Override
-			public void handleResponse(ClientDemo c, Response res) {
+			public void handleResponse(ClientDemo c, Response res, MainDetailPanel panel) {
 				ResponseCreateGroup resp = (ResponseCreateGroup) res;
 				String newGroup = resp.getGroupName();
 				c.groups.add(newGroup);
-
-				System.out.println("Welcome to group " + newGroup);
-				System.out.println("Enter any operation...");
+				panel.addGroup(newGroup);
+				
+				panel.printToTextArea("You've created group " + newGroup,  Color.BLACK);
 			}
 		},
 		JOIN_GROUP {
 			@Override
-			public void handleResponse(ClientDemo c, Response res) {
+			public void handleResponse(ClientDemo c, Response res, MainDetailPanel panel) {
 				ResponseJoinGroup resp = (ResponseJoinGroup) res;
 				int userId = resp.getUserId();
 				String newGroup = resp.getGroupName();
@@ -146,18 +143,18 @@ public class ClientDemo {
 
 				if (userId == c.clientId) {
 					c.groups.add(newGroup);
-					System.out.println("Welcom to group " + newGroup);
+					panel.addGroup(newGroup);
+					panel.printToTextArea("Welcom to group " + newGroup,  Color.BLACK);
 				}
 				else {
-					System.out.println(sender + " has joined group " + newGroup);
-					System.out.println("Say hello!");
+					panel.printToTextArea(sender + " has joined group " + newGroup,  Color.BLACK);
+					panel.printToTextArea("Say hello!",  Color.BLACK);
 				}
-				System.out.println("Enter any operation...");
 			}
 		},
 		LEAVE_GROUP {
 			@Override
-			public void handleResponse(ClientDemo c, Response res) {
+			public void handleResponse(ClientDemo c, Response res, MainDetailPanel panel) {
 				ResponseLeaveGroup resp = (ResponseLeaveGroup) res;
 				int userId = resp.getUserId();
 				String group = resp.getGroupName();
@@ -165,33 +162,31 @@ public class ClientDemo {
 
 				if (userId == c.clientId) {
 					c.groups.remove(group);
-					System.out.println("You just left group " + group);
+					panel.removeGroup(group);
+					panel.printToTextArea("You just left group " + group,  Color.BLACK);
 				}
 				else {
-					System.out.println(sender + " has left group " + group);
+					panel.printToTextArea(sender + " has left group " + group, Color.BLACK);
 				}
-				System.out.println("Enter any operation...");
 			}
 		},
 		SEND_MSG {
 			@Override
-			public void handleResponse(ClientDemo c, Response res) {
+			public void handleResponse(ClientDemo c, Response res, MainDetailPanel panel) {
 				ResponseSend resp = (ResponseSend) res;
 				int userId = resp.getUserId();
 				String group = resp.getGroupName();
 				String sender = resp.getSenderName();
 				String msg = resp.getMsg();
-				//Color color = resp.getProp().getColor();
 
 				if (userId != c.clientId) {
-					System.out.println(sender + " in group " + group + " says:");
-					System.out.println(msg);
+					panel.printToTextArea(sender + " in group " + group + " says:", resp.getProp().getColor());
+					panel.printToTextArea(msg, Color.BLACK);
 				}
-				System.out.println("Enter any operation...");
 			}
 		};
 
-		public abstract void handleResponse(ClientDemo c, Response res);
+		public abstract void handleResponse(ClientDemo c, Response res, MainDetailPanel panel);
 	}
 }
 

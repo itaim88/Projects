@@ -15,12 +15,13 @@ public class ChatApp {
 				frame.setSize(300, 150);
 				frame.setVisible(true);  
 				frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-			}	
-		});	
+			}
+			
+		});
+		
 	}
 	
 	public static void main(String[] args) {
 		ChatApp c = new ChatApp("Login");
-		
 	}
 }

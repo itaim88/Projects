@@ -70,16 +70,38 @@ public class TCPCommunication implements Communication {
 						client.configureBlocking(false);
 						client.register(selector, SelectionKey.OP_READ);
 					}
+					/*
+					Request request = null;
+						try {
+							channel = (SocketChannel) key.channel();
+							ByteBuffer bb = ByteBuffer.allocate(2048);
+							if(-1 == channel.read(bb)) {key.cancel(); keyIterator.remove(); continue;}
+							Thread.sleep(1000);
+							ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(bb.array()));
+							request = (Request)ois.readObject();
+							if(!(request instanceof Request) && request.getOpId() != null) { continue; }
+							System.out.println(request.getOpId());
+						}  catch (InterruptedException| ClassNotFoundException e) {
+							e.printStackTrace();							
+						} catch (IOException e) {
+							key.cancel(); keyIterator.remove(); continue;
+						}
+						request.getOpId().handleMsg(request, channel, this);
+					}
+					 */
 					else if(currentKey.isReadable()) {
 						channel = (SocketChannel) currentKey.channel();
-						ByteBuffer buffer =  ByteBuffer.allocate(1024);
+						ByteBuffer buffer =  ByteBuffer.allocate(2048);
+						if(-1 == channel.read(buffer)) {currentKey.cancel(); keyIterator.remove(); continue;}
 						Request request = null;
-						channel.read(buffer);
+						//channel.read(buffer);
 						//buffer.flip();
 						ByteArrayInputStream bis = new ByteArrayInputStream(buffer.array());
 			            ObjectInputStream ois = new ObjectInputStream(bis);
 						request = (Request)ois.readObject();
+						if(!(request instanceof Request) && request.getOpId() != null) { continue; }
 						request.getOpId().handleMsg(request, channel, this);	
+						
 					}
 					
 					keyIterator.remove(); 
