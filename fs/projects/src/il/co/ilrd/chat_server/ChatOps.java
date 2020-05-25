@@ -45,15 +45,9 @@ public enum ChatOps {
 			RequestSend request = (RequestSend)msg;
 			commun.server.sendMsg(request.getMsgID(), request.getUserId(), request.getGroupName(), request.getMsg());
 		}
-	},
-
-	LOGOUT {
-		@Override
-		public void handleMsg(Request msg,  SocketChannel clientSocket, TCPCommunication commun) {
-//			RequestLogout reply = (RequestLogin)msg;
-//			commun.server.logIn(reply.getMsgID(), reply.getEmail(), reply.getUserName(), commun. new SocketPeer(clientSocket));
-		}
 	};
+
+
 
 	public abstract void handleMsg(Request msg,  SocketChannel clientSocket, TCPCommunication commun);
 	
