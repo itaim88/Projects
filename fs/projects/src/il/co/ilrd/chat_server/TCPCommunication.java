@@ -28,14 +28,14 @@ import il.co.ilrd.chat_msg.ResponseLogin;
 import il.co.ilrd.chat_msg.ResponseSend;
 
 public class TCPCommunication implements Communication {
-	
+
 	public ChatServer server;
 	private int port = 55555;
 	private Selector selector;
 	private ServerSocketChannel serverChannel;
 	private ServerSocket serverSocket;
 	private SocketChannel channel;
-	
+
 	public TCPCommunication(ChatServer server) {
 		this.server = server;
 	}
@@ -44,21 +44,20 @@ public class TCPCommunication implements Communication {
 			selector = Selector.open();
 			serverChannel = ServerSocketChannel.open();
 			serverSocket =  serverChannel.socket();
-			serverSocket.bind(new InetSocketAddress("localhost", port));
+			serverSocket.bind(new InetSocketAddress("0.0.0.0", port));
 			serverChannel.configureBlocking(false);
 			serverChannel.register(selector, SelectionKey.OP_ACCEPT);
-			
+
 		} catch (IOException e) {
 			System.err.println(e.getMessage());
 			e.printStackTrace();
 		}
 	}
-		
+
 	@Override
 	public void Init() {
 		try {
 			while(true) {
-
 				selector.select();
 				Iterator<SelectionKey> keyIterator = selector.selectedKeys().iterator();
 
@@ -70,49 +69,35 @@ public class TCPCommunication implements Communication {
 						client.configureBlocking(false);
 						client.register(selector, SelectionKey.OP_READ);
 					}
-					/*
-					Request request = null;
-						try {
-							channel = (SocketChannel) key.channel();
-							ByteBuffer bb = ByteBuffer.allocate(2048);
-							if(-1 == channel.read(bb)) {key.cancel(); keyIterator.remove(); continue;}
-							Thread.sleep(1000);
-							ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(bb.array()));
-							request = (Request)ois.readObject();
-							if(!(request instanceof Request) && request.getOpId() != null) { continue; }
-							System.out.println(request.getOpId());
-						}  catch (InterruptedException| ClassNotFoundException e) {
-							e.printStackTrace();							
-						} catch (IOException e) {
-							key.cancel(); keyIterator.remove(); continue;
-						}
-						request.getOpId().handleMsg(request, channel, this);
-					}
-					 */
+
 					else if(currentKey.isReadable()) {
 						channel = (SocketChannel) currentKey.channel();
 						ByteBuffer buffer =  ByteBuffer.allocate(2048);
-						if(-1 == channel.read(buffer)) {currentKey.cancel(); keyIterator.remove(); continue;}
+						if (-1 == channel.read(buffer)) {
+							currentKey.cancel();
+							keyIterator.remove();
+							continue;
+						}
 						Request request = null;
-						//channel.read(buffer);
-						//buffer.flip();
 						ByteArrayInputStream bis = new ByteArrayInputStream(buffer.array());
-			            ObjectInputStream ois = new ObjectInputStream(bis);
+						ObjectInputStream ois = new ObjectInputStream(bis);
 						request = (Request)ois.readObject();
-						if(!(request instanceof Request) && request.getOpId() != null) { continue; }
-						request.getOpId().handleMsg(request, channel, this);	
+						if (!(request instanceof Request) && request.getOpId() != null) { continue; }
+						System.out.println(request.getMsgID());
+						System.out.println(request+ "request");
+						System.out.println(request.getOpId()+ " request.getOpId()");
 						
+						request.getOpId().handleMsg(request, channel, this);	
 					}
-					
+
 					keyIterator.remove(); 
 				}
 			}
 		} catch (IOException | ClassNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} 
 	}
-	
+
 	class SocketPeer implements Peer {
 		private SocketChannel clientSocket = null;
 
@@ -133,7 +118,6 @@ public class TCPCommunication implements Communication {
 				clientSocket.write(bb);
 
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
@@ -197,8 +181,6 @@ public class TCPCommunication implements Communication {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-			
 		}
-	
 	}
 }

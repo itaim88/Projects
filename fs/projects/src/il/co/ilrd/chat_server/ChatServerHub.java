@@ -79,15 +79,17 @@ public class ChatServerHub implements ChatServer{
 
 		if (null != group) {
 			if (group.usersInGroup.containsKey(userId)) {
-				group.usersInGroup.remove(userId);
 				for(Integer id : group.usersInGroup.keySet()) {
 					users.get(id).peer.responseLeaveGroup(msgId, userId, user.userName, groupName, Status.SUCCESS);
 				}
+				group.usersInGroup.remove(userId);
+			} else {
+				user.peer.responseLeaveGroup(msgId, userId, user.userName, groupName, Status.NOT_IN_GROUP);								
 			}
 
-			user.peer.responseLeaveGroup(msgId, userId, user.userName, groupName, Status.NOT_IN_GROUP);				
+		} else {
+			user.peer.responseLeaveGroup(msgId, userId, user.userName, groupName, Status.GROUP_NOT_FOUND);					
 		}
-		user.peer.responseLeaveGroup(msgId, userId, user.userName, groupName, Status.GROUP_NOT_FOUND);		
 	}
 
 	@Override

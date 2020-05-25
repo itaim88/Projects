@@ -181,6 +181,7 @@ public class ClientDemo {
 				}
 			}
 		},
+		
 		SEND_MSG {
 			@Override
 			public void handleResponse(ClientDemo c, Response res, MainDetailPanel panel) {
