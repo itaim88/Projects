@@ -44,7 +44,7 @@ public class TCPCommunication implements Communication {
 			selector = Selector.open();
 			serverChannel = ServerSocketChannel.open();
 			serverSocket =  serverChannel.socket();
-			serverSocket.bind(new InetSocketAddress("0.0.0.0", port));
+			serverSocket.bind(new InetSocketAddress("localhost", port));
 			serverChannel.configureBlocking(false);
 			serverChannel.register(selector, SelectionKey.OP_ACCEPT);
 
@@ -81,13 +81,17 @@ public class TCPCommunication implements Communication {
 						Request request = null;
 						ByteArrayInputStream bis = new ByteArrayInputStream(buffer.array());
 						ObjectInputStream ois = new ObjectInputStream(bis);
-						request = (Request)ois.readObject();
-						if (!(request instanceof Request) && request.getOpId() != null) { continue; }
-						System.out.println(request.getMsgID());
-						System.out.println(request+ "request");
-						System.out.println(request.getOpId()+ " request.getOpId()");
+						Object obj = ois.readObject();
+						if (obj instanceof Request) {
+							request = (Request)obj;
+							request.getOpId().handleMsg(request, channel, this);	
+						}
 						
-						request.getOpId().handleMsg(request, channel, this);	
+						else { 
+							currentKey.cancel();
+							keyIterator.remove();
+							continue;
+						}
 					}
 
 					keyIterator.remove(); 
