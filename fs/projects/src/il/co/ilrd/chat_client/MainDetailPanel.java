@@ -27,17 +27,15 @@ import javax.swing.text.StyleConstants;
 import javax.swing.text.StyleContext;
 
 public class MainDetailPanel extends JPanel {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -338415732415014061L;
-	ClientDemo client;
-	JTextArea textArea;
-	JList<String> groups;
-	DefaultListModel<String> demoList;
+	private ClientDemo client;
+	private JTextArea textArea;
+	private JList<String> groups;
+	private DefaultListModel<String> demoList;
+	private Dimension size;
 	
 	MainDetailPanel(ClientDemo client) {
-		Dimension size = getPreferredSize();
+		size = getPreferredSize();
 		size.width = 1000;
 		size.height = 1000;
 		setPreferredSize(size);
@@ -51,7 +49,6 @@ public class MainDetailPanel extends JPanel {
 		final JTextField groupField = new JTextField(15);
 		final JTextField msgField = new JTextField(15);
 		final JButton sendButton = new JButton("send");
-		final JTextField newGroupField = new JTextField(15);
 		final JButton newGroupButton = new JButton("new grp");
 		final JButton leaveGroupButton = new JButton("leave grp");
 		final JButton joinGroupButton = new JButton("join grp");
@@ -89,8 +86,8 @@ public class MainDetailPanel extends JPanel {
 
 				try {
 					textArea.append(msgField.getText() + "\n");
+					client.sendMsg(client.clientId,groupField.getText(), msgField.getText());
 					msgField.setText("");
-					client.sendMsg(client.clientId, newGroupField.getText(), msgField.getText());
 				} catch (IOException e1) {
 					e1.printStackTrace();
 				}
@@ -103,7 +100,7 @@ public class MainDetailPanel extends JPanel {
 			public void actionPerformed(ActionEvent e) {
 
 				try {
-					client.createGroup(client.clientId, groupField.getText());
+					client.joinGroup(client.clientId, groupField.getText());
 					groupField.setText("");
 				} catch (IOException e1) {
 					e1.printStackTrace();
@@ -142,7 +139,7 @@ public class MainDetailPanel extends JPanel {
 	}
 
 	public void printToTextArea(String str, Color color) {
-		textArea.setForeground(color);
+		//textArea.setForeground(color);
 	    textArea.append(str + "\n");
 	}
 	

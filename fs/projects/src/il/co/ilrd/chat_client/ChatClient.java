@@ -20,8 +20,8 @@ import il.co.ilrd.chat_msg.RequestSend;
 import il.co.ilrd.chat_msg.Response;
 
 public class ChatClient {
-	Socket clientSocket = null;
-	Set<String> groupNames = new HashSet<>();
+	private Socket clientSocket = null;
+	private Set<String> groupNames = new HashSet<>();
 	int clientId = 0;
 
 	public ChatClient() {

@@ -17,9 +17,8 @@ import il.co.ilrd.chat_msg.*;
 
 public class ClientDemo {
 	int clientId;
-	Set<String> groups;
-	Socket clientSocket;
-	
+	private Set<String> groups;
+	private Socket clientSocket;
 	MainDetailPanel panel;
 	
 	public ClientDemo(String hostName, int port) {
@@ -64,7 +63,20 @@ public class ClientDemo {
 	public void createGroup(int usrId, String groupName) throws IOException {
 		RequestCreateGroup req = new RequestCreateGroup(usrId, groupName);
 
-		System.out.println("new group " + groupName + " id " + usrId);
+		ByteArrayOutputStream bos = new ByteArrayOutputStream();
+		OutputStream outToServer = clientSocket.getOutputStream();
+		ObjectOutputStream out = null;
+
+		out = new ObjectOutputStream(bos);   
+		out.writeObject(req);
+		out.flush();
+		byte[] yourBytes = bos.toByteArray();
+		outToServer.write(yourBytes);
+	}
+	
+	public void joinGroup(int usrId, String groupName) throws IOException {
+		RequestJoinGroup req = new RequestJoinGroup(usrId, groupName);
+
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
 		OutputStream outToServer = clientSocket.getOutputStream();
 		ObjectOutputStream out = null;
@@ -91,7 +103,6 @@ public class ClientDemo {
 	}
 
 	public void sendMsg(int userID, String groupName, String msg) throws IOException {
-
 		RequestSend req = new RequestSend(userID, groupName, msg);
 
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();

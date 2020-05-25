@@ -141,7 +141,6 @@ public class TCPCommunication implements Communication {
 		@Override
 		public void responseJoinGroup(int msgID, int userID, String userName, String groupName, Status status) {
 			try {
-				System.out.println(msgID + userID + userName + groupName + status);
 				ResponseJoinGroup reply = new ResponseJoinGroup(msgID, userID, groupName, userName, status);
 				ByteArrayOutputStream bos = new ByteArrayOutputStream();
 				ObjectOutputStream out = new ObjectOutputStream(bos);

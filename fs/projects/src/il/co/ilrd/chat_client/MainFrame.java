@@ -9,13 +9,9 @@ import javax.swing.JTextArea;
 
 
 public class MainFrame extends JFrame {
-
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -582593631733082271L;
-	MainDetailPanel panel;
-	ClientDemo client;
+	private MainDetailPanel panel;
+	private ClientDemo client;
 	
 	public MainFrame(String title, ClientDemo client, String name) {
 		super(title);

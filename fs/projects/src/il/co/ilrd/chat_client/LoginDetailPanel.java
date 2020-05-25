@@ -13,11 +13,8 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 public class LoginDetailPanel extends JPanel {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -7048977961845005738L;
-	ClientDemo client;
+	private ClientDemo client;
 	
 	LoginDetailPanel(ClientDemo client) {
 		this.client = client;
@@ -49,7 +46,7 @@ public class LoginDetailPanel extends JPanel {
 				}
 				
 				JFrame frame = new MainFrame("ChatApp", client, nameField.getText());
-				frame.setSize(500, 700);
+				frame.setSize(800, 750);
 				frame.setVisible(true);  
 				frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 			}

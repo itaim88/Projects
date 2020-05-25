@@ -8,9 +8,6 @@ import javax.swing.JFrame;
 
 public class LoginFrame extends JFrame {
 	
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -582593631733082271L;
 	LoginDetailPanel panel;
 	ClientDemo client;

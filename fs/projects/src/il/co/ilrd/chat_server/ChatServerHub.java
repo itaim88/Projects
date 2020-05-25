@@ -47,7 +47,6 @@ public class ChatServerHub implements ChatServer{
 			user.peer.responseCreateGroup(msgId, groupName, Status.GROUP_ALREADY_EXISTS);
 			return;	
 		}
-		System.out.println("new group print " +  user);
 		Group g = new Group(groupName,user);
 		groups.put(groupName,g);
 		user.groupNames.add(groupName);
@@ -67,6 +66,7 @@ public class ChatServerHub implements ChatServer{
 			user.peer.responseJoinGroup(msgId, userId, user.userName, groupName, Status.ALREADY_IN_GROUP);
 		}
 		group.usersInGroup.put(userId, new ColorUsrProperties());
+		user.groupNames.add(groupName);
 		for(Integer id : group.usersInGroup.keySet()) {
 			users.get(id).peer.responseJoinGroup(msgId, userId, user.userName, groupName, Status.SUCCESS);
 		}
@@ -92,30 +92,24 @@ public class ChatServerHub implements ChatServer{
 
 	@Override
 	public void sendMsg(int msgId, Integer userId, String groupName, String msg) {
-		/*User user = users.get(userId);
-		Group group = groups.get(groupName);
-		UsrProperties p;
-		if (group != null) {
-			p = group.usersInGroup.get(user.id);
-			for (Integer id : group.usersInGroup.keySet()) {
-				users.get(id).peer.responseMessage(msgId, userId, user.userName, groupName, p, msg, Status.SUCCESS);
-			}
-		}
-		user.peer.responseMessage(msgId, userId, user.userName, groupName, new ColorUsrProperties(), msg, Status.GROUP_NOT_FOUND);*/
 		Status status;
 		User user = users.get(userId);
 		Group group = groups.get(groupName);
-		if(user == null) { status = Status.CLIENT_NOT_FOUND; }
-		else if(group == null) { status = Status.GROUP_NOT_FOUND; }
+		if(user == null) {
+			status = Status.CLIENT_NOT_FOUND;
+			}
+		
+		else if(group == null) {
+			status = Status.GROUP_NOT_FOUND;
+		}
+		
 		else if(!user.groupNames.contains(groupName)) { status = Status.NOT_IN_GROUP; }
 		else{
 			status = Status.SUCCESS;
 			for(Entry<Integer, UsrProperties> member : group.usersInGroup.entrySet()) { 
 				users.get(member.getKey()).peer.responseMessage(msgId, userId, user.userName, groupName, member.getValue() , msg, status);
-			}
-			return;
+			}	
 		}
-		user.peer.responseMessage(msgId, userId, user.userName, groupName, null , msg, status);
 	}
 	
 	
